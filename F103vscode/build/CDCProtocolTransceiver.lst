@@ -1,0 +1,1072 @@
+ARM GAS  C:\Users\subdia\AppData\Local\Temp\ccqPFBUy.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.arch armv7-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"CDCProtocolTransceiver.cpp"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.file 1 "Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp"
+  18              		.section	.text._ZN22CDCProtocolTransceiver7ProcessEv,"ax",%progbits
+  19              		.align	1
+  20              		.global	_ZN22CDCProtocolTransceiver7ProcessEv
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  25              	_ZN22CDCProtocolTransceiver7ProcessEv:
+  26              		.fnstart
+  27              	.LVL0:
+  28              	.LFB6344:
+   1:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 
+   2:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** #include "CDCProtocolTransceiver.hpp"
+   3:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 
+   4:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** int8_t CDCProtocolTransceiver::Process() {
+  29              		.loc 1 4 42 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		.loc 1 4 42 is_stmt 0 view .LVU1
+  34 0000 38B5     		push	{r3, r4, r5, lr}
+  35              		.save {r3, r4, r5, lr}
+  36              	.LCFI0:
+  37              		.cfi_def_cfa_offset 16
+  38              		.cfi_offset 3, -16
+  39              		.cfi_offset 4, -12
+  40              		.cfi_offset 5, -8
+  41              		.cfi_offset 14, -4
+   5:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 	switch (_cdcStateMachine.GetState()) {
+  42              		.loc 1 5 2 is_stmt 1 view .LVU2
+  43              	.LVL1:
+  44              	.LBB16:
+  45              	.LBI16:
+  46              		.file 2 "Core/Src/CDCExchangeProtocol/CDCStateMachine.hpp"
+   1:Core/Src/CDCExchangeProtocol/CDCStateMachine.hpp **** 
+   2:Core/Src/CDCExchangeProtocol/CDCStateMachine.hpp **** enum CDCState {
+   3:Core/Src/CDCExchangeProtocol/CDCStateMachine.hpp **** 	CDCFree,
+   4:Core/Src/CDCExchangeProtocol/CDCStateMachine.hpp **** 	CDCCommandAwaiting,
+   5:Core/Src/CDCExchangeProtocol/CDCStateMachine.hpp **** 	CDCFileReceiving,
+   6:Core/Src/CDCExchangeProtocol/CDCStateMachine.hpp **** 	CDCFileTransmitting
+   7:Core/Src/CDCExchangeProtocol/CDCStateMachine.hpp **** };
+ARM GAS  C:\Users\subdia\AppData\Local\Temp\ccqPFBUy.s 			page 2
+
+
+   8:Core/Src/CDCExchangeProtocol/CDCStateMachine.hpp **** 
+   9:Core/Src/CDCExchangeProtocol/CDCStateMachine.hpp **** 
+  10:Core/Src/CDCExchangeProtocol/CDCStateMachine.hpp **** class CDCStateMachine {
+  11:Core/Src/CDCExchangeProtocol/CDCStateMachine.hpp **** 
+  12:Core/Src/CDCExchangeProtocol/CDCStateMachine.hpp **** CDCState currentState = CDCFree; 
+  13:Core/Src/CDCExchangeProtocol/CDCStateMachine.hpp **** 
+  14:Core/Src/CDCExchangeProtocol/CDCStateMachine.hpp **** public:
+  15:Core/Src/CDCExchangeProtocol/CDCStateMachine.hpp **** 
+  16:Core/Src/CDCExchangeProtocol/CDCStateMachine.hpp **** 	CDCStateMachine() {
+  17:Core/Src/CDCExchangeProtocol/CDCStateMachine.hpp **** 		currentState = CDCCommandAwaiting;
+  18:Core/Src/CDCExchangeProtocol/CDCStateMachine.hpp **** 	}
+  19:Core/Src/CDCExchangeProtocol/CDCStateMachine.hpp **** 	~CDCStateMachine();
+  20:Core/Src/CDCExchangeProtocol/CDCStateMachine.hpp **** 	
+  21:Core/Src/CDCExchangeProtocol/CDCStateMachine.hpp **** 	void SetState(CDCState state) {
+  22:Core/Src/CDCExchangeProtocol/CDCStateMachine.hpp **** 		this -> currentState = state;
+  23:Core/Src/CDCExchangeProtocol/CDCStateMachine.hpp **** 	}
+  24:Core/Src/CDCExchangeProtocol/CDCStateMachine.hpp **** 
+  25:Core/Src/CDCExchangeProtocol/CDCStateMachine.hpp **** 	CDCState GetState() {
+  47              		.loc 2 25 11 view .LVU3
+  48              	.LBB17:
+  26:Core/Src/CDCExchangeProtocol/CDCStateMachine.hpp **** 		return this -> currentState;
+  49              		.loc 2 26 3 view .LVU4
+  50              		.loc 2 26 18 is_stmt 0 view .LVU5
+  51 0002 0379     		ldrb	r3, [r0, #4]	@ zero_extendqisi2
+  52              	.LVL2:
+  53              		.loc 2 26 18 view .LVU6
+  54              	.LBE17:
+  55              	.LBE16:
+  56              		.loc 1 5 2 discriminator 1 view .LVU7
+  57 0004 2BB3     		cbz	r3, .L4
+  58 0006 0446     		mov	r4, r0
+  59 0008 012B     		cmp	r3, #1
+  60 000a 25D1     		bne	.L5
+   6:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 		case CDCFree:
+   7:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 		//send FAIL frame here
+   8:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 		return RES_FAIL; //communication state can't be free at this moment
+   9:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 		case CDCCommandAwaiting:
+  61              		.loc 1 9 3 is_stmt 1 view .LVU8
+  10:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 		//is this a command?
+  11:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 		if (_cdcProtocolFormer.IsItCommand(_txrxBuffer.at(CDC_PROTOCOL_CMD_PLACE))) {
+  62              		.loc 1 11 3 view .LVU9
+  63              		.loc 1 11 37 is_stmt 0 view .LVU10
+  64 000c 431D     		adds	r3, r0, #5
+  65 000e 1D46     		mov	r5, r3
+  66              		.loc 1 11 37 discriminator 1 view .LVU11
+  67 0010 C179     		ldrb	r1, [r0, #7]	@ zero_extendqisi2
+  68 0012 1846     		mov	r0, r3
+  69              	.LVL3:
+  70              		.loc 1 11 37 discriminator 1 view .LVU12
+  71 0014 FFF7FEFF 		bl	_ZN17CDCProtocolFormer11IsItCommandEh
+  72              	.LVL4:
+  73              		.loc 1 11 3 discriminator 2 view .LVU13
+  74 0018 00B3     		cbz	r0, .L6
+  12:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 			if (_cdcProtocolFormer.GetCommandFromFrame(_txrxBuffer) == 
+  75              		.loc 1 12 4 is_stmt 1 view .LVU14
+  76              		.loc 1 12 46 is_stmt 0 view .LVU15
+  77 001a D4F80610 		ldr	r1, [r4, #6]	@ unaligned
+ARM GAS  C:\Users\subdia\AppData\Local\Temp\ccqPFBUy.s 			page 3
+
+
+  78 001e D4F80A20 		ldr	r2, [r4, #10]	@ unaligned
+  79 0022 2846     		mov	r0, r5
+  80 0024 FFF7FEFF 		bl	_ZN17CDCProtocolFormer19GetCommandFromFrameEN3etl5arrayIhLj8EEE
+  81              	.LVL5:
+  82              		.loc 1 12 4 discriminator 1 view .LVU16
+  83 0028 CC28     		cmp	r0, #204
+  84 002a 03D1     		bne	.L3
+  13:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 				CDCCommands::SendConfig) {
+  14:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 				//send OK frame
+  15:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 				//send config transmittion command
+  16:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 				//pack data and send
+  17:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 				_cdcStateMachine.SetState(CDCFileTransmitting);
+  85              		.loc 1 17 5 is_stmt 1 view .LVU17
+  86              	.LVL6:
+  87              	.LBB18:
+  88              	.LBI18:
+  21:Core/Src/CDCExchangeProtocol/CDCStateMachine.hpp **** 		this -> currentState = state;
+  89              		.loc 2 21 7 view .LVU18
+  90              	.LBB19:
+  22:Core/Src/CDCExchangeProtocol/CDCStateMachine.hpp **** 	}
+  91              		.loc 2 22 3 view .LVU19
+  22:Core/Src/CDCExchangeProtocol/CDCStateMachine.hpp **** 	}
+  92              		.loc 2 22 24 is_stmt 0 view .LVU20
+  93 002c 0323     		movs	r3, #3
+  94 002e 2371     		strb	r3, [r4, #4]
+  95              	.LVL7:
+  22:Core/Src/CDCExchangeProtocol/CDCStateMachine.hpp **** 	}
+  96              		.loc 2 22 24 view .LVU21
+  97              	.LBE19:
+  98              	.LBE18:
+  18:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 			}
+  19:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 			else if (_cdcProtocolFormer.GetCommandFromFrame(_txrxBuffer) == 
+  20:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 				CDCCommands::CatchConfig) {
+  21:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 				//extract data about config flow here
+  22:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 				//send OK frame
+  23:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 				_cdcStateMachine.SetState(CDCFileReceiving);
+  24:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 			}
+  25:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 		}
+  26:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 		else return RES_FAIL;
+  27:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 		//if yes - recognize command
+  28:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 		//switch state machine
+  29:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 		//if no - return RES_FAIL
+  30:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 		break;
+  31:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 		case CDCFileReceiving:
+  32:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 		//get packet
+  33:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 		//parse?
+  34:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 		//write to the file
+  35:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 		break;
+  36:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 		case CDCFileTransmitting:
+  37:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 		//form packet
+  38:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 		//transmit
+  39:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 		break;
+  40:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 		default:
+  41:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 		break;
+  42:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 	}
+  43:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 	return RES_OK;
+  99              		.loc 1 43 9 view .LVU22
+ARM GAS  C:\Users\subdia\AppData\Local\Temp\ccqPFBUy.s 			page 4
+
+
+ 100 0030 0020     		movs	r0, #0
+ 101              	.LBB21:
+ 102              	.LBB20:
+  23:Core/Src/CDCExchangeProtocol/CDCStateMachine.hpp **** 
+ 103              		.loc 2 23 2 view .LVU23
+ 104 0032 10E0     		b	.L2
+ 105              	.L3:
+ 106              	.LBE20:
+ 107              	.LBE21:
+  19:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 				CDCCommands::CatchConfig) {
+ 108              		.loc 1 19 9 is_stmt 1 view .LVU24
+  19:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 				CDCCommands::CatchConfig) {
+ 109              		.loc 1 19 51 is_stmt 0 view .LVU25
+ 110 0034 D4F80610 		ldr	r1, [r4, #6]	@ unaligned
+ 111 0038 D4F80A20 		ldr	r2, [r4, #10]	@ unaligned
+ 112 003c 2846     		mov	r0, r5
+ 113 003e FFF7FEFF 		bl	_ZN17CDCProtocolFormer19GetCommandFromFrameEN3etl5arrayIhLj8EEE
+ 114              	.LVL8:
+  19:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 				CDCCommands::CatchConfig) {
+ 115              		.loc 1 19 9 discriminator 1 view .LVU26
+ 116 0042 BB28     		cmp	r0, #187
+ 117 0044 01D0     		beq	.L9
+ 118              		.loc 1 43 9 view .LVU27
+ 119 0046 0020     		movs	r0, #0
+ 120 0048 05E0     		b	.L2
+ 121              	.L9:
+  23:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 			}
+ 122              		.loc 1 23 5 is_stmt 1 view .LVU28
+ 123              	.LVL9:
+ 124              	.LBB22:
+ 125              	.LBI22:
+  21:Core/Src/CDCExchangeProtocol/CDCStateMachine.hpp **** 		this -> currentState = state;
+ 126              		.loc 2 21 7 view .LVU29
+ 127              	.LBB23:
+  22:Core/Src/CDCExchangeProtocol/CDCStateMachine.hpp **** 	}
+ 128              		.loc 2 22 3 view .LVU30
+  22:Core/Src/CDCExchangeProtocol/CDCStateMachine.hpp **** 	}
+ 129              		.loc 2 22 24 is_stmt 0 view .LVU31
+ 130 004a 0223     		movs	r3, #2
+ 131 004c 2371     		strb	r3, [r4, #4]
+ 132              	.LVL10:
+  22:Core/Src/CDCExchangeProtocol/CDCStateMachine.hpp **** 	}
+ 133              		.loc 2 22 24 view .LVU32
+ 134              	.LBE23:
+ 135              	.LBE22:
+ 136              		.loc 1 43 9 view .LVU33
+ 137 004e 0020     		movs	r0, #0
+ 138              	.LBB25:
+ 139              	.LBB24:
+  23:Core/Src/CDCExchangeProtocol/CDCStateMachine.hpp **** 
+ 140              		.loc 2 23 2 view .LVU34
+ 141 0050 01E0     		b	.L2
+ 142              	.LVL11:
+ 143              	.L4:
+  23:Core/Src/CDCExchangeProtocol/CDCStateMachine.hpp **** 
+ 144              		.loc 2 23 2 view .LVU35
+ 145              	.LBE24:
+ARM GAS  C:\Users\subdia\AppData\Local\Temp\ccqPFBUy.s 			page 5
+
+
+ 146              	.LBE25:
+   5:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 		case CDCFree:
+ 147              		.loc 1 5 2 discriminator 1 view .LVU36
+ 148 0052 4FF0FF30 		mov	r0, #-1
+ 149              	.LVL12:
+ 150              	.L2:
+  44:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** }
+ 151              		.loc 1 44 1 view .LVU37
+ 152 0056 38BD     		pop	{r3, r4, r5, pc}
+ 153              	.LVL13:
+ 154              	.L5:
+  43:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** }
+ 155              		.loc 1 43 9 view .LVU38
+ 156 0058 0020     		movs	r0, #0
+ 157              	.LVL14:
+  43:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** }
+ 158              		.loc 1 43 9 view .LVU39
+ 159 005a FCE7     		b	.L2
+ 160              	.L6:
+  26:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 		//if yes - recognize command
+ 161              		.loc 1 26 15 view .LVU40
+ 162 005c 4FF0FF30 		mov	r0, #-1
+ 163 0060 F9E7     		b	.L2
+ 164              		.cfi_endproc
+ 165              	.LFE6344:
+ 166              		.fnend
+ 168              		.section	.text._ZN22CDCProtocolTransceiver7ReceiveEPhj,"ax",%progbits
+ 169              		.align	1
+ 170              		.global	_ZN22CDCProtocolTransceiver7ReceiveEPhj
+ 171              		.syntax unified
+ 172              		.thumb
+ 173              		.thumb_func
+ 175              	_ZN22CDCProtocolTransceiver7ReceiveEPhj:
+ 176              		.fnstart
+ 177              	.LVL15:
+ 178              	.LFB6347:
+  45:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 
+  46:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** int8_t CDCProtocolTransceiver::StoreMsgToIncoming(etl::array<uint8_t, COMMAND_FRAME_MAX_LENGTH> pac
+  47:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 	_rxTransceiverQueue.push(packet);
+  48:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 	return RES_OK;
+  49:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** }
+  50:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 
+  51:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** int8_t CDCProtocolTransceiver::StoreMsgToOutgoing(etl::array<uint8_t, COMMAND_FRAME_MAX_LENGTH> pac
+  52:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 	_txTransceiverQueue.push(packet);
+  53:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 	return RES_OK;
+  54:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** }
+  55:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 
+  56:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** int8_t CDCProtocolTransceiver::Receive(uint8_t* buf, size_t size) {
+ 179              		.loc 1 56 67 is_stmt 1 view -0
+ 180              		.cfi_startproc
+ 181              		@ args = 0, pretend = 0, frame = 0
+ 182              		@ frame_needed = 0, uses_anonymous_args = 0
+ 183              		.loc 1 56 67 is_stmt 0 view .LVU42
+ 184 0000 08B5     		push	{r3, lr}
+ 185              		.save {r3, lr}
+ 186              	.LCFI1:
+ 187              		.cfi_def_cfa_offset 8
+ARM GAS  C:\Users\subdia\AppData\Local\Temp\ccqPFBUy.s 			page 6
+
+
+ 188              		.cfi_offset 3, -8
+ 189              		.cfi_offset 14, -4
+ 190 0002 0846     		mov	r0, r1
+ 191              	.LVL16:
+  57:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 	if (CDC_Receive_FS(buf, (uint32_t*) size) != USBD_OK) {
+ 192              		.loc 1 57 2 is_stmt 1 view .LVU43
+ 193              		.loc 1 57 20 is_stmt 0 view .LVU44
+ 194 0004 1146     		mov	r1, r2
+ 195              	.LVL17:
+ 196              		.loc 1 57 20 view .LVU45
+ 197 0006 FFF7FEFF 		bl	CDC_Receive_FS
+ 198              	.LVL18:
+ 199              		.loc 1 57 2 discriminator 1 view .LVU46
+ 200 000a 00B9     		cbnz	r0, .L14
+ 201              	.L11:
+  58:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 		return RES_FAIL;
+  59:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 	}
+  60:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 	return RES_OK;
+  61:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** }
+ 202              		.loc 1 61 1 view .LVU47
+ 203 000c 08BD     		pop	{r3, pc}
+ 204              	.L14:
+  58:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 		return RES_FAIL;
+ 205              		.loc 1 58 10 view .LVU48
+ 206 000e 4FF0FF30 		mov	r0, #-1
+ 207 0012 FBE7     		b	.L11
+ 208              		.cfi_endproc
+ 209              	.LFE6347:
+ 210              		.fnend
+ 212              		.section	.text._ZN22CDCProtocolTransceiver8TransmitEPhj,"ax",%progbits
+ 213              		.align	1
+ 214              		.global	_ZN22CDCProtocolTransceiver8TransmitEPhj
+ 215              		.syntax unified
+ 216              		.thumb
+ 217              		.thumb_func
+ 219              	_ZN22CDCProtocolTransceiver8TransmitEPhj:
+ 220              		.fnstart
+ 221              	.LVL19:
+ 222              	.LFB6348:
+  62:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 
+  63:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** int8_t CDCProtocolTransceiver::Transmit(uint8_t* buf, size_t size) {
+ 223              		.loc 1 63 68 is_stmt 1 view -0
+ 224              		.cfi_startproc
+ 225              		@ args = 0, pretend = 0, frame = 0
+ 226              		@ frame_needed = 0, uses_anonymous_args = 0
+ 227              		.loc 1 63 68 is_stmt 0 view .LVU50
+ 228 0000 08B5     		push	{r3, lr}
+ 229              		.save {r3, lr}
+ 230              	.LCFI2:
+ 231              		.cfi_def_cfa_offset 8
+ 232              		.cfi_offset 3, -8
+ 233              		.cfi_offset 14, -4
+ 234 0002 0846     		mov	r0, r1
+ 235              	.LVL20:
+  64:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 	if (CDC_Transmit_FS(buf, (uint16_t) size) != USBD_OK) {
+ 236              		.loc 1 64 2 is_stmt 1 view .LVU51
+ 237              		.loc 1 64 21 is_stmt 0 view .LVU52
+ARM GAS  C:\Users\subdia\AppData\Local\Temp\ccqPFBUy.s 			page 7
+
+
+ 238 0004 91B2     		uxth	r1, r2
+ 239              	.LVL21:
+ 240              		.loc 1 64 21 view .LVU53
+ 241 0006 FFF7FEFF 		bl	CDC_Transmit_FS
+ 242              	.LVL22:
+ 243              		.loc 1 64 2 discriminator 1 view .LVU54
+ 244 000a 00B9     		cbnz	r0, .L19
+ 245              	.L16:
+  65:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 		return RES_FAIL;
+  66:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 	}
+  67:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 	return RES_OK;
+  68:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** }...
+ 246              		.loc 1 68 1 view .LVU55
+ 247 000c 08BD     		pop	{r3, pc}
+ 248              	.L19:
+  65:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 		return RES_FAIL;
+ 249              		.loc 1 65 10 view .LVU56
+ 250 000e 4FF0FF30 		mov	r0, #-1
+ 251 0012 FBE7     		b	.L16
+ 252              		.cfi_endproc
+ 253              	.LFE6348:
+ 254              		.fnend
+ 256              		.section	.text._ZN3etl6iqueueINS_5arrayIhLj8EEELj2EE4pushERKS2_,"axG",%progbits,_ZN3etl6iqueueINS_
+ 257              		.align	1
+ 258              		.weak	_ZN3etl6iqueueINS_5arrayIhLj8EEELj2EE4pushERKS2_
+ 259              		.syntax unified
+ 260              		.thumb
+ 261              		.thumb_func
+ 263              	_ZN3etl6iqueueINS_5arrayIhLj8EEELj2EE4pushERKS2_:
+ 264              		.fnstart
+ 265              	.LVL23:
+ 266              	.LFB6747:
+ 267              		.file 3 "libs/etl/queue.h"
+   1:libs/etl/queue.h **** ///\file
+   2:libs/etl/queue.h **** 
+   3:libs/etl/queue.h **** /******************************************************************************
+   4:libs/etl/queue.h **** The MIT License(MIT)
+   5:libs/etl/queue.h **** 
+   6:libs/etl/queue.h **** Embedded Template Library.
+   7:libs/etl/queue.h **** https://github.com/ETLCPP/etl
+   8:libs/etl/queue.h **** https://www.etlcpp.com
+   9:libs/etl/queue.h **** 
+  10:libs/etl/queue.h **** Copyright(c) 2014 John Wellbelove, Mark Kitson
+  11:libs/etl/queue.h **** 
+  12:libs/etl/queue.h **** Permission is hereby granted, free of charge, to any person obtaining a copy
+  13:libs/etl/queue.h **** of this software and associated documentation files(the "Software"), to deal
+  14:libs/etl/queue.h **** in the Software without restriction, including without limitation the rights
+  15:libs/etl/queue.h **** to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
+  16:libs/etl/queue.h **** copies of the Software, and to permit persons to whom the Software is
+  17:libs/etl/queue.h **** furnished to do so, subject to the following conditions :
+  18:libs/etl/queue.h **** 
+  19:libs/etl/queue.h **** The above copyright notice and this permission notice shall be included in all
+  20:libs/etl/queue.h **** copies or substantial portions of the Software.
+  21:libs/etl/queue.h **** 
+  22:libs/etl/queue.h **** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  23:libs/etl/queue.h **** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  24:libs/etl/queue.h **** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+ARM GAS  C:\Users\subdia\AppData\Local\Temp\ccqPFBUy.s 			page 8
+
+
+  25:libs/etl/queue.h **** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  26:libs/etl/queue.h **** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  27:libs/etl/queue.h **** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  28:libs/etl/queue.h **** SOFTWARE.
+  29:libs/etl/queue.h **** ******************************************************************************/
+  30:libs/etl/queue.h **** 
+  31:libs/etl/queue.h **** #ifndef ETL_QUEUE_INCLUDED
+  32:libs/etl/queue.h **** #define ETL_QUEUE_INCLUDED
+  33:libs/etl/queue.h **** 
+  34:libs/etl/queue.h **** #include "platform.h"
+  35:libs/etl/queue.h **** #include "alignment.h"
+  36:libs/etl/queue.h **** #include "debug_count.h"
+  37:libs/etl/queue.h **** #include "error_handler.h"
+  38:libs/etl/queue.h **** #include "exception.h"
+  39:libs/etl/queue.h **** #include "integral_limits.h"
+  40:libs/etl/queue.h **** #include "memory_model.h"
+  41:libs/etl/queue.h **** #include "parameter_type.h"
+  42:libs/etl/queue.h **** #include "placement_new.h"
+  43:libs/etl/queue.h **** #include "type_traits.h"
+  44:libs/etl/queue.h **** #include "utility.h"
+  45:libs/etl/queue.h **** 
+  46:libs/etl/queue.h **** #include <stddef.h>
+  47:libs/etl/queue.h **** 
+  48:libs/etl/queue.h **** //*****************************************************************************
+  49:libs/etl/queue.h **** ///\defgroup queue queue
+  50:libs/etl/queue.h **** /// A First-in / first-out queue with the capacity defined at compile time,
+  51:libs/etl/queue.h **** /// written in the STL style.
+  52:libs/etl/queue.h **** ///\ingroup containers
+  53:libs/etl/queue.h **** //*****************************************************************************
+  54:libs/etl/queue.h **** 
+  55:libs/etl/queue.h **** namespace etl
+  56:libs/etl/queue.h **** {
+  57:libs/etl/queue.h ****   //***************************************************************************
+  58:libs/etl/queue.h ****   /// The base class for queue exceptions.
+  59:libs/etl/queue.h ****   ///\ingroup queue
+  60:libs/etl/queue.h ****   //***************************************************************************
+  61:libs/etl/queue.h ****   class queue_exception : public exception
+  62:libs/etl/queue.h ****   {
+  63:libs/etl/queue.h ****   public:
+  64:libs/etl/queue.h **** 
+  65:libs/etl/queue.h ****     queue_exception(string_type reason_, string_type file_name_, numeric_type line_number_)
+  66:libs/etl/queue.h ****       : exception(reason_, file_name_, line_number_)
+  67:libs/etl/queue.h ****     {
+  68:libs/etl/queue.h ****     }
+  69:libs/etl/queue.h ****   };
+  70:libs/etl/queue.h **** 
+  71:libs/etl/queue.h ****   //***************************************************************************
+  72:libs/etl/queue.h ****   /// The exception thrown when the queue is full.
+  73:libs/etl/queue.h ****   ///\ingroup queue
+  74:libs/etl/queue.h ****   //***************************************************************************
+  75:libs/etl/queue.h ****   class queue_full : public queue_exception
+  76:libs/etl/queue.h ****   {
+  77:libs/etl/queue.h ****   public:
+  78:libs/etl/queue.h **** 
+  79:libs/etl/queue.h ****     queue_full(string_type file_name_, numeric_type line_number_)
+  80:libs/etl/queue.h ****       : queue_exception(ETL_ERROR_TEXT("queue:full", ETL_QUEUE_FILE_ID"A"), file_name_, line_number
+  81:libs/etl/queue.h ****     {
+ARM GAS  C:\Users\subdia\AppData\Local\Temp\ccqPFBUy.s 			page 9
+
+
+  82:libs/etl/queue.h ****     }
+  83:libs/etl/queue.h ****   };
+  84:libs/etl/queue.h **** 
+  85:libs/etl/queue.h ****   //***************************************************************************
+  86:libs/etl/queue.h ****   /// The exception thrown when the queue is empty.
+  87:libs/etl/queue.h ****   ///\ingroup queue
+  88:libs/etl/queue.h ****   //***************************************************************************
+  89:libs/etl/queue.h ****   class queue_empty : public queue_exception
+  90:libs/etl/queue.h ****   {
+  91:libs/etl/queue.h ****   public:
+  92:libs/etl/queue.h **** 
+  93:libs/etl/queue.h ****     queue_empty(string_type file_name_, numeric_type line_number_)
+  94:libs/etl/queue.h ****       : queue_exception(ETL_ERROR_TEXT("queue:empty", ETL_QUEUE_FILE_ID"B"), file_name_, line_numbe
+  95:libs/etl/queue.h ****     {
+  96:libs/etl/queue.h ****     }
+  97:libs/etl/queue.h ****   };
+  98:libs/etl/queue.h **** 
+  99:libs/etl/queue.h ****   //***************************************************************************
+ 100:libs/etl/queue.h ****   /// The base class for all queues.
+ 101:libs/etl/queue.h ****   ///\ingroup queue
+ 102:libs/etl/queue.h ****   //***************************************************************************
+ 103:libs/etl/queue.h ****   template <size_t MEMORY_MODEL = etl::memory_model::MEMORY_MODEL_LARGE>
+ 104:libs/etl/queue.h ****   class queue_base
+ 105:libs/etl/queue.h ****   {
+ 106:libs/etl/queue.h ****   public:
+ 107:libs/etl/queue.h **** 
+ 108:libs/etl/queue.h ****     /// The type used for determining the size of queue.
+ 109:libs/etl/queue.h ****     typedef typename etl::size_type_lookup<MEMORY_MODEL>::type size_type;
+ 110:libs/etl/queue.h **** 
+ 111:libs/etl/queue.h ****     //*************************************************************************
+ 112:libs/etl/queue.h ****     /// Returns the current number of items in the queue.
+ 113:libs/etl/queue.h ****     //*************************************************************************
+ 114:libs/etl/queue.h ****     size_type size() const
+ 115:libs/etl/queue.h ****     {
+ 116:libs/etl/queue.h ****       return current_size;
+ 117:libs/etl/queue.h ****     }
+ 118:libs/etl/queue.h **** 
+ 119:libs/etl/queue.h ****     //*************************************************************************
+ 120:libs/etl/queue.h ****     /// Returns the maximum number of items that can be queued.
+ 121:libs/etl/queue.h ****     //*************************************************************************
+ 122:libs/etl/queue.h ****     size_type max_size() const
+ 123:libs/etl/queue.h ****     {
+ 124:libs/etl/queue.h ****       return CAPACITY;
+ 125:libs/etl/queue.h ****     }
+ 126:libs/etl/queue.h **** 
+ 127:libs/etl/queue.h ****     //*************************************************************************
+ 128:libs/etl/queue.h ****     /// Returns the maximum number of items that can be queued.
+ 129:libs/etl/queue.h ****     //*************************************************************************
+ 130:libs/etl/queue.h ****     size_type capacity() const
+ 131:libs/etl/queue.h ****     {
+ 132:libs/etl/queue.h ****       return CAPACITY;
+ 133:libs/etl/queue.h ****     }
+ 134:libs/etl/queue.h **** 
+ 135:libs/etl/queue.h ****     //*************************************************************************
+ 136:libs/etl/queue.h ****     /// Checks to see if the queue is empty.
+ 137:libs/etl/queue.h ****     /// \return <b>true</b> if the queue is empty, otherwise <b>false</b>
+ 138:libs/etl/queue.h ****     //*************************************************************************
+ARM GAS  C:\Users\subdia\AppData\Local\Temp\ccqPFBUy.s 			page 10
+
+
+ 139:libs/etl/queue.h ****     bool empty() const
+ 140:libs/etl/queue.h ****     {
+ 141:libs/etl/queue.h ****       return current_size == 0;
+ 142:libs/etl/queue.h ****     }
+ 143:libs/etl/queue.h **** 
+ 144:libs/etl/queue.h ****     //*************************************************************************
+ 145:libs/etl/queue.h ****     /// Checks to see if the queue is full.
+ 146:libs/etl/queue.h ****     /// \return <b>true</b> if the queue is full, otherwise <b>false</b>
+ 147:libs/etl/queue.h ****     //*************************************************************************
+ 148:libs/etl/queue.h ****     bool full() const
+ 149:libs/etl/queue.h ****     {
+ 150:libs/etl/queue.h ****       return current_size == CAPACITY;
+ 151:libs/etl/queue.h ****     }
+ 152:libs/etl/queue.h **** 
+ 153:libs/etl/queue.h ****     //*************************************************************************
+ 154:libs/etl/queue.h ****     /// Returns the remaining capacity.
+ 155:libs/etl/queue.h ****     ///\return The remaining capacity.
+ 156:libs/etl/queue.h ****     //*************************************************************************
+ 157:libs/etl/queue.h ****     size_type available() const
+ 158:libs/etl/queue.h ****     {
+ 159:libs/etl/queue.h ****       return max_size() - size();
+ 160:libs/etl/queue.h ****     }
+ 161:libs/etl/queue.h **** 
+ 162:libs/etl/queue.h ****   protected:
+ 163:libs/etl/queue.h **** 
+ 164:libs/etl/queue.h ****     //*************************************************************************
+ 165:libs/etl/queue.h ****     /// The constructor that is called from derived classes.
+ 166:libs/etl/queue.h ****     //*************************************************************************
+ 167:libs/etl/queue.h ****     queue_base(size_type max_size_)
+ 168:libs/etl/queue.h ****       : in(0)
+ 169:libs/etl/queue.h ****       , out(0)
+ 170:libs/etl/queue.h ****       , current_size(0)
+ 171:libs/etl/queue.h ****       , CAPACITY(max_size_)
+ 172:libs/etl/queue.h ****     {
+ 173:libs/etl/queue.h ****     }
+ 174:libs/etl/queue.h **** 
+ 175:libs/etl/queue.h ****     //*************************************************************************
+ 176:libs/etl/queue.h ****     /// Destructor.
+ 177:libs/etl/queue.h ****     //*************************************************************************
+ 178:libs/etl/queue.h ****     ~queue_base() {}
+ 179:libs/etl/queue.h **** 
+ 180:libs/etl/queue.h ****     //*************************************************************************
+ 181:libs/etl/queue.h ****     /// Increments (and wraps) the 'in' index value to record a queue addition.
+ 182:libs/etl/queue.h ****     //*************************************************************************
+ 183:libs/etl/queue.h ****     void add_in()
+ 184:libs/etl/queue.h ****     {
+ 185:libs/etl/queue.h ****       if (++in == CAPACITY) ETL_UNLIKELY
+ 186:libs/etl/queue.h ****       {
+ 187:libs/etl/queue.h ****         in = 0;
+ 188:libs/etl/queue.h ****       }
+ 189:libs/etl/queue.h **** 
+ 190:libs/etl/queue.h ****       ++current_size;
+ 191:libs/etl/queue.h ****       ETL_INCREMENT_DEBUG_COUNT;
+ 192:libs/etl/queue.h ****     }
+ 193:libs/etl/queue.h **** 
+ 194:libs/etl/queue.h ****     //*************************************************************************
+ 195:libs/etl/queue.h ****     /// Increments (and wraps) the 'out' index value to record a queue deletion.
+ARM GAS  C:\Users\subdia\AppData\Local\Temp\ccqPFBUy.s 			page 11
+
+
+ 196:libs/etl/queue.h ****     //*************************************************************************
+ 197:libs/etl/queue.h ****     void del_out()
+ 198:libs/etl/queue.h ****     {
+ 199:libs/etl/queue.h ****       if (++out == CAPACITY) ETL_UNLIKELY
+ 200:libs/etl/queue.h ****       {
+ 201:libs/etl/queue.h ****         out = 0;
+ 202:libs/etl/queue.h ****       }
+ 203:libs/etl/queue.h ****       --current_size;
+ 204:libs/etl/queue.h ****       ETL_DECREMENT_DEBUG_COUNT;
+ 205:libs/etl/queue.h ****     }
+ 206:libs/etl/queue.h **** 
+ 207:libs/etl/queue.h ****     //*************************************************************************
+ 208:libs/etl/queue.h ****     /// Clears the indexes.
+ 209:libs/etl/queue.h ****     //*************************************************************************
+ 210:libs/etl/queue.h ****     void index_clear()
+ 211:libs/etl/queue.h ****     {
+ 212:libs/etl/queue.h ****       in           = 0;
+ 213:libs/etl/queue.h ****       out          = 0;
+ 214:libs/etl/queue.h ****       current_size = 0;
+ 215:libs/etl/queue.h ****       ETL_RESET_DEBUG_COUNT;
+ 216:libs/etl/queue.h ****     }
+ 217:libs/etl/queue.h **** 
+ 218:libs/etl/queue.h ****     size_type       in;           ///< Where to input new data.
+ 219:libs/etl/queue.h ****     size_type       out;          ///< Where to get the oldest data.
+ 220:libs/etl/queue.h ****     size_type       current_size; ///< The number of items in the queue.
+ 221:libs/etl/queue.h ****     const size_type CAPACITY;     ///< The maximum number of items in the queue.
+ 222:libs/etl/queue.h ****     ETL_DECLARE_DEBUG_COUNT;      ///< For internal debugging purposes.
+ 223:libs/etl/queue.h ****   };
+ 224:libs/etl/queue.h **** 
+ 225:libs/etl/queue.h ****   //***************************************************************************
+ 226:libs/etl/queue.h ****   ///\ingroup queue
+ 227:libs/etl/queue.h ****   ///\brief This is the base for all queues that contain a particular type.
+ 228:libs/etl/queue.h ****   ///\details Normally a reference to this type will be taken from a derived
+ 229:libs/etl/queue.h ****   /// queue. \code
+ 230:libs/etl/queue.h ****   /// etl::queue<int, 10> myQueue;
+ 231:libs/etl/queue.h ****   /// etl::iqueue<int>& iQueue = myQueue;
+ 232:libs/etl/queue.h ****   ///\endcode
+ 233:libs/etl/queue.h ****   /// \warning This queue cannot be used for concurrent access from multiple
+ 234:libs/etl/queue.h ****   /// threads. \tparam T The type of value that the queue holds.
+ 235:libs/etl/queue.h ****   //***************************************************************************
+ 236:libs/etl/queue.h ****   template <typename T, const size_t MEMORY_MODEL = etl::memory_model::MEMORY_MODEL_LARGE>
+ 237:libs/etl/queue.h ****   class iqueue : public etl::queue_base<MEMORY_MODEL>
+ 238:libs/etl/queue.h ****   {
+ 239:libs/etl/queue.h ****   private:
+ 240:libs/etl/queue.h **** 
+ 241:libs/etl/queue.h ****     typedef typename etl::queue_base<MEMORY_MODEL> base_t;
+ 242:libs/etl/queue.h **** 
+ 243:libs/etl/queue.h ****   public:
+ 244:libs/etl/queue.h **** 
+ 245:libs/etl/queue.h ****     typedef T        value_type;      ///< The type stored in the queue.
+ 246:libs/etl/queue.h ****     typedef T&       reference;       ///< A reference to the type used in the queue.
+ 247:libs/etl/queue.h ****     typedef const T& const_reference; ///< A const reference to the type used in the queue.
+ 248:libs/etl/queue.h **** #if ETL_USING_CPP11
+ 249:libs/etl/queue.h ****     typedef T&& rvalue_reference; ///< An rvalue reference to the type used in the queue.
+ 250:libs/etl/queue.h **** #endif
+ 251:libs/etl/queue.h ****     typedef T*                         pointer;       ///< A pointer to the type used in the queue.
+ 252:libs/etl/queue.h ****     typedef const T*                   const_pointer; ///< A const pointer to the type used in the 
+ARM GAS  C:\Users\subdia\AppData\Local\Temp\ccqPFBUy.s 			page 12
+
+
+ 253:libs/etl/queue.h ****     typedef typename base_t::size_type size_type;     ///< The type used for determining the size o
+ 254:libs/etl/queue.h **** 
+ 255:libs/etl/queue.h ****     using base_t::add_in;
+ 256:libs/etl/queue.h ****     using base_t::CAPACITY;
+ 257:libs/etl/queue.h ****     using base_t::current_size;
+ 258:libs/etl/queue.h ****     using base_t::del_out;
+ 259:libs/etl/queue.h ****     using base_t::empty;
+ 260:libs/etl/queue.h ****     using base_t::full;
+ 261:libs/etl/queue.h ****     using base_t::in;
+ 262:libs/etl/queue.h ****     using base_t::out;
+ 263:libs/etl/queue.h **** 
+ 264:libs/etl/queue.h ****     //*************************************************************************
+ 265:libs/etl/queue.h ****     /// Gets a reference to the value at the front of the queue.
+ 266:libs/etl/queue.h ****     /// If asserts or exceptions are enabled, throws an etl::queue_empty if the
+ 267:libs/etl/queue.h ****     /// queue is empty. \return A reference to the value at the front of the
+ 268:libs/etl/queue.h ****     /// queue.
+ 269:libs/etl/queue.h ****     //*************************************************************************
+ 270:libs/etl/queue.h ****     reference front()
+ 271:libs/etl/queue.h ****     {
+ 272:libs/etl/queue.h ****       ETL_ASSERT_CHECK_EXTRA(!empty(), ETL_ERROR(queue_empty));
+ 273:libs/etl/queue.h ****       return p_buffer[out];
+ 274:libs/etl/queue.h ****     }
+ 275:libs/etl/queue.h **** 
+ 276:libs/etl/queue.h ****     //*************************************************************************
+ 277:libs/etl/queue.h ****     /// Gets a const reference to the value at the front of the queue.
+ 278:libs/etl/queue.h ****     /// If asserts or exceptions are enabled, throws an etl::queue_empty if the
+ 279:libs/etl/queue.h ****     /// queue is empty. \return A const reference to the value at the front of
+ 280:libs/etl/queue.h ****     /// the queue.
+ 281:libs/etl/queue.h ****     //*************************************************************************
+ 282:libs/etl/queue.h ****     const_reference front() const
+ 283:libs/etl/queue.h ****     {
+ 284:libs/etl/queue.h ****       ETL_ASSERT_CHECK_EXTRA(!empty(), ETL_ERROR(queue_empty));
+ 285:libs/etl/queue.h ****       return p_buffer[out];
+ 286:libs/etl/queue.h ****     }
+ 287:libs/etl/queue.h **** 
+ 288:libs/etl/queue.h ****     //*************************************************************************
+ 289:libs/etl/queue.h ****     /// Gets a reference to the value at the back of the queue.
+ 290:libs/etl/queue.h ****     /// If asserts or exceptions are enabled, throws an etl::queue_empty if the
+ 291:libs/etl/queue.h ****     /// queue is empty. \return A reference to the value at the back of the
+ 292:libs/etl/queue.h ****     /// queue.
+ 293:libs/etl/queue.h ****     //*************************************************************************
+ 294:libs/etl/queue.h ****     reference back()
+ 295:libs/etl/queue.h ****     {
+ 296:libs/etl/queue.h ****       ETL_ASSERT_CHECK_EXTRA(!empty(), ETL_ERROR(queue_empty));
+ 297:libs/etl/queue.h ****       return p_buffer[in == 0 ? CAPACITY - 1 : in - 1];
+ 298:libs/etl/queue.h ****     }
+ 299:libs/etl/queue.h **** 
+ 300:libs/etl/queue.h ****     //*************************************************************************
+ 301:libs/etl/queue.h ****     /// Gets a const reference to the value at the back of the queue.
+ 302:libs/etl/queue.h ****     /// If asserts or exceptions are enabled, throws an etl::queue_empty if the
+ 303:libs/etl/queue.h ****     /// queue is empty. \return A const reference to the value at the back of
+ 304:libs/etl/queue.h ****     /// the queue.
+ 305:libs/etl/queue.h ****     //*************************************************************************
+ 306:libs/etl/queue.h ****     const_reference back() const
+ 307:libs/etl/queue.h ****     {
+ 308:libs/etl/queue.h ****       ETL_ASSERT_CHECK_EXTRA(!empty(), ETL_ERROR(queue_empty));
+ 309:libs/etl/queue.h ****       return p_buffer[in == 0 ? CAPACITY - 1 : in - 1];
+ARM GAS  C:\Users\subdia\AppData\Local\Temp\ccqPFBUy.s 			page 13
+
+
+ 310:libs/etl/queue.h ****     }
+ 311:libs/etl/queue.h **** 
+ 312:libs/etl/queue.h ****     //*************************************************************************
+ 313:libs/etl/queue.h ****     /// Adds a value to the queue.
+ 314:libs/etl/queue.h ****     /// If asserts or exceptions are enabled, throws an etl::queue_full if the
+ 315:libs/etl/queue.h ****     /// queue if already full.
+ 316:libs/etl/queue.h ****     ///\param value The value to push to the queue.
+ 317:libs/etl/queue.h ****     //*************************************************************************
+ 318:libs/etl/queue.h ****     void push(const_reference value)
+ 268              		.loc 3 318 10 is_stmt 1 view -0
+ 269              		.cfi_startproc
+ 270              		@ args = 0, pretend = 0, frame = 0
+ 271              		@ frame_needed = 0, uses_anonymous_args = 0
+ 272              		.loc 3 318 10 is_stmt 0 view .LVU58
+ 273 0000 00B5     		push	{lr}
+ 274              	.LCFI3:
+ 275              		.cfi_def_cfa_offset 4
+ 276              		.cfi_offset 14, -4
+ 319:libs/etl/queue.h ****     {
+ 320:libs/etl/queue.h ****       ETL_ASSERT_CHECK_PUSH_POP_OR_RETURN(!full(), ETL_ERROR(queue_full));
+ 321:libs/etl/queue.h **** 
+ 322:libs/etl/queue.h ****       ::new (&p_buffer[in]) T(value);
+ 277              		.loc 3 322 15 view .LVU59
+ 278 0002 0369     		ldr	r3, [r0, #16]
+ 279              		.loc 3 322 24 view .LVU60
+ 280 0004 0268     		ldr	r2, [r0]
+ 281              		.loc 3 322 7 discriminator 1 view .LVU61
+ 282 0006 03EBC20C 		add	ip, r3, r2, lsl #3
+ 283 000a D1F800E0 		ldr	lr, [r1]	@ unaligned
+ 284 000e 4968     		ldr	r1, [r1, #4]	@ unaligned
+ 285              	.LVL24:
+ 286              		.loc 3 322 7 discriminator 1 view .LVU62
+ 287 0010 43F832E0 		str	lr, [r3, r2, lsl #3]	@ unaligned
+ 288 0014 CCF80410 		str	r1, [ip, #4]	@ unaligned
+ 289              	.LVL25:
+ 290              	.LBB26:
+ 291              	.LBI26:
+ 183:libs/etl/queue.h ****     {
+ 292              		.loc 3 183 10 is_stmt 1 view .LVU63
+ 293              	.LBB27:
+ 185:libs/etl/queue.h ****       {
+ 294              		.loc 3 185 13 is_stmt 0 view .LVU64
+ 295 0018 0368     		ldr	r3, [r0]
+ 185:libs/etl/queue.h ****       {
+ 296              		.loc 3 185 16 view .LVU65
+ 297 001a 0133     		adds	r3, r3, #1
+ 298 001c 0360     		str	r3, [r0]
+ 185:libs/etl/queue.h ****       {
+ 299              		.loc 3 185 19 view .LVU66
+ 300 001e C268     		ldr	r2, [r0, #12]
+ 185:libs/etl/queue.h ****       {
+ 301              		.loc 3 185 7 view .LVU67
+ 302 0020 9342     		cmp	r3, r2
+ 303 0022 03D0     		beq	.L23
+ 304              	.L21:
+ 190:libs/etl/queue.h ****       ETL_INCREMENT_DEBUG_COUNT;
+ 305              		.loc 3 190 9 view .LVU68
+ARM GAS  C:\Users\subdia\AppData\Local\Temp\ccqPFBUy.s 			page 14
+
+
+ 306 0024 8368     		ldr	r3, [r0, #8]
+ 190:libs/etl/queue.h ****       ETL_INCREMENT_DEBUG_COUNT;
+ 307              		.loc 3 190 7 view .LVU69
+ 308 0026 0133     		adds	r3, r3, #1
+ 309 0028 8360     		str	r3, [r0, #8]
+ 310              	.LVL26:
+ 190:libs/etl/queue.h ****       ETL_INCREMENT_DEBUG_COUNT;
+ 311              		.loc 3 190 7 view .LVU70
+ 312              	.LBE27:
+ 313              	.LBE26:
+ 323:libs/etl/queue.h ****       add_in();
+ 324:libs/etl/queue.h ****     }
+ 314              		.loc 3 324 5 view .LVU71
+ 315 002a 00BD     		pop	{pc}
+ 316              	.LVL27:
+ 317              	.L23:
+ 318              	.LBB29:
+ 319              	.LBB28:
+ 187:libs/etl/queue.h ****       }
+ 320              		.loc 3 187 12 view .LVU72
+ 321 002c 0023     		movs	r3, #0
+ 322 002e 0360     		str	r3, [r0]
+ 323 0030 F8E7     		b	.L21
+ 324              	.LBE28:
+ 325              	.LBE29:
+ 326              		.cfi_endproc
+ 327              	.LFE6747:
+ 328              		.cantunwind
+ 329              		.fnend
+ 331              		.section	.text._ZN22CDCProtocolTransceiver18StoreMsgToIncomingEN3etl5arrayIhLj8EEE,"ax",%progbits
+ 332              		.align	1
+ 333              		.global	_ZN22CDCProtocolTransceiver18StoreMsgToIncomingEN3etl5arrayIhLj8EEE
+ 334              		.syntax unified
+ 335              		.thumb
+ 336              		.thumb_func
+ 338              	_ZN22CDCProtocolTransceiver18StoreMsgToIncomingEN3etl5arrayIhLj8EEE:
+ 339              		.fnstart
+ 340              	.LVL28:
+ 341              	.LFB6345:
+  46:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** int8_t CDCProtocolTransceiver::StoreMsgToIncoming(etl::array<uint8_t, COMMAND_FRAME_MAX_LENGTH> pac
+ 342              		.loc 1 46 105 is_stmt 1 view -0
+ 343              		.cfi_startproc
+ 344              		@ args = 0, pretend = 0, frame = 8
+ 345              		@ frame_needed = 0, uses_anonymous_args = 0
+  46:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** int8_t CDCProtocolTransceiver::StoreMsgToIncoming(etl::array<uint8_t, COMMAND_FRAME_MAX_LENGTH> pac
+ 346              		.loc 1 46 105 is_stmt 0 view .LVU74
+ 347 0000 00B5     		push	{lr}
+ 348              	.LCFI4:
+ 349              		.cfi_def_cfa_offset 4
+ 350              		.cfi_offset 14, -4
+ 351 0002 83B0     		sub	sp, sp, #12
+ 352              	.LCFI5:
+ 353              		.cfi_def_cfa_offset 16
+ 354 0004 CDE90012 		strd	r1, r2, [sp]
+  47:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 	_rxTransceiverQueue.push(packet);
+ 355              		.loc 1 47 2 is_stmt 1 view .LVU75
+  47:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 	_rxTransceiverQueue.push(packet);
+ARM GAS  C:\Users\subdia\AppData\Local\Temp\ccqPFBUy.s 			page 15
+
+
+ 356              		.loc 1 47 26 is_stmt 0 view .LVU76
+ 357 0008 6946     		mov	r1, sp
+ 358 000a 1030     		adds	r0, r0, #16
+ 359              	.LVL29:
+  47:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 	_rxTransceiverQueue.push(packet);
+ 360              		.loc 1 47 26 view .LVU77
+ 361 000c FFF7FEFF 		bl	_ZN3etl6iqueueINS_5arrayIhLj8EEELj2EE4pushERKS2_
+ 362              	.LVL30:
+  48:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 	return RES_OK;
+ 363              		.loc 1 48 2 is_stmt 1 view .LVU78
+  49:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** }
+ 364              		.loc 1 49 1 is_stmt 0 view .LVU79
+ 365 0010 0020     		movs	r0, #0
+ 366 0012 03B0     		add	sp, sp, #12
+ 367              	.LCFI6:
+ 368              		.cfi_def_cfa_offset 4
+ 369              		@ sp needed
+ 370 0014 00BD     		pop	{pc}
+ 371              		.cfi_endproc
+ 372              	.LFE6345:
+ 373              		.cantunwind
+ 374              		.fnend
+ 376              		.section	.text._ZN22CDCProtocolTransceiver18StoreMsgToOutgoingEN3etl5arrayIhLj8EEE,"ax",%progbits
+ 377              		.align	1
+ 378              		.global	_ZN22CDCProtocolTransceiver18StoreMsgToOutgoingEN3etl5arrayIhLj8EEE
+ 379              		.syntax unified
+ 380              		.thumb
+ 381              		.thumb_func
+ 383              	_ZN22CDCProtocolTransceiver18StoreMsgToOutgoingEN3etl5arrayIhLj8EEE:
+ 384              		.fnstart
+ 385              	.LVL31:
+ 386              	.LFB6346:
+  51:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** int8_t CDCProtocolTransceiver::StoreMsgToOutgoing(etl::array<uint8_t, COMMAND_FRAME_MAX_LENGTH> pac
+ 387              		.loc 1 51 105 is_stmt 1 view -0
+ 388              		.cfi_startproc
+ 389              		@ args = 0, pretend = 0, frame = 8
+ 390              		@ frame_needed = 0, uses_anonymous_args = 0
+  51:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** int8_t CDCProtocolTransceiver::StoreMsgToOutgoing(etl::array<uint8_t, COMMAND_FRAME_MAX_LENGTH> pac
+ 391              		.loc 1 51 105 is_stmt 0 view .LVU81
+ 392 0000 00B5     		push	{lr}
+ 393              	.LCFI7:
+ 394              		.cfi_def_cfa_offset 4
+ 395              		.cfi_offset 14, -4
+ 396 0002 83B0     		sub	sp, sp, #12
+ 397              	.LCFI8:
+ 398              		.cfi_def_cfa_offset 16
+ 399 0004 CDE90012 		strd	r1, r2, [sp]
+  52:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 	_txTransceiverQueue.push(packet);
+ 400              		.loc 1 52 2 is_stmt 1 view .LVU82
+  52:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 	_txTransceiverQueue.push(packet);
+ 401              		.loc 1 52 26 is_stmt 0 view .LVU83
+ 402 0008 6946     		mov	r1, sp
+ 403 000a 00F50970 		add	r0, r0, #548
+ 404              	.LVL32:
+  52:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 	_txTransceiverQueue.push(packet);
+ 405              		.loc 1 52 26 view .LVU84
+ 406 000e FFF7FEFF 		bl	_ZN3etl6iqueueINS_5arrayIhLj8EEELj2EE4pushERKS2_
+ARM GAS  C:\Users\subdia\AppData\Local\Temp\ccqPFBUy.s 			page 16
+
+
+ 407              	.LVL33:
+  53:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** 	return RES_OK;
+ 408              		.loc 1 53 2 is_stmt 1 view .LVU85
+  54:Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp **** }
+ 409              		.loc 1 54 1 is_stmt 0 view .LVU86
+ 410 0012 0020     		movs	r0, #0
+ 411 0014 03B0     		add	sp, sp, #12
+ 412              	.LCFI9:
+ 413              		.cfi_def_cfa_offset 4
+ 414              		@ sp needed
+ 415 0016 00BD     		pop	{pc}
+ 416              		.cfi_endproc
+ 417              	.LFE6346:
+ 418              		.cantunwind
+ 419              		.fnend
+ 421              		.weak	_ZTS23ICDCProtocolTransceiver
+ 422              		.section	.rodata._ZTS23ICDCProtocolTransceiver,"aG",%progbits,_ZTS23ICDCProtocolTransceiver,comdat
+ 423              		.align	2
+ 426              	_ZTS23ICDCProtocolTransceiver:
+ 427 0000 32334943 		.ascii	"23ICDCProtocolTransceiver\000"
+ 427      44435072 
+ 427      6F746F63 
+ 427      6F6C5472 
+ 427      616E7363 
+ 428              		.weak	_ZTI23ICDCProtocolTransceiver
+ 429              		.section	.rodata._ZTI23ICDCProtocolTransceiver,"aG",%progbits,_ZTI23ICDCProtocolTransceiver,comdat
+ 430              		.align	2
+ 433              	_ZTI23ICDCProtocolTransceiver:
+ 434 0000 08000000 		.word	_ZTVN10__cxxabiv117__class_type_infoE+8
+ 435 0004 00000000 		.word	_ZTS23ICDCProtocolTransceiver
+ 436              		.global	_ZTS22CDCProtocolTransceiver
+ 437              		.section	.rodata._ZTS22CDCProtocolTransceiver,"a"
+ 438              		.align	2
+ 441              	_ZTS22CDCProtocolTransceiver:
+ 442 0000 32324344 		.ascii	"22CDCProtocolTransceiver\000"
+ 442      4350726F 
+ 442      746F636F 
+ 442      6C547261 
+ 442      6E736365 
+ 443              		.global	_ZTI22CDCProtocolTransceiver
+ 444              		.section	.rodata._ZTI22CDCProtocolTransceiver,"a"
+ 445              		.align	2
+ 448              	_ZTI22CDCProtocolTransceiver:
+ 449 0000 08000000 		.word	_ZTVN10__cxxabiv120__si_class_type_infoE+8
+ 450 0004 00000000 		.word	_ZTS22CDCProtocolTransceiver
+ 451 0008 00000000 		.word	_ZTI23ICDCProtocolTransceiver
+ 452              		.global	_ZTV22CDCProtocolTransceiver
+ 453              		.section	.rodata._ZTV22CDCProtocolTransceiver,"a"
+ 454              		.align	2
+ 457              	_ZTV22CDCProtocolTransceiver:
+ 458 0000 00000000 		.word	0
+ 459 0004 00000000 		.word	_ZTI22CDCProtocolTransceiver
+ 460 0008 00000000 		.word	_ZN22CDCProtocolTransceiver7ProcessEv
+ 461              		.text
+ 462              	.Letext0:
+ 463              		.file 4 "C:/GNUArmToolchain/arm-none-eabi-gcc-15.2.1/arm-none-eabi/include/c++/15.2.1/cstdint"
+ 464              		.file 5 "C:/GNUArmToolchain/arm-none-eabi-gcc-15.2.1/arm-none-eabi/include/c++/15.2.1/type_traits"
+ARM GAS  C:\Users\subdia\AppData\Local\Temp\ccqPFBUy.s 			page 17
+
+
+ 465              		.file 6 "C:/GNUArmToolchain/arm-none-eabi-gcc-15.2.1/arm-none-eabi/include/c++/15.2.1/cmath"
+ 466              		.file 7 "C:/GNUArmToolchain/arm-none-eabi-gcc-15.2.1/arm-none-eabi/include/c++/15.2.1/debug/debug.
+ 467              		.file 8 "C:/GNUArmToolchain/arm-none-eabi-gcc-15.2.1/arm-none-eabi/include/c++/15.2.1/bits/std_abs
+ 468              		.file 9 "C:/GNUArmToolchain/arm-none-eabi-gcc-15.2.1/arm-none-eabi/include/c++/15.2.1/arm-none-eab
+ 469              		.file 10 "C:/GNUArmToolchain/arm-none-eabi-gcc-15.2.1/arm-none-eabi/include/c++/15.2.1/cwchar"
+ 470              		.file 11 "C:/GNUArmToolchain/arm-none-eabi-gcc-15.2.1/arm-none-eabi/include/c++/15.2.1/bits/except
+ 471              		.file 12 "C:/GNUArmToolchain/arm-none-eabi-gcc-15.2.1/arm-none-eabi/include/c++/15.2.1/bits/shared
+ 472              		.file 13 "C:/GNUArmToolchain/arm-none-eabi-gcc-15.2.1/arm-none-eabi/include/c++/15.2.1/clocale"
+ 473              		.file 14 "C:/GNUArmToolchain/arm-none-eabi-gcc-15.2.1/arm-none-eabi/include/c++/15.2.1/string_view
+ 474              		.file 15 "C:/GNUArmToolchain/arm-none-eabi-gcc-15.2.1/arm-none-eabi/include/c++/15.2.1/bits/basic_
+ 475              		.file 16 "C:/GNUArmToolchain/arm-none-eabi-gcc-15.2.1/arm-none-eabi/include/c++/15.2.1/cstdlib"
+ 476              		.file 17 "C:/GNUArmToolchain/arm-none-eabi-gcc-15.2.1/arm-none-eabi/include/c++/15.2.1/cstdio"
+ 477              		.file 18 "C:/GNUArmToolchain/arm-none-eabi-gcc-15.2.1/arm-none-eabi/include/c++/15.2.1/cstddef"
+ 478              		.file 19 "C:/GNUArmToolchain/arm-none-eabi-gcc-15.2.1/arm-none-eabi/include/c++/15.2.1/system_erro
+ 479              		.file 20 "C:/GNUArmToolchain/arm-none-eabi-gcc-15.2.1/arm-none-eabi/include/c++/15.2.1/functional"
+ 480              		.file 21 "C:/GNUArmToolchain/arm-none-eabi-gcc-15.2.1/arm-none-eabi/include/c++/15.2.1/bits/align.
+ 481              		.file 22 "C:/GNUArmToolchain/arm-none-eabi-gcc-15.2.1/arm-none-eabi/include/c++/15.2.1/bits/predef
+ 482              		.file 23 "C:/GNUArmToolchain/arm-none-eabi-gcc-15.2.1/arm-none-eabi/include/machine/_default_types
+ 483              		.file 24 "C:/GNUArmToolchain/arm-none-eabi-gcc-15.2.1/arm-none-eabi/include/sys/_stdint.h"
+ 484              		.file 25 "C:/GNUArmToolchain/arm-none-eabi-gcc-15.2.1/arm-none-eabi/include/stdint.h"
+ 485              		.file 26 "C:/GNUArmToolchain/arm-none-eabi-gcc-15.2.1/lib/gcc/arm-none-eabi/15.2.1/include/stddef.
+ 486              		.file 27 "libs/etl/profiles/determine_builtin_support.h"
+ 487              		.file 28 "libs/etl/platform.h"
+ 488              		.file 29 "libs/etl/integral_limits.h"
+ 489              		.file 30 "libs/etl/utility.h"
+ 490              		.file 31 "libs/etl/functional.h"
+ 491              		.file 32 "libs/etl/iterator.h"
+ 492              		.file 33 "libs/etl/ranges.h"
+ 493              		.file 34 "libs/etl/smallest.h"
+ 494              		.file 35 "libs/etl/type_list.h"
+ 495              		.file 36 "libs/etl/tuple.h"
+ 496              		.file 37 "libs/etl/algorithm.h"
+ 497              		.file 38 "libs/etl/memory.h"
+ 498              		.file 39 "libs/etl/array.h"
+ 499              		.file 40 "C:/GNUArmToolchain/arm-none-eabi-gcc-15.2.1/arm-none-eabi/include/c++/15.2.1/ext/concurr
+ 500              		.file 41 "libs/etl/memory_model.h"
+ 501              		.file 42 "libs/etl/type_traits.h"
+ 502              		.file 43 "libs/etl/parameter_type.h"
+ 503              		.file 44 "libs/etl/alignment.h"
+ 504              		.file 45 "C:/GNUArmToolchain/arm-none-eabi-gcc-15.2.1/arm-none-eabi/include/sys/_types.h"
+ 505              		.file 46 "C:/GNUArmToolchain/arm-none-eabi-gcc-15.2.1/arm-none-eabi/include/sys/reent.h"
+ 506              		.file 47 "C:/GNUArmToolchain/arm-none-eabi-gcc-15.2.1/arm-none-eabi/include/sys/lock.h"
+ 507              		.file 48 "C:/GNUArmToolchain/arm-none-eabi-gcc-15.2.1/arm-none-eabi/include/math.h"
+ 508              		.file 49 "C:/GNUArmToolchain/arm-none-eabi-gcc-15.2.1/arm-none-eabi/include/stdlib.h"
+ 509              		.file 50 "C:/GNUArmToolchain/arm-none-eabi-gcc-15.2.1/arm-none-eabi/include/c++/15.2.1/bits/stl_it
+ 510              		.file 51 "C:/GNUArmToolchain/arm-none-eabi-gcc-15.2.1/arm-none-eabi/include/c++/15.2.1/math.h"
+ 511              		.file 52 "C:/GNUArmToolchain/arm-none-eabi-gcc-15.2.1/lib/gcc/arm-none-eabi/15.2.1/include/stdarg.
+ 512              		.file 53 "C:/GNUArmToolchain/arm-none-eabi-gcc-15.2.1/arm-none-eabi/include/wchar.h"
+ 513              		.file 54 "C:/GNUArmToolchain/arm-none-eabi-gcc-15.2.1/arm-none-eabi/include/c++/15.2.1/pstl/execut
+ 514              		.file 55 "C:/GNUArmToolchain/arm-none-eabi-gcc-15.2.1/arm-none-eabi/include/locale.h"
+ 515              		.file 56 "C:/GNUArmToolchain/arm-none-eabi-gcc-15.2.1/arm-none-eabi/include/stdio.h"
+ 516              		.file 57 "Core/Src/CDCExchangeProtocol/ICDCProtocolFormer.hpp"
+ 517              		.file 58 "Core/Src/CDCExchangeProtocol/CDCProtocolFormer.hpp"
+ 518              		.file 59 "C:/GNUArmToolchain/arm-none-eabi-gcc-15.2.1/arm-none-eabi/include/c++/15.2.1/stdlib.h"
+ 519              		.file 60 "Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h"
+ 520              		.file 61 "Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.hpp"
+ 521              		.file 62 "Core/Src/CDCExchangeProtocol/ICDCProtocolTransceiver.hpp"
+ARM GAS  C:\Users\subdia\AppData\Local\Temp\ccqPFBUy.s 			page 18
+
+
+ 522              		.file 63 "USB_DEVICE/App/usbd_cdc_if.h"
+ 523              		.file 64 "C:/GNUArmToolchain/arm-none-eabi-gcc-15.2.1/arm-none-eabi/include/c++/15.2.1/new"
+ 524              		.file 65 "C:/GNUArmToolchain/arm-none-eabi-gcc-15.2.1/arm-none-eabi/include/c++/15.2.1/bits/memory
+ 525              		.file 66 "<built-in>"
+ARM GAS  C:\Users\subdia\AppData\Local\Temp\ccqPFBUy.s 			page 19
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 CDCProtocolTransceiver.cpp
+C:\Users\subdia\AppData\Local\Temp\ccqPFBUy.s:19     .text._ZN22CDCProtocolTransceiver7ProcessEv:00000000 $t
+C:\Users\subdia\AppData\Local\Temp\ccqPFBUy.s:25     .text._ZN22CDCProtocolTransceiver7ProcessEv:00000000 _ZN22CDCProtocolTransceiver7ProcessEv
+.ARM.exidx.text._ZN22CDCProtocolTransceiver7ProcessEv:00000000 $d
+C:\Users\subdia\AppData\Local\Temp\ccqPFBUy.s:169    .text._ZN22CDCProtocolTransceiver7ReceiveEPhj:00000000 $t
+C:\Users\subdia\AppData\Local\Temp\ccqPFBUy.s:175    .text._ZN22CDCProtocolTransceiver7ReceiveEPhj:00000000 _ZN22CDCProtocolTransceiver7ReceiveEPhj
+.ARM.extab.text._ZN22CDCProtocolTransceiver7ReceiveEPhj:00000000 $d
+.ARM.exidx.text._ZN22CDCProtocolTransceiver7ReceiveEPhj:00000000 $d
+C:\Users\subdia\AppData\Local\Temp\ccqPFBUy.s:213    .text._ZN22CDCProtocolTransceiver8TransmitEPhj:00000000 $t
+C:\Users\subdia\AppData\Local\Temp\ccqPFBUy.s:219    .text._ZN22CDCProtocolTransceiver8TransmitEPhj:00000000 _ZN22CDCProtocolTransceiver8TransmitEPhj
+.ARM.extab.text._ZN22CDCProtocolTransceiver8TransmitEPhj:00000000 $d
+.ARM.exidx.text._ZN22CDCProtocolTransceiver8TransmitEPhj:00000000 $d
+C:\Users\subdia\AppData\Local\Temp\ccqPFBUy.s:257    .text._ZN3etl6iqueueINS_5arrayIhLj8EEELj2EE4pushERKS2_:00000000 $t
+C:\Users\subdia\AppData\Local\Temp\ccqPFBUy.s:263    .text._ZN3etl6iqueueINS_5arrayIhLj8EEELj2EE4pushERKS2_:00000000 _ZN3etl6iqueueINS_5arrayIhLj8EEELj2EE4pushERKS2_
+.ARM.exidx.text._ZN3etl6iqueueINS_5arrayIhLj8EEELj2EE4pushERKS2_:00000000 $d
+C:\Users\subdia\AppData\Local\Temp\ccqPFBUy.s:332    .text._ZN22CDCProtocolTransceiver18StoreMsgToIncomingEN3etl5arrayIhLj8EEE:00000000 $t
+C:\Users\subdia\AppData\Local\Temp\ccqPFBUy.s:338    .text._ZN22CDCProtocolTransceiver18StoreMsgToIncomingEN3etl5arrayIhLj8EEE:00000000 _ZN22CDCProtocolTransceiver18StoreMsgToIncomingEN3etl5arrayIhLj8EEE
+.ARM.exidx.text._ZN22CDCProtocolTransceiver18StoreMsgToIncomingEN3etl5arrayIhLj8EEE:00000000 $d
+C:\Users\subdia\AppData\Local\Temp\ccqPFBUy.s:377    .text._ZN22CDCProtocolTransceiver18StoreMsgToOutgoingEN3etl5arrayIhLj8EEE:00000000 $t
+C:\Users\subdia\AppData\Local\Temp\ccqPFBUy.s:383    .text._ZN22CDCProtocolTransceiver18StoreMsgToOutgoingEN3etl5arrayIhLj8EEE:00000000 _ZN22CDCProtocolTransceiver18StoreMsgToOutgoingEN3etl5arrayIhLj8EEE
+.ARM.exidx.text._ZN22CDCProtocolTransceiver18StoreMsgToOutgoingEN3etl5arrayIhLj8EEE:00000000 $d
+C:\Users\subdia\AppData\Local\Temp\ccqPFBUy.s:426    .rodata._ZTS23ICDCProtocolTransceiver:00000000 _ZTS23ICDCProtocolTransceiver
+C:\Users\subdia\AppData\Local\Temp\ccqPFBUy.s:423    .rodata._ZTS23ICDCProtocolTransceiver:00000000 $d
+C:\Users\subdia\AppData\Local\Temp\ccqPFBUy.s:433    .rodata._ZTI23ICDCProtocolTransceiver:00000000 _ZTI23ICDCProtocolTransceiver
+C:\Users\subdia\AppData\Local\Temp\ccqPFBUy.s:430    .rodata._ZTI23ICDCProtocolTransceiver:00000000 $d
+C:\Users\subdia\AppData\Local\Temp\ccqPFBUy.s:441    .rodata._ZTS22CDCProtocolTransceiver:00000000 _ZTS22CDCProtocolTransceiver
+C:\Users\subdia\AppData\Local\Temp\ccqPFBUy.s:438    .rodata._ZTS22CDCProtocolTransceiver:00000000 $d
+C:\Users\subdia\AppData\Local\Temp\ccqPFBUy.s:448    .rodata._ZTI22CDCProtocolTransceiver:00000000 _ZTI22CDCProtocolTransceiver
+C:\Users\subdia\AppData\Local\Temp\ccqPFBUy.s:445    .rodata._ZTI22CDCProtocolTransceiver:00000000 $d
+C:\Users\subdia\AppData\Local\Temp\ccqPFBUy.s:457    .rodata._ZTV22CDCProtocolTransceiver:00000000 _ZTV22CDCProtocolTransceiver
+C:\Users\subdia\AppData\Local\Temp\ccqPFBUy.s:454    .rodata._ZTV22CDCProtocolTransceiver:00000000 $d
+
+UNDEFINED SYMBOLS
+_ZN17CDCProtocolFormer11IsItCommandEh
+_ZN17CDCProtocolFormer19GetCommandFromFrameEN3etl5arrayIhLj8EEE
+__aeabi_unwind_cpp_pr0
+CDC_Receive_FS
+__aeabi_unwind_cpp_pr1
+CDC_Transmit_FS
+_ZTVN10__cxxabiv117__class_type_infoE
+_ZTVN10__cxxabiv120__si_class_type_infoE

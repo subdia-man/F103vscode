@@ -1,0 +1,77 @@
+PS D:\MCUworks\STM32\F103vscode\F103vscode> openocd.exe -c "gdb_port 50000" -c "tcl_port 50001" -c "telnet_port 50002" -s "D:\\MCUworks\\STM32\\F103vscode" -f "c:/Users/subdia/.vscode/extensions/marus25.cortex-debug-1.12.1/support/openocd-helpers.tcl" -f interface/stlink.cfg -f target/stm32f1x.cfg
+xPack Open On-Chip Debugger 0.12.0+dev-02228-ge5888bda3-dirty (2025-10-04-22:44)
+Licensed under GNU GPL v2
+For bug reports, read
+        http://openocd.org/doc/doxygen/bugs.html
+DEPRECATED! use 'gdb port', not 'gdb_port'
+DEPRECATED! use 'tcl port' not 'tcl_port'
+DEPRECATED! use 'telnet port', not 'telnet_port'
+CDLiveWatchSetup
+Warn : DEPRECATED: auto-selecting transport "swd (dapdirect)". Use 'transport select swd' to suppress this message.
+Info : Listening on port 50001 for tcl connections
+Info : Listening on port 50002 for telnet connections
+Info : STLINK V2J44M29 (API v2) VID:PID 0483:374B
+Info : Target voltage: 0.033028
+Error: target voltage may be too low for reliable debugging
+Info : Unable to match requested speed 1000 kHz, using 950 kHz
+Info : Unable to match requested speed 1000 kHz, using 950 kHz
+Info : clock speed 950 kHz
+Info : SWD DPIDR 0x1ba01477
+Info : [stm32f1x.cpu] Cortex-M3 r1p1 processor detected
+Info : [stm32f1x.cpu] target has 6 breakpoints, 4 watchpoints
+Info : [stm32f1x.cpu] Examination succeed
+Info : [stm32f1x.cpu] starting gdb server on 50000
+Info : Listening on port 50000 for gdb connections
+
+
+"configuration": {
+    "name": "STM32 Debug",
+    "type": "cortex-debug",
+    "request": "launch",
+    "showDevDebugOutput": "raw",
+    "cwd": "D:\\MCUworks\\STM32\\F103vscode",
+    "executable": "D:/MCUworks/STM32/F103vscode/F103vscode/build/F103vscode.elf",
+    "servertype": "openocd",
+    "device": "STM32F103C8",
+    "configFiles": [
+        "interface/stlink.cfg",
+        "target/stm32f1x.cfg"
+    ],
+    "svdFile": "D:\\MCUworks\\STM32\\F103vscode/Drivers/CMSIS/Device/ST/STM32F1xx/Include/STM32F103C8.svd",
+    "runToEntryPoint": "main",
+    "__configurationTarget": 6,
+    "gdbServerConsolePort": 55878,
+    "pvtAvoidPorts": [],
+    "chainedConfigurations": {
+        "enabled": false
+    },
+    "debuggerArgs": [],
+    "swoConfig": {
+        "enabled": false,
+        "decoders": [],
+        "cpuFrequency": 0,
+        "swoFrequency": 0,
+        "source": "probe"
+    },
+    "rttConfig": {
+        "enabled": false,
+        "decoders": []
+    },
+    "graphConfig": [],
+    "preLaunchCommands": [],
+    "postLaunchCommands": [],
+    "preAttachCommands": [],
+    "postAttachCommands": [],
+    "preRestartCommands": [],
+    "postRestartCommands": [],
+    "preResetCommands": [],
+    "postResetCommands": [],
+    "searchDir": [],
+    "toolchainPrefix": "arm-none-eabi",
+    "extensionPath": "c:/Users/subdia/.vscode/extensions/marus25.cortex-debug-1.12.1",
+    "registerUseNaturalFormat": true,
+    "variableUseNaturalFormat": true,
+    "pvtVersion": "1.12.1",
+    "__sessionId": "bfea5e09-1da4-4ec9-9211-7e4ee3c99f56",
+    "pvtShowDevDebugOutput": "raw"
+}

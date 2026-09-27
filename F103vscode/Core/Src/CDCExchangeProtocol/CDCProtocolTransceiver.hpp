@@ -1,0 +1,34 @@
+#ifndef CDCPROTOCOLTRANSCEIVER_H
+#define CDCPROTOCOLTRANSCEIVER_H
+
+#include "ICDCProtocolTransceiver.hpp"
+#include "Instances.hpp"
+#include "etl/queue.h"
+
+extern "C" {
+	#include "usbd_cdc_if.h"	
+}
+
+class CDCStateMachine;
+
+class CDCProtocolTransceiver : public ICDCProtocolTransceiver {
+
+	CDCStateMachine _cdcStateMachine;
+	CDCProtocolFormer _cdcProtocolFormer;
+	
+	etl::array<uint8_t, COMMAND_FRAME_MAX_LENGTH> _txrxBuffer;
+	etl::queue<etl::array<uint8_t, COMMAND_FRAME_MAX_LENGTH>, 64> _rxTransceiverQueue;
+	etl::queue<etl::array<uint8_t, COMMAND_FRAME_MAX_LENGTH>, 64> _txTransceiverQueue;
+
+public:
+	
+	CDCProtocolTransceiver();
+	~CDCProtocolTransceiver();
+	int8_t Process();
+	int8_t Receive(uint8_t* buf, size_t size);
+	int8_t Transmit(uint8_t* buf, size_t size);
+	int8_t StoreMsgToIncoming(etl::array<uint8_t, COMMAND_FRAME_MAX_LENGTH> packet);
+	int8_t StoreMsgToOutgoing(etl::array<uint8_t, COMMAND_FRAME_MAX_LENGTH> packet);
+};
+
+#endif
