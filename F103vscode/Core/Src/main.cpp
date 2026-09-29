@@ -26,8 +26,9 @@
 #include "usbd_cdc_if.h"
 #include "ssd1306.h"
 #include "lcd_graphics.h"
+ 
+#include "CDCExchangeProtocol/CDCProtocolTransceiver.hpp"
 
-//#include "CDCCoder.hpp"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -49,8 +50,11 @@
 SPI_HandleTypeDef hspi1;
 
 osThreadId defaultTaskHandle;
+osThreadId cdcRxTaskHandle;
+osThreadId cdcTxTaskHandle;
+osThreadId cdcProcessTaskHandle;
 /* USER CODE BEGIN PV */
-
+CDCProtocolTransceiver _cdcProtocolTransceiver;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -60,7 +64,9 @@ static void MX_SPI1_Init(void);
 void StartDefaultTask(void const * argument);
 
 /* USER CODE BEGIN PFP */
-
+void StartCdcRxTask(void const * argument);
+void StartCdcTxTask(void const * argument);
+void StartCdcProcessTask(void const * argument);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -126,8 +132,15 @@ int main(void)
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
-  //osThreadDef(usbReceiveTask, StartUsbReceiveTask, osPriorityNormal, 0, 128);
-  //usbReceiveTaskHandle = osThreadCreate(osThread(usbReceiveTask), NULL);
+  osThreadDef(cdcRxTask, StartCdcRxTask, osPriorityNormal, 0, 128);
+  cdcRxTaskHandle = osThreadCreate(osThread(cdcRxTask), NULL);
+
+  osThreadDef(cdcTxTask, StartCdcTxTask, osPriorityNormal, 0, 128);
+  cdcTxTaskHandle = osThreadCreate(osThread(cdcTxTask), NULL);
+
+  osThreadDef(cdcProcessTask, StartCdcProcessTask, osPriorityNormal, 0, 128);
+  cdcProcessTaskHandle = osThreadCreate(osThread(cdcProcessTask), NULL);
+  
   /* USER CODE END RTOS_THREADS */
 
   /* Start scheduler */
@@ -290,11 +303,39 @@ void StartDefaultTask(void const * argument)
   /* USER CODE BEGIN 5 */
   /* Infinite loop */
   for(;;) {
-    HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
-	  osDelay(500);
+    //HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+	  //osDelay(500);
+    volatile uint16_t res = 0;
+    volatile uint8_t part1 = 0x4d;
+    volatile uint8_t part2 = 0xaa;
+    res = part1 << 8 | part2;
+    if (res != 0x4daa) {
+      part1 = part2 = 0x00;
+    }
   }
   /* USER CODE END 5 */
 }
+
+/* USER CODE BEGIN 6 */
+void StartCdcRxTask(void const * argument) {
+ 
+  for(;;) {
+   _cdcProtocolTransceiver.Receive();
+  }
+}
+
+void StartCdcTxTask(void const * argument) {
+  for(;;) {
+   _cdcProtocolTransceiver.Transmit();
+  }
+}
+
+void StartCdcProcessTask(void const * argument) {
+  for(;;) {
+    _cdcProtocolTransceiver.Process();
+  }
+}
+ /* USER CODE END 6 */
 
 /**
   * @brief  Period elapsed callback in non blocking mode
