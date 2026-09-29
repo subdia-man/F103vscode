@@ -36,8 +36,6 @@ public:
 	int8_t StoreMsgToOutgoing(etl::array<uint8_t, COMMAND_FRAME_MAX_LENGTH> packet);
 	void ExtractPacketDataFromCmd(uint8_t* buf);
 
-	void PrepareTestStub();
-
 private:
 	
 };

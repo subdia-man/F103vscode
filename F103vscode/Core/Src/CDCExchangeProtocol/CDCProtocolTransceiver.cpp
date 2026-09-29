@@ -104,15 +104,3 @@ int8_t CDCProtocolTransceiver::Transmit(uint8_t* buf, size_t size) {
 	}
 	return RES_OK;
 }
-
-void CDCProtocolTransceiver::PrepareTestStub() {
-	_txrxBuffer.at(0) = 0xAA;
-	_txrxBuffer.at(1) = 0xCC;
-	_txrxBuffer.at(2) = 0x2B;
-	_txrxBuffer.at(3) = 0xC0;
-	_txrxBuffer.at(4) = 0x44;
-	_txrxBuffer.at(5) = 0x00;
-	_txrxBuffer.at(6) = 0xA5;
-	_txrxBuffer.at(7) = 0x00;
-	return;
-}
