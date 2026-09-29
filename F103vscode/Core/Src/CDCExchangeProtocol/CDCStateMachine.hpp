@@ -1,3 +1,5 @@
+#ifndef ICDCSTATE_MACHINE_H
+#define ICDCSTATE_MACHINE_H
 
 enum CDCState {
 	CDCFree,
@@ -16,7 +18,7 @@ public:
 	CDCStateMachine() {
 		currentState = CDCCommandAwaiting;
 	}
-	~CDCStateMachine();
+	//~CDCStateMachine(); 
 	
 	void SetState(CDCState state) {
 		this -> currentState = state;
@@ -26,3 +28,5 @@ public:
 		return this -> currentState;
 	}
 };
+
+#endif
