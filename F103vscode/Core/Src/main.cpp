@@ -305,6 +305,13 @@ void StartDefaultTask(void const * argument)
   for(;;) {
     //HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
 	  //osDelay(500);
+    volatile uint16_t res = 0;
+    volatile uint8_t part1 = 0x4d;
+    volatile uint8_t part2 = 0xaa;
+    res = part1 << 8 | part2;
+    if (res != 0x4daa) {
+      part1 = part2 = 0x00;
+    }
   }
   /* USER CODE END 5 */
 }

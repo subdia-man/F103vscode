@@ -39,9 +39,7 @@ int8_t CDCProtocolTransceiver::Process() {
 		}
 		break;
 		case CDCFileReceiving:
-		//get packet
-		//parse?
-		//write to the file
+		CfgFileReceiveProcessingStep();
 		break;
 		case CDCFileTransmitting:
 		//form packet
@@ -53,12 +51,25 @@ int8_t CDCProtocolTransceiver::Process() {
 	return RES_OK;
 }
 
+int8_t CDCProtocolTransceiver::CfgFileReceiveProcessingStep() {
+	if (!_rxTransceiverQueue.empty()) {
+	etl::array<uint8_t, COMMAND_FRAME_MAX_LENGTH> packet = _rxTransceiverQueue.front();
+	uint16_t currentPacketNum = packet.at(CDC_PROTOCOL_CFG_FILE_PACKET_NUM0) << 8 | packet.at(CDC_PROTOCOL_CFG_FILE_PACKET_NUM1);
+	if (currentPacketNum != (_lastPacketNum++)) {
+		return RES_FAIL;
+	}
+	//TODO: send packet payload to the file storage for processing
+	_rxTransceiverQueue.pop();
+	}
+	return RES_OK;
+}
+
 void CDCProtocolTransceiver::ExtractPacketDataFromCmd(uint8_t* buf) {
-	_cfgFileSize = buf[2];
-	_cfgFileSize = (_cfgFileSize << 8) | buf[3];
-	_cfgFilePacketSize = buf[4];
-	_cfgFilePacketsNum = buf[5];
-	_cfgFilePacketsNum = (_cfgFilePacketsNum << 8) | buf[6];
+	etl::array<uint8_t, COMMAND_FRAME_MAX_LENGTH> arr;
+	memcpy(arr.begin(), buf, COMMAND_FRAME_MAX_LENGTH);
+	_cfgFileSize = arr.at(CDC_PROTOCOL_CFG_FILE_VAL_PLACE0) << 8 | arr.at(CDC_PROTOCOL_CFG_FILE_VAL_PLACE1);
+	_cfgFilePacketSize = arr.at(CDC_PROTOCOL_CFG_FILE_PACKET_SIZE);
+	_cfgFilePacketsNum = arr.at(CDC_PROTOCOL_CFG_FILE_PACKETS_NUM0) << 8 | arr.at(CDC_PROTOCOL_CFG_FILE_PACKETS_NUM1);
 	return;
 }
 
