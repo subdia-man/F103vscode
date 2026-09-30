@@ -7,8 +7,8 @@
 class ICDCProtocolTransceiver {
 
 public:
-	//ICDCProtocolTransceiver();
-	//~ICDCProtocolTransceiver();
+	ICDCProtocolTransceiver() {}
+	~ICDCProtocolTransceiver() {}
 	virtual int8_t Process() = 0;
 };
 
