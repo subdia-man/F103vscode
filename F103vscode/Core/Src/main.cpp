@@ -25,7 +25,7 @@
 /* USER CODE BEGIN Includes */
 #include "usbd_cdc_if.h"
 #include "ssd1306.h"
-#include "lcd_graphics.h"
+#include "LcdGraphics.h"
  
 #include "CDCExchangeProtocol/CDCProtocolTransceiver.hpp"
 
@@ -55,6 +55,7 @@ osThreadId cdcTxTaskHandle;
 osThreadId cdcProcessTaskHandle;
 /* USER CODE BEGIN PV */
 CDCProtocolTransceiver _cdcProtocolTransceiver;
+LcdGraphics _lcdGraphics;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -106,7 +107,24 @@ int main(void)
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
   SSD1306_Init();
-  to_my_wife();
+  _lcdGraphics.DrawHorizontalLine(5, 120, 50);
+  _lcdGraphics.ClearScreen();
+  _lcdGraphics.SetTextPosition(First, 2);
+  _lcdGraphics.WriteString("First line", _lcdGraphics.GetCurrentFont(), White);
+  _lcdGraphics.SetTextPosition(Second, 2);
+  _lcdGraphics.WriteString("Second line", _lcdGraphics.GetCurrentFont(), White);
+  _lcdGraphics.SetTextPosition(Third, 2);
+  _lcdGraphics.WriteString("Third line", _lcdGraphics.GetCurrentFont(), White);
+  _lcdGraphics.SetTextPosition(Fourth, 2);
+  _lcdGraphics.WriteString("Fourth line", _lcdGraphics.GetCurrentFont(), White);
+  _lcdGraphics.SetTextPosition(Fifth, 2);
+  _lcdGraphics.WriteString("Fifth line", _lcdGraphics.GetCurrentFont(), White);
+  _lcdGraphics.SetTextPosition(Sixth, 2);
+  _lcdGraphics.WriteString("Sixth line", _lcdGraphics.GetCurrentFont(), White);
+  _lcdGraphics.SetTextPosition(Seventh, 2);
+  _lcdGraphics.WriteString("Seventh line", _lcdGraphics.GetCurrentFont(), White);
+  _lcdGraphics.SetTextPosition(Eighth, 2);
+  _lcdGraphics.WriteString("Eighth line", _lcdGraphics.GetCurrentFont(), White);
   /* USER CODE END 2 */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -305,13 +323,6 @@ void StartDefaultTask(void const * argument)
   for(;;) {
     //HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
 	  //osDelay(500);
-    volatile uint16_t res = 0;
-    volatile uint8_t part1 = 0x4d;
-    volatile uint8_t part2 = 0xaa;
-    res = part1 << 8 | part2;
-    if (res != 0x4daa) {
-      part1 = part2 = 0x00;
-    }
   }
   /* USER CODE END 5 */
 }

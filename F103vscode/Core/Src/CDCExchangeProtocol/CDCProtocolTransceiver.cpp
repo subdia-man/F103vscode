@@ -59,6 +59,7 @@ int8_t CDCProtocolTransceiver::CfgFileReceiveProcessingStep() {
 		return RES_FAIL;
 	}
 	//TODO: send packet payload to the file storage for processing
+	_lastPacketNum = currentPacketNum;
 	_rxTransceiverQueue.pop();
 	}
 	return RES_OK;
