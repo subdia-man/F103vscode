@@ -50,10 +50,10 @@
 SPI_HandleTypeDef hspi1;
 
 osThreadId defaultTaskHandle;
+/* USER CODE BEGIN PV */
 osThreadId cdcRxTaskHandle;
 osThreadId cdcTxTaskHandle;
 osThreadId cdcProcessTaskHandle;
-/* USER CODE BEGIN PV */
 CDCProtocolTransceiver _cdcProtocolTransceiver;
 LcdGraphics _lcdGraphics;
 /* USER CODE END PV */
