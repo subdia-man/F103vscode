@@ -84,7 +84,7 @@ Core/Src/syscalls.c
 # CPP sources
 CPP_SOURCES =  \
 Core/Src/main.cpp \
-Core/Src/lcd_graphics.cpp \
+Core/Src/LcdGraphics.cpp \
 Core/Src/CDCExchangeProtocol/CDCCoder.cpp \
 Core/Src/CDCExchangeProtocol/CDCDecoder.cpp \
 Core/Src/CDCExchangeProtocol/CDCParser.cpp \
