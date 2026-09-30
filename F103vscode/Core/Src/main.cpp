@@ -26,7 +26,8 @@
 #include "usbd_cdc_if.h"
 #include "ssd1306.h"
 #include "LcdGraphics.h"
- 
+#include "W25Q128Driver.hpp"
+
 #include "CDCExchangeProtocol/CDCProtocolTransceiver.hpp"
 
 /* USER CODE END Includes */
@@ -57,6 +58,7 @@ osThreadId cdcTxTaskHandle;
 osThreadId cdcProcessTaskHandle;
 CDCProtocolTransceiver _cdcProtocolTransceiver;
 LcdGraphics _lcdGraphics;
+W25Q128Driver _w25Q128Driver;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -81,8 +83,7 @@ void StartCdcProcessTask(void const * argument);
   * @brief  The application entry point.
   * @retval int
   */
-int main(void)
-{
+int main(void) {
 
   /* USER CODE BEGIN 1 */
 
@@ -110,24 +111,10 @@ int main(void)
   MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
   SSD1306_Init();
-  _lcdGraphics.DrawHorizontalLine(5, 120, 50);
   _lcdGraphics.ClearScreen();
   _lcdGraphics.SetTextPosition(First, 2);
-  _lcdGraphics.WriteString("First line", _lcdGraphics.GetCurrentFont(), White);
-  _lcdGraphics.SetTextPosition(Second, 2);
-  _lcdGraphics.WriteString("Second line", _lcdGraphics.GetCurrentFont(), White);
-  _lcdGraphics.SetTextPosition(Third, 2);
-  _lcdGraphics.WriteString("Third line", _lcdGraphics.GetCurrentFont(), White);
-  _lcdGraphics.SetTextPosition(Fourth, 2);
-  _lcdGraphics.WriteString("Fourth line", _lcdGraphics.GetCurrentFont(), White);
-  _lcdGraphics.SetTextPosition(Fifth, 2);
-  _lcdGraphics.WriteString("Fifth line", _lcdGraphics.GetCurrentFont(), White);
-  _lcdGraphics.SetTextPosition(Sixth, 2);
-  _lcdGraphics.WriteString("Sixth line", _lcdGraphics.GetCurrentFont(), White);
-  _lcdGraphics.SetTextPosition(Seventh, 2);
-  _lcdGraphics.WriteString("Seventh line", _lcdGraphics.GetCurrentFont(), White);
-  _lcdGraphics.SetTextPosition(Eighth, 2);
-  _lcdGraphics.WriteString("Eighth line", _lcdGraphics.GetCurrentFont(), White);
+
+  _w25Q128Driver.W25QxxInit();
   /* USER CODE END 2 */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -183,8 +170,7 @@ int main(void)
   * @brief System Clock Configuration
   * @retval None
   */
-void SystemClock_Config(void)
-{
+void SystemClock_Config(void) {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
   RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
@@ -199,8 +185,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
   RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL9;
-  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-  {
+  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK) {
     Error_Handler();
   }
 
@@ -213,14 +198,12 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
-  {
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK) {
     Error_Handler();
   }
   PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USB;
   PeriphClkInit.UsbClockSelection = RCC_USBCLKSOURCE_PLL_DIV1_5;
-  if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
-  {
+  if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK) {
     Error_Handler();
   }
 }
@@ -230,8 +213,7 @@ void SystemClock_Config(void)
   * @param None
   * @retval None
   */
-static void MX_SPI1_Init(void)
-{
+static void MX_SPI1_Init(void) {
 
   /* USER CODE BEGIN SPI1_Init 0 */
 
@@ -253,8 +235,7 @@ static void MX_SPI1_Init(void)
   hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
   hspi1.Init.CRCPolynomial = 10;
-  if (HAL_SPI_Init(&hspi1) != HAL_OK)
-  {
+  if (HAL_SPI_Init(&hspi1) != HAL_OK) {
     Error_Handler();
   }
   /* USER CODE BEGIN SPI1_Init 2 */
@@ -268,8 +249,7 @@ static void MX_SPI1_Init(void)
   * @param None
   * @retval None
   */
-static void MX_SPI2_Init(void)
-{
+static void MX_SPI2_Init(void) {
 
   /* USER CODE BEGIN SPI2_Init 0 */
 
@@ -291,8 +271,7 @@ static void MX_SPI2_Init(void)
   hspi2.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi2.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
   hspi2.Init.CRCPolynomial = 10;
-  if (HAL_SPI_Init(&hspi2) != HAL_OK)
-  {
+  if (HAL_SPI_Init(&hspi2) != HAL_OK) {
     Error_Handler();
   }
   /* USER CODE BEGIN SPI2_Init 2 */
@@ -306,8 +285,7 @@ static void MX_SPI2_Init(void)
   * @param None
   * @retval None
   */
-static void MX_GPIO_Init(void)
-{
+static void MX_GPIO_Init(void) {
   GPIO_InitTypeDef GPIO_InitStruct = {0};
   /* USER CODE BEGIN MX_GPIO_Init_1 */
 
@@ -355,8 +333,7 @@ static void MX_GPIO_Init(void)
   * @retval None
   */
 /* USER CODE END Header_StartDefaultTask */
-void StartDefaultTask(void const * argument)
-{
+void StartDefaultTask(void const * argument) {
   /* init code for USB_DEVICE */
   MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 5 */
@@ -397,8 +374,7 @@ void StartCdcProcessTask(void const * argument) {
   * @param  htim : TIM handle
   * @retval None
   */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-{
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
   /* USER CODE BEGIN Callback 0 */
 
   /* USER CODE END Callback 0 */
@@ -415,8 +391,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   * @brief  This function is executed in case of error occurrence.
   * @retval None
   */
-void Error_Handler(void)
-{
+void Error_Handler(void) {
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
   __disable_irq();
@@ -432,8 +407,7 @@ void Error_Handler(void)
   * @param  line: assert_param error line source number
   * @retval None
   */
-void assert_failed(uint8_t *file, uint32_t line)
-{
+void assert_failed(uint8_t *file, uint32_t line) {
   /* USER CODE BEGIN 6 */
   /* User can add his own implementation to report the file name and line number,
      ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */

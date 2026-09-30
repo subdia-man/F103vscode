@@ -36,12 +36,12 @@ BUILD_DIR = build
 ######################################
 # C sources
 C_SOURCES =  \
+Core/Src/ExternInstances.c \
 Core/Src/freertos.c \
 Core/Src/ssd1306.c \
 Core/Src/stm32f1xx_it.c \
 Core/Src/stm32f1xx_hal_msp.c \
 Core/Src/stm32f1xx_hal_timebase_tim.c \
-Core/Src/ExternInstances.c \
 USB_DEVICE/App/usb_device.c \
 USB_DEVICE/App/usbd_desc.c \
 USB_DEVICE/App/usbd_cdc_if.c \
@@ -89,7 +89,8 @@ Core/Src/CDCExchangeProtocol/CDCCoder.cpp \
 Core/Src/CDCExchangeProtocol/CDCDecoder.cpp \
 Core/Src/CDCExchangeProtocol/CDCParser.cpp \
 Core/Src/CDCExchangeProtocol/CDCProtocolFormer.cpp \
-Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp 
+Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp \
+Core/Src/CfgFileStorageRoutines/W25Q128Driver.cpp
 
 # ASM sources
 ASM_SOURCES =  \
@@ -181,6 +182,7 @@ C_INCLUDES =  \
 CPP_INCLUDES =  \
 -ICore/Inc \
 -ICore/Src/CDCExchangeProtocol \
+-ICore/Src/CfgFileStorageRoutines\
 -IUSB_DEVICE/App \
 -IUSB_DEVICE/Target \
 -IDrivers/STM32F1xx_HAL_Driver/Inc \
