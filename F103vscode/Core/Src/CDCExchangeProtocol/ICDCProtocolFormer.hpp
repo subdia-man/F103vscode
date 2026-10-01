@@ -4,7 +4,7 @@ class ICDCProtocolFormer {
 
 public:
 
-	//ICDCProtocolFormer();
-	//~ICDCProtocolFormer();
+	ICDCProtocolFormer() {}
+	~ICDCProtocolFormer() {}
 	
 };

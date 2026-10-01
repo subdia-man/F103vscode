@@ -18,7 +18,7 @@ public:
 	CDCStateMachine() {
 		currentState = CDCCommandAwaiting;
 	}
-	//~CDCStateMachine(); 
+	~CDCStateMachine() {} 
 	
 	void SetState(CDCState state) {
 		this -> currentState = state;

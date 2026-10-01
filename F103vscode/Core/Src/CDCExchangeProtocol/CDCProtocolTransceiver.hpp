@@ -26,8 +26,8 @@ class CDCProtocolTransceiver : public ICDCProtocolTransceiver {
 
 public:
 	
-	//CDCProtocolTransceiver();
-	//~CDCProtocolTransceiver();
+	CDCProtocolTransceiver() {}
+	~CDCProtocolTransceiver() {}
 	int8_t Process();
 	int8_t CfgFileReceiveProcessingStep();
 	int8_t Receive();

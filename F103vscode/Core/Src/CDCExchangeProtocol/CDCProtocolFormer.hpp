@@ -31,8 +31,8 @@ class CDCProtocolFormer : public ICDCProtocolFormer {
 
 public:
 
-	//CDCProtocolFormer();
-	//~CDCProtocolFormer();
+	CDCProtocolFormer() {}
+	~CDCProtocolFormer() {}
 
 	bool IsItCommand(uint8_t cmd);
 	CDCCommands GetCommandFromFrame(etl::array<uint8_t, COMMAND_FRAME_MAX_LENGTH> frame);

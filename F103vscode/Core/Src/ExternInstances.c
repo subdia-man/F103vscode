@@ -2,7 +2,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-
 uint8_t cdc_global_rx_buffer[68];
 uint32_t cdc_global_rx_length = 0;
 bool cdc_is_something_received = false;
