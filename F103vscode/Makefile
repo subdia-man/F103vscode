@@ -79,7 +79,7 @@ Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c \
 Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c \
 Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c \
 Core/Src/sysmem.c \
-Core/Src/syscalls.c  
+Core/Src/syscalls.c \
 
 # CPP sources
 CPP_SOURCES =  \
@@ -90,7 +90,8 @@ Core/Src/CDCExchangeProtocol/CDCDecoder.cpp \
 Core/Src/CDCExchangeProtocol/CDCParser.cpp \
 Core/Src/CDCExchangeProtocol/CDCProtocolFormer.cpp \
 Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp \
-Core/Src/CfgFileStorageRoutines/W25Q128Driver.cpp
+Core/Src/CfgFileStorageRoutines/W25Q128Driver.cpp \
+Core/Src/CfgFileStorageRoutines/BlockDevice.cpp
 
 # ASM sources
 ASM_SOURCES =  \
