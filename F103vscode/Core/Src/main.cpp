@@ -26,7 +26,7 @@
 #include "usbd_cdc_if.h"
 #include "ssd1306.h"
 #include "LcdGraphics.h"
-#include "W25Q128Driver.hpp"
+#include "LittleFileSystem.hpp"
 
 #include "CDCExchangeProtocol/CDCProtocolTransceiver.hpp"
 
@@ -58,7 +58,10 @@ osThreadId cdcTxTaskHandle;
 osThreadId cdcProcessTaskHandle;
 CDCProtocolTransceiver _cdcProtocolTransceiver;
 LcdGraphics _lcdGraphics;
-W25Q128Driver _w25Q128Driver;
+
+extern BlockDevice _blockDevice;
+LittleFileSystem _littleFS(_blockDevice);
+//W25Q128Driver _w25Q128Driver;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -112,9 +115,10 @@ int main(void) {
   /* USER CODE BEGIN 2 */
   SSD1306_Init();
   _lcdGraphics.ClearScreen();
-  _lcdGraphics.SetTextPosition(First, 2);
+  _lcdGraphics.SetTextPosition(Third, 4);
+  _lcdGraphics.WriteString("SYSTEM INIT...", _lcdGraphics.GetCurrentFont(), White);
+  _littleFS.Mount();
 
-  _w25Q128Driver.W25QxxInit();
   /* USER CODE END 2 */
 
   /* USER CODE BEGIN RTOS_MUTEX */
