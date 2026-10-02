@@ -59,8 +59,9 @@ osThreadId cdcProcessTaskHandle;
 CDCProtocolTransceiver _cdcProtocolTransceiver;
 LcdGraphics _lcdGraphics;
 
-extern BlockDevice _blockDevice;
-LittleFileSystem _littleFS(_blockDevice);
+W25Q128Driver _flashDevice;
+BlockDevice _blockDevice(_flashDevice);
+
 //W25Q128Driver _w25Q128Driver;
 /* USER CODE END PV */
 
@@ -117,7 +118,6 @@ int main(void) {
   _lcdGraphics.ClearScreen();
   _lcdGraphics.SetTextPosition(Third, 4);
   _lcdGraphics.WriteString("SYSTEM INIT...", _lcdGraphics.GetCurrentFont(), White);
-  _littleFS.Mount();
 
   /* USER CODE END 2 */
 
