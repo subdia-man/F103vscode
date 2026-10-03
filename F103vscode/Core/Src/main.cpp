@@ -17,10 +17,12 @@
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
+extern "C" {
+  #include "fatfs.h"
+}
 #include "main.h"
 #include "cmsis_os.h"
 #include "usb_device.h"
-
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "usbd_cdc_if.h"
@@ -113,6 +115,7 @@ int main(void) {
   MX_GPIO_Init();
   MX_SPI1_Init();
   MX_SPI2_Init();
+  MX_FATFS_Init();
   /* USER CODE BEGIN 2 */
   SSD1306_Init();
   _lcdGraphics.ClearScreen();

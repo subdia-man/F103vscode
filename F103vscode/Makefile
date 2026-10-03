@@ -80,6 +80,9 @@ Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c \
 Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c \
 Core/Src/sysmem.c \
 Core/Src/syscalls.c \
+FATFS/App/fatfs.c \
+Middlewares/Third_Party/FatFs/src/ff_gen_drv.c \
+FATFS/Target/user_diskio.c \
 
 # CPP sources
 CPP_SOURCES =  \
@@ -91,7 +94,7 @@ Core/Src/CDCExchangeProtocol/CDCParser.cpp \
 Core/Src/CDCExchangeProtocol/CDCProtocolFormer.cpp \
 Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp \
 Core/Src/CfgFileStorageRoutines/W25Q128Driver.cpp \
-Core/Src/CfgFileStorageRoutines/BlockDevice.cpp
+Core/Src/CfgFileStorageRoutines/BlockDevice.cpp \
 
 # ASM sources
 ASM_SOURCES =  \
@@ -178,6 +181,9 @@ C_INCLUDES =  \
 -IMiddlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc \
 -IDrivers/CMSIS/Device/ST/STM32F1xx/Include \
 -IDrivers/CMSIS/Include \
+-IFATFS/App \
+-IFATFS/Target \
+-IMiddlewares/Third_Party/FatFs/src \
 
 # CPP includes
 CPP_INCLUDES =  \
@@ -204,8 +210,11 @@ CPP_INCLUDES =  \
 -Ietl/mutex \
 -Ietl/private \
 -Ietl/private/chrono \
--Ietl/profiles
-
+-Ietl/profiles \
+-IFATFS/App\
+-IFATFS/Target\
+-IMiddlewares/Third_Party/FatFs/src \
+-IMiddlewares/Third_Party/FatFs/src/option \
 # compile gcc flags
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
  
