@@ -61,9 +61,10 @@ void W25Q128Driver::W25QxxWaitForWriteEnd(void) {
 
 uint8_t W25Q128Driver::W25QxxInit(void) {
   w25qxx.Lock = 1;
-  while(HAL_GetTick() < 100)
-  W25QxxDelay(1);
-  W25QxxDelay(100);
+  /*while(HAL_GetTick() < 100) {
+    W25QxxDelay(1);
+    W25QxxDelay(100);
+  }*/
 
   uint32_t  id = W25QxxReadID();
 
@@ -623,7 +624,7 @@ void W25Q128Driver::W25QxxReadPage(uint8_t *pBuffer, uint32_t Page_Address, uint
 
   HAL_SPI_Receive(W25QXX_SPI_PTR, pBuffer, NumByteToRead_up_to_PageSize, 100);
 
-  W25QxxDelay(1);
+  //W25QxxDelay(1);
   w25qxx.Lock=0;
 }
 
