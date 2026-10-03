@@ -17,10 +17,6 @@
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
-extern "C" {
-  #include "fatfs.h"
-  #include "ff.h"
-}
 #include "main.h"
 #include "cmsis_os.h"
 #include "usb_device.h"
@@ -29,9 +25,7 @@ extern "C" {
 #include "usbd_cdc_if.h"
 #include "ssd1306.h"
 #include "LcdGraphics.h"
-#include "LittleFileSystem.hpp"
-#include "FatFsDiskFunctionalityLayer.h"
-
+#include "W25Q128Driver.hpp"
 #include "CDCExchangeProtocol/CDCProtocolTransceiver.hpp"
 
 /* USER CODE END Includes */
@@ -64,7 +58,6 @@ CDCProtocolTransceiver _cdcProtocolTransceiver;
 LcdGraphics _lcdGraphics;
 
 W25Q128Driver _flashDevice;
-BlockDevice _blockDevice(_flashDevice);
 
 //W25Q128Driver _w25Q128Driver;
 /* USER CODE END PV */
@@ -84,31 +77,7 @@ void StartCdcProcessTask(void const * argument);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-void FatFsTest(void) {
-  FATFS FatFs;
-  FIL Fil;
-  volatile FRESULT FR_Status;
-  FATFS *FS_Ptr;
-  UINT RWC, WWC; // Read/Write Word Counter
-  DWORD FreeClusters;
-  uint32_t TotalSize, FreeSpace;
-  char RW_Buffer[200];
-  //_flashDevice.W25QxxEraseBlock(0);
-  //_flashDevice.W25QxxEraseBlock(1);
-  /*FR_Status = f_mount(&FatFs, "fs", 1);
-  if (FR_Status != 0) {
-    FR_Status = f_mount(&FatFs, "fs", 1);
-  }
-  FR_Status = f_open(&Fil, "TextFileWrite.txt", FA_WRITE | FA_READ | FA_CREATE_ALWAYS);
-  f_puts("Hello! From STM32 To SD Card Over SPI, Using f_puts()\n", &Fil);
-  strcpy(RW_Buffer, "Hello! From STM32 To SD Card Over SPI, Using f_write()\r\n");
-  f_write(&Fil, RW_Buffer, strlen(RW_Buffer), &WWC);
-  f_close(&Fil);
-  FR_Status = f_open(&Fil, "TextFileWrite.txt", FA_READ);
-  f_gets(RW_Buffer, sizeof(RW_Buffer), &Fil);
-  f_close(&Fil);
-  FR_Status = f_mount(NULL, "", 0); //unmount */
-}
+
 /* USER CODE END 0 */
 
 /**
@@ -141,13 +110,11 @@ int main(void) {
   MX_GPIO_Init();
   MX_SPI1_Init();
   MX_SPI2_Init();
-  MX_FATFS_Init();
   /* USER CODE BEGIN 2 */
   SSD1306_Init();
   _lcdGraphics.ClearScreen();
   _lcdGraphics.SetTextPosition(Third, 4);
   _lcdGraphics.WriteString("SYSTEM INIT...", _lcdGraphics.GetCurrentFont(), White);
-  FatFsTest();
   /* USER CODE END 2 */
 
   /* USER CODE BEGIN RTOS_MUTEX */
