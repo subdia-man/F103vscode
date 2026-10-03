@@ -19,6 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 extern "C" {
   #include "fatfs.h"
+  #include "ff.h"
 }
 #include "main.h"
 #include "cmsis_os.h"
@@ -29,6 +30,7 @@ extern "C" {
 #include "ssd1306.h"
 #include "LcdGraphics.h"
 #include "LittleFileSystem.hpp"
+#include "FatFsDiskFunctionalityLayer.h"
 
 #include "CDCExchangeProtocol/CDCProtocolTransceiver.hpp"
 
@@ -82,7 +84,31 @@ void StartCdcProcessTask(void const * argument);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+void FatFsTest(void) {
+  FATFS FatFs;
+  FIL Fil;
+  volatile FRESULT FR_Status;
+  FATFS *FS_Ptr;
+  UINT RWC, WWC; // Read/Write Word Counter
+  DWORD FreeClusters;
+  uint32_t TotalSize, FreeSpace;
+  char RW_Buffer[200];
+  //_flashDevice.W25QxxEraseBlock(0);
+  //_flashDevice.W25QxxEraseBlock(1);
+  /*FR_Status = f_mount(&FatFs, "fs", 1);
+  if (FR_Status != 0) {
+    FR_Status = f_mount(&FatFs, "fs", 1);
+  }
+  FR_Status = f_open(&Fil, "TextFileWrite.txt", FA_WRITE | FA_READ | FA_CREATE_ALWAYS);
+  f_puts("Hello! From STM32 To SD Card Over SPI, Using f_puts()\n", &Fil);
+  strcpy(RW_Buffer, "Hello! From STM32 To SD Card Over SPI, Using f_write()\r\n");
+  f_write(&Fil, RW_Buffer, strlen(RW_Buffer), &WWC);
+  f_close(&Fil);
+  FR_Status = f_open(&Fil, "TextFileWrite.txt", FA_READ);
+  f_gets(RW_Buffer, sizeof(RW_Buffer), &Fil);
+  f_close(&Fil);
+  FR_Status = f_mount(NULL, "", 0); //unmount */
+}
 /* USER CODE END 0 */
 
 /**
@@ -121,7 +147,7 @@ int main(void) {
   _lcdGraphics.ClearScreen();
   _lcdGraphics.SetTextPosition(Third, 4);
   _lcdGraphics.WriteString("SYSTEM INIT...", _lcdGraphics.GetCurrentFont(), White);
-
+  FatFsTest();
   /* USER CODE END 2 */
 
   /* USER CODE BEGIN RTOS_MUTEX */
