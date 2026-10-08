@@ -1,19 +1,18 @@
 
+#include <cstring>
 #include "NoFsStorage.hpp"
 
 extern W25Q128Driver _flashDevice;
 
 int8_t NoFsStorage::Init() {
 	int8_t res = _flashDevice.W25QxxInit();
-	if (res == 1) {
-		_flashDeviceInfo = GetDeviceInfo();
-		return RES_OK;
+	if (res != 1) {
+		return RES_FAIL;
 	}
-	else return RES_FAIL;
-}
-
-int8_t NoFsStorage::ReadStorageInfo() {
-	_flashDevice.W25QxxReadSector(_rwxBuffer, STORAGE_INFO_SECTOR, 0, 0);
+	_flashDeviceInfo = GetDeviceInfo();
+	if (InitStorageInfo() != RES_OK) {
+		return RES_FAIL;
+	}
 	return RES_OK;
 }
 
@@ -21,25 +20,43 @@ w25qxx_t NoFsStorage::GetDeviceInfo() {
 	return _flashDevice.GetW25QxxInstance ();
 }
 
-void NoFsStorage::WriteByte(uint8_t byte, uint32_t addr) {
-	_flashDevice.W25QxxWriteByte(byte, addr);
+int8_t NoFsStorage::InitStorageInfo() {
+	//check zero page for some data
+	if (_flashDevice.W25QxxIsEmptyPage(STORAGE_INFO_PAGE, 0)) {
+		_fileStorageInfo = CreateNewStorageInfo();
+		WriteStorageInfo(_fileStorageInfo);
+		return RES_OK;
+	} 
+	//read zero page
+	_flashDevice.W25QxxReadPage(_rwxBuffer, STORAGE_INFO_PAGE, 0, 0);
+	//search header
+	uint32_t checkHeader = (_rwxBuffer[0] << 8) | _rwxBuffer[1];
+	if (checkHeader != STORAGE_INFO_HEADER) {
+		//corrupted or not exist
+		_fileStorageInfo = CreateNewStorageInfo();
+		WriteStorageInfo(_fileStorageInfo);
+	} else {
+		//init storage info with read data
+		memcpy((void*)&_fileStorageInfo, _rwxBuffer, sizeof(StorageStruct_t));
+	}
+	return RES_OK;
 }
 
-void NoFsStorage::Write(uint8_t* pBuffer, size_t size, uint32_t address) {
-	_flashDevice.W25QxxWritePage(pBuffer, address, 0, size);
-	return;
+StorageStruct_t NoFsStorage::CreateNewStorageInfo() {
+	StorageStruct_t info;
+	info.header = STORAGE_INFO_HEADER;
+	info.memoryRecordedVolume = 0;
+	info.filesNumber = 0;
+	memset(info.fAddresses, 0, sizeof(uint32_t)*MAX_FILES_NUMBER);
+	memset(info.fUIDs, 0, sizeof(uint32_t)*MAX_FILES_NUMBER);
+	info.cyclesCounter = 0;
+	return info;
 }
 
-void NoFsStorage::Read(uint8_t* pBuffer, size_t size, uint32_t address) {
-	_flashDevice.W25QxxReadBytes(pBuffer, address, size);
-	return;
-}
-
-void NoFsStorage::EraseSector(uint32_t SectorAddr) {
-	_flashDevice.W25QxxEraseSector(SectorAddr);
-}
-
-void NoFsStorage::WritePage (uint8_t *pBuffer, uint32_t Page_Address, uint32_t OffsetInByte, 
-                      uint32_t NumByteToWrite_up_to_PageSize) {
-	return _flashDevice.W25QxxWritePage(pBuffer, Page_Address, OffsetInByte, NumByteToWrite_up_to_PageSize);
+int8_t NoFsStorage::WriteStorageInfo(StorageStruct_t info) {
+	//erase zero sector
+	_flashDevice.W25QxxEraseSector(STORAGE_INFO_SECTOR);
+	info.cyclesCounter++;
+	_flashDevice.W25QxxWritePage((uint8_t*)&info, STORAGE_INFO_PAGE, 0, 0);
+	return RES_OK;
 }

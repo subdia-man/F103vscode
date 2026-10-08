@@ -78,7 +78,8 @@ void StartCdcProcessTask(void const * argument);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 void NoFsStorageTest (void) {
-  
+  uint8_t res = _noFsStorage.Init();
+  return;
 }
 /* USER CODE END 0 */
 
