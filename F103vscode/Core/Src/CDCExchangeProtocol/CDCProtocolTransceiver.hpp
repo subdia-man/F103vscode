@@ -3,6 +3,7 @@
 
 #include "ICDCProtocolTransceiver.hpp"
 #include "Instances.hpp"
+#include "Common.h"
 #include "etl/queue.h"
 
 extern "C" {
