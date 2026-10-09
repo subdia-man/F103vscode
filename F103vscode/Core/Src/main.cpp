@@ -77,10 +77,7 @@ void StartCdcProcessTask(void const * argument);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-void NoFsStorageTest (void) {
-  uint8_t res = _noFsStorage.Init();
-  return;
-}
+
 /* USER CODE END 0 */
 
 /**
@@ -118,7 +115,7 @@ int main(void) {
   _lcdGraphics.ClearScreen();
   _lcdGraphics.SetTextPosition(Third, 4);
   _lcdGraphics.WriteString("SYSTEM INIT...", _lcdGraphics.GetCurrentFont(), White);
-  NoFsStorageTest();
+  
   /* USER CODE END 2 */
 
   /* USER CODE BEGIN RTOS_MUTEX */
