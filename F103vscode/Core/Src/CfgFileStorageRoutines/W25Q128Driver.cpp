@@ -8,6 +8,23 @@ char buf[64] = {0,};
 #endif
 
 #define W25QXX_DUMMY_BYTE        0xA5
+/* W25Q128 Commands */
+#define W25Q_CMD_WRITE_ENABLE     0x06
+#define W25Q_CMD_WRITE_DISABLE    0x04
+#define W25Q_CMD_READ_STATUS1     0x05
+#define W25Q_CMD_READ_DATA        0x03
+#define W25Q_CMD_PAGE_PROGRAM     0x02
+#define W25Q_CMD_SECTOR_ERASE_4K  0x20
+#define W25Q_CMD_BLOCK_ERASE_64K  0xD8
+#define W25Q_CMD_CHIP_ERASE       0xC7
+#define W25Q_CMD_JEDEC_ID         0x9F
+
+/* Status Register bits */
+#define W25Q_STATUS_BUSY  0x01
+#define W25Q_STATUS_WEL   0x02
+
+#define CS_LOW() HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_RESET);
+#define CS_HIGH() HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_SET);
 
 w25qxx_t w25qxx;
 
@@ -20,51 +37,76 @@ w25qxx_t w25qxx;
 
 uint8_t W25Q128Driver::W25QxxSpi(uint8_t  Data) {
   uint8_t ret;
-
-  HAL_SPI_TransmitReceive(W25QXX_SPI_PTR, &Data, &ret, 1, 100); // spi2
-
+  HAL_SPI_TransmitReceive(W25QXX_SPI_PTR, &Data, &ret, 1, 200); // spi2
   return ret;
+}
+
+uint8_t W25Q128Driver::W25QxxReadStatus(StatusReg_t reg) {
+  if ((reg != StatusRegister1) && (reg != StatusRegister2) &&
+    (reg != StatusRegister3)) {
+    return 0;
+  }
+  CS_LOW();
+  W25QxxDelay(2);
+  W25QxxSpi(reg);
+  W25QxxDelay(2);
+  uint8_t regData = W25QxxSpi(W25QXX_DUMMY_BYTE);
+  W25QxxDelay(2);
+  CS_HIGH();
+  W25QxxDelay(2);
+  return regData;
 }
 
 uint32_t W25Q128Driver::W25QxxReadID(void) {
   uint32_t Temp = 0, Temp0 = 0, Temp1 = 0, Temp2 = 0;
-
+  CS_LOW();
+  W25QxxDelay(2);
   W25QxxSpi(W25_GET_JEDEC_ID);
-
   Temp0 = W25QxxSpi(W25QXX_DUMMY_BYTE);
+  W25QxxDelay(2);
   Temp1 = W25QxxSpi(W25QXX_DUMMY_BYTE);
+  W25QxxDelay(2);
   Temp2 = W25QxxSpi(W25QXX_DUMMY_BYTE);
-
+  W25QxxDelay(2);
+  CS_HIGH();
   Temp = (Temp0 << 16) | (Temp1 << 8) | Temp2;
-
   return Temp;
 }
 
 void W25Q128Driver::W25QxxWriteEnable(void) {
+  CS_LOW();
+  W25QxxDelay(2);
   W25QxxSpi(W25_WRITE_ENABLE);
+  W25QxxDelay(2);
+  CS_HIGH();
+  do {
+    w25qxx.StatusRegister1 = W25QxxReadStatus(StatusRegister1);
+  } while((w25qxx.StatusRegister1 & 0x02) != 0x02);
   W25QxxDelay(1);
 }
 
 void W25Q128Driver::W25QxxWriteDisable(void) {
+  CS_LOW();
+  W25QxxDelay(2);
   W25QxxSpi(W25_WRITE_DISABLE);
+  W25QxxDelay(2);
+  CS_HIGH();
   W25QxxDelay(1);
 }
 
 void W25Q128Driver::W25QxxWaitForWriteEnd(void) {
   W25QxxDelay(1);
-  W25QxxSpi(W25_READ_STATUS_1);
   do {
-    w25qxx.StatusRegister1 = W25QxxSpi(W25QXX_DUMMY_BYTE);
-    W25QxxDelay(1);
+     w25qxx.StatusRegister1 = W25QxxReadStatus(StatusRegister1);
   } while((w25qxx.StatusRegister1 & 0x01) == 0x01);
 }
 
 uint8_t W25Q128Driver::W25QxxInit(void) {
   w25qxx.Lock = 1;
-  /*while(HAL_GetTick() < 100) {
+  while(HAL_GetTick() < 100) {
     W25QxxDelay(1);
     W25QxxDelay(100);
-  }*/
+  }
 
   uint32_t  id = W25QxxReadID();
 
@@ -176,14 +218,16 @@ void W25Q128Driver::W25QxxEraseChip(void) {
   while(w25qxx.Lock == 1) {
     W25QxxDelay(1);
   }
-
   w25qxx.Lock = 1;
 
   W25QxxWriteEnable();
+  CS_LOW();
+  W25QxxDelay(2);
   W25QxxSpi(W25_CHIP_ERASE);
+  W25QxxDelay(2);
+  CS_HIGH();
   W25QxxWaitForWriteEnd();
-  W25QxxDelay(10);
-
+  
   w25qxx.Lock = 0;
 }
 
@@ -199,15 +243,14 @@ void W25Q128Driver::W25QxxEraseSector(uint32_t SectorAddr) {
 
   W25QxxWriteEnable();
 
+  CS_LOW();
+  W25QxxDelay(2);
   W25QxxSpi(W25_SECTOR_ERASE);
-
-  if(w25qxx.ID >= W25Q256){
-    W25QxxSpi((SectorAddr & 0xFF000000) >> 24);
-  }
-
-  W25QxxSpi((SectorAddr & 0xFF0000) >> 16);
-  W25QxxSpi((SectorAddr & 0xFF00) >> 8);
+  W25QxxSpi((SectorAddr >> 16) & 0xFF);
+  W25QxxSpi((SectorAddr >> 8) & 0xFF);
   W25QxxSpi(SectorAddr & 0xFF);
+  W25QxxDelay(2);
+  CS_HIGH();
 
   W25QxxWaitForWriteEnd();
 
@@ -228,16 +271,15 @@ void W25Q128Driver::W25QxxEraseBlock(uint32_t BlockAddr) {
 
   W25QxxWriteEnable();
 
+  CS_LOW();
+  W25QxxDelay(2);
   W25QxxSpi(W25_BLOCK_ERASE);
-
-  if(w25qxx.ID>=W25Q256){
-    W25QxxSpi((BlockAddr & 0xFF000000) >> 24);
-  }
-
-  W25QxxSpi((BlockAddr & 0xFF0000) >> 16);
-  W25QxxSpi((BlockAddr & 0xFF00) >> 8);
+  
+  W25QxxSpi((BlockAddr >> 16) & 0xFF);
+  W25QxxSpi((BlockAddr >> 8) & 0xFF);
   W25QxxSpi(BlockAddr & 0xFF);
-
+  W25QxxDelay(2);
+  CS_HIGH();
   W25QxxWaitForWriteEnd();
 
   W25QxxDelay(1);
@@ -278,19 +320,18 @@ uint8_t W25Q128Driver::W25QxxIsEmptyPage(uint32_t Page_Address, uint32_t OffsetI
   size = w25qxx.PageSize - OffsetInByte;
   WorkAddress = (OffsetInByte + Page_Address * w25qxx.PageSize);
 
-  W25QxxSpi(W25_FAST_READ);
+  CS_LOW();
+  W25QxxDelay(2);
+  W25QxxSpi(W25_READ);
 
-  if(w25qxx.ID >= W25Q256) {
-    W25QxxSpi((WorkAddress & 0xFF000000) >> 24);
-  }
-
-  W25QxxSpi((WorkAddress & 0xFF0000) >> 16);
-  W25QxxSpi((WorkAddress & 0xFF00) >> 8);
+  W25QxxSpi((WorkAddress >> 16) & 0xFF);
+  W25QxxSpi((WorkAddress >> 8) & 0xFF);
   W25QxxSpi(WorkAddress & 0xFF);
-
   W25QxxSpi(0);
 
   HAL_SPI_Receive(W25QXX_SPI_PTR, pBuffer, size, 100);
+  W25QxxDelay(2);
+  CS_HIGH();
 
   for(uint16_t i = 0; i < size; i++) {
     if(pBuffer[i] != 0xFF) {
@@ -333,15 +374,12 @@ uint8_t W25Q128Driver::W25QxxIsEmptySector(uint32_t Sector_Address, uint32_t Off
   }
 
   for(uint16_t i = 0; i < count_cycle; i++) {
-   
-    W25QxxSpi(W25_FAST_READ);
-
-    if(w25qxx.ID>=W25Q256) {
-      W25QxxSpi((WorkAddress & 0xFF000000) >> 24);
-    }
-
-    W25QxxSpi((WorkAddress & 0xFF0000) >> 16);
-    W25QxxSpi((WorkAddress & 0xFF00) >> 8);
+    CS_LOW();
+    W25QxxDelay(2);
+    W25QxxSpi(W25_READ);
+    
+    W25QxxSpi((WorkAddress >> 16) & 0xFF);
+    W25QxxSpi((WorkAddress >> 8) & 0xFF);
     W25QxxSpi(WorkAddress & 0xFF);
 
     W25QxxSpi(0);
@@ -349,6 +387,8 @@ uint8_t W25Q128Driver::W25QxxIsEmptySector(uint32_t Sector_Address, uint32_t Off
     if(size < 256) s_buf = size;
 
     HAL_SPI_Receive(W25QXX_SPI_PTR, pBuffer, s_buf, 100);
+    W25QxxDelay(2);
+    CS_HIGH();
 
     for(uint16_t i = 0; i < s_buf; i++) {
       if(pBuffer[i] != 0xFF) {
@@ -396,14 +436,12 @@ uint8_t W25Q128Driver::W25QxxIsEmptyBlock(uint32_t Block_Address, uint32_t Offse
 
 
   for(uint16_t i = 0; i < count_cycle; i++) {
-    W25QxxSpi(W25_FAST_READ);
+    CS_LOW();
+    W25QxxDelay(2);
+    W25QxxSpi(W25_READ);
 
-    if(w25qxx.ID>=W25Q256) {
-      W25QxxSpi((WorkAddress & 0xFF000000) >> 24);
-    }
-
-    W25QxxSpi((WorkAddress & 0xFF0000) >> 16);
-    W25QxxSpi((WorkAddress & 0xFF00) >> 8);
+    W25QxxSpi((WorkAddress >> 16) & 0xFF);
+    W25QxxSpi((WorkAddress >> 8) & 0xFF);
     W25QxxSpi(WorkAddress & 0xFF);
 
     W25QxxSpi(0);
@@ -411,6 +449,8 @@ uint8_t W25Q128Driver::W25QxxIsEmptyBlock(uint32_t Block_Address, uint32_t Offse
     if(size < 256) s_buf = size;
 
     HAL_SPI_Receive(W25QXX_SPI_PTR, pBuffer, s_buf, 100);
+    W25QxxDelay(2);
+    CS_HIGH();
 
     for(uint16_t i = 0; i < s_buf; i++) {
       if(pBuffer[i] != 0xFF) {
@@ -437,17 +477,15 @@ void W25Q128Driver::W25QxxWriteByte(uint8_t byte, uint32_t addr) {
   W25QxxWaitForWriteEnd();
   W25QxxWriteEnable();
 
+  CS_LOW();
+  W25QxxDelay(2);
   W25QxxSpi(W25_PAGE_PROGRAMM);
-
-  if(w25qxx.ID >= W25Q256) {
-    W25QxxSpi((addr & 0xFF000000) >> 24);
-  }
-
-  W25QxxSpi((addr & 0xFF0000) >> 16);
-  W25QxxSpi((addr & 0xFF00) >> 8);
+  W25QxxSpi((addr >> 16) & 0xFF);
+  W25QxxSpi((addr >> 8) & 0xFF);
   W25QxxSpi(addr & 0xFF);
-
   W25QxxSpi(byte);
+  W25QxxDelay(2);
+  CS_HIGH();
 
   W25QxxWaitForWriteEnd();
 
@@ -473,19 +511,19 @@ void W25Q128Driver::W25QxxWritePage(uint8_t *pBuffer, uint32_t Page_Address, uin
 
   W25QxxWriteEnable();
 
+  CS_LOW();
+  W25QxxDelay(2);
   W25QxxSpi(W25_PAGE_PROGRAMM);
 
   Page_Address = (Page_Address * w25qxx.PageSize) + OffsetInByte;
 
-  if(w25qxx.ID >= W25Q256) {
-    W25QxxSpi((Page_Address & 0xFF000000) >> 24);
-  }
-
-  W25QxxSpi((Page_Address & 0xFF0000) >> 16);
-  W25QxxSpi((Page_Address & 0xFF00) >> 8);
+  W25QxxSpi((Page_Address >> 16) & 0xFF);
+  W25QxxSpi((Page_Address >> 8) & 0xFF);
   W25QxxSpi(Page_Address & 0xFF);
 
   HAL_SPI_Transmit(W25QXX_SPI_PTR, pBuffer, NumByteToWrite_up_to_PageSize, 100);
+  W25QxxDelay(2);
+  CS_HIGH();
 
   W25QxxWaitForWriteEnd();
 
@@ -554,18 +592,18 @@ void W25Q128Driver::W25QxxReadByte(uint8_t *pBuffer, uint32_t Bytes_Address) {
 
   w25qxx.Lock=1;
 
-  W25QxxSpi(W25_FAST_READ);
+  CS_LOW();
+  W25QxxDelay(2);
+  W25QxxSpi(W25_READ);
 
-  if(w25qxx.ID >= W25Q256) {
-    W25QxxSpi((Bytes_Address & 0xFF000000) >> 24);
-  }
-
-  W25QxxSpi((Bytes_Address & 0xFF0000) >> 16);
-  W25QxxSpi((Bytes_Address& 0xFF00) >> 8);
+  W25QxxSpi((Bytes_Address >> 16) & 0xFF);
+  W25QxxSpi((Bytes_Address >> 8) & 0xFF);
   W25QxxSpi(Bytes_Address & 0xFF);
   W25QxxSpi(0);
 
   *pBuffer = W25QxxSpi(W25QXX_DUMMY_BYTE);
+  W25QxxDelay(2);
+  CS_HIGH();
 
   w25qxx.Lock = 0;
 }
@@ -577,18 +615,18 @@ void W25Q128Driver::W25QxxReadBytes(uint8_t* pBuffer, uint32_t ReadAddr, uint32_
 
   w25qxx.Lock = 1;
 
-  W25QxxSpi(W25_FAST_READ);
-
-  if(w25qxx.ID >= W25Q256) {
-    W25QxxSpi((ReadAddr & 0xFF000000) >> 24);
-    }
-    W25QxxSpi((ReadAddr & 0xFF0000) >> 16);
-    W25QxxSpi((ReadAddr& 0xFF00) >> 8);
-    W25QxxSpi(ReadAddr & 0xFF);
-    W25QxxSpi(0);
-  
+  CS_LOW();
+  W25QxxDelay(2);
+  W25QxxSpi(W25_READ);
+    
+  W25QxxSpi((ReadAddr >> 16) & 0xFF);
+  W25QxxSpi((ReadAddr >> 8) & 0xFF);
+  W25QxxSpi(ReadAddr & 0xFF);
+  W25QxxSpi(0);
 
   HAL_SPI_Receive(W25QXX_SPI_PTR, pBuffer, NumByteToRead, 2000);
+  W25QxxDelay(2);
+  CS_HIGH();
 
   W25QxxDelay(1);
   w25qxx.Lock = 0;
@@ -610,21 +648,21 @@ void W25Q128Driver::W25QxxReadPage(uint8_t *pBuffer, uint32_t Page_Address, uint
 
   Page_Address = Page_Address * w25qxx.PageSize + OffsetInByte;
 
-  W25QxxSpi(W25_FAST_READ);
+  CS_LOW();
+  W25QxxDelay(2);
+  W25QxxSpi(W25_READ);
 
-  if(w25qxx.ID >= W25Q256) {
-    W25QxxSpi((Page_Address & 0xFF000000) >> 24);
-  }
-
-  W25QxxSpi((Page_Address & 0xFF0000) >> 16);
-  W25QxxSpi((Page_Address& 0xFF00) >> 8);
+  W25QxxSpi((Page_Address >> 16) & 0xFF);
+  W25QxxSpi((Page_Address >> 8) & 0xFF);
   W25QxxSpi(Page_Address & 0xFF);
 
-  W25QxxSpi(0);
+  //W25QxxSpi(0);
 
   HAL_SPI_Receive(W25QXX_SPI_PTR, pBuffer, NumByteToRead_up_to_PageSize, 100);
+  W25QxxDelay(2);
+  CS_HIGH();
 
-  //W25QxxDelay(1);
+  W25QxxDelay(1);
   w25qxx.Lock=0;
 }
 

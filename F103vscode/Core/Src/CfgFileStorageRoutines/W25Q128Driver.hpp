@@ -7,6 +7,7 @@
 */
 
 #include "main.h"
+#include "Common.h"
 
 extern SPI_HandleTypeDef hspi2;
 
@@ -22,6 +23,7 @@ extern SPI_HandleTypeDef hspi2;
 #define W25_CHIP_ERASE        0xC7
 #define W25_SECTOR_ERASE      0x20
 #define W25_BLOCK_ERASE       0xD8
+#define W25_READ              0x03
 #define W25_FAST_READ         0x0B
 #define W25_PAGE_PROGRAMM     0x02
 #define W25_GET_JEDEC_ID      0x9F
@@ -32,6 +34,11 @@ extern SPI_HandleTypeDef hspi2;
 #define W25_WRITE_STATUS_2    0x31
 #define W25_WRITE_STATUS_3    0x11
 #define W25_READ_UNIQUE_ID    0x4B
+#define W25_RELEASE_POWERDOWN 0xAB
+#define W25_WRITE_VOLATILE    0x50
+#define W25_ENABLE_RESET      0x66
+#define W25_RESET             0x99
+#define W25_EXIT_QSPI_MODE    0xFF
 
 
 typedef enum {
@@ -63,6 +70,12 @@ typedef struct {
   uint8_t   Lock;
 } w25qxx_t;
 
+typedef enum {
+  StatusRegister1 = 0x05,
+  StatusRegister2 = 0x35,
+  StatusRegister3 = 0x15
+} StatusReg_t;
+
 class W25Q128Driver {
 
   w25qxx_t w25qxx;
@@ -73,6 +86,7 @@ public:
   ~W25Q128Driver() {}
 
   uint8_t W25QxxInit(void);
+  uint8_t W25QxxReadStatus(StatusReg_t reg);
 
   void W25QxxEraseChip(void);
   void W25QxxEraseSector(uint32_t SectorAddr);
@@ -104,6 +118,7 @@ public:
                       uint32_t NumByteToRead_up_to_SectorSize);
   void W25QxxReadBlock(uint8_t *pBuffer, uint32_t Block_Address, uint32_t OffsetInByte, 
                       uint32_t NumByteToRead_up_to_BlockSize);
+  w25qxx_t GetW25QxxInstance ();
 
 private:
   uint8_t W25QxxSpi(uint8_t Data);
@@ -111,8 +126,6 @@ private:
   void W25QxxWriteEnable(void);
   void W25QxxWriteDisable(void);
   void W25QxxWaitForWriteEnd(void);
-  w25qxx_t GetW25QxxInstance ();
-  
 };
 
 #endif

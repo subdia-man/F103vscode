@@ -98,7 +98,7 @@ Core/Src/CDCExchangeProtocol/CDCProtocolFormer.cpp \
 Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp \
 Core/Src/CfgFileStorageRoutines/W25Q128Driver.cpp \
 Core/Src/CfgFileStorageRoutines/BlockDevice.cpp \
-Core/CfgFileStorageRoutines/FatFsDiskFunctionalityLayer.cpp \
+Core/CfgFileStorageRoutines/NoFsStorage.cpp \
 
 # ASM sources
 ASM_SOURCES =  \
