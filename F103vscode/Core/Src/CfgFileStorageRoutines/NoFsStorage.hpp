@@ -61,8 +61,8 @@ private:
 	StorageStruct_t CreateNewStorageInfo();
 	int8_t WriteStorageInfo(StorageStruct_t info);
 	RecordSession_t StartNewRecordSession(uint16_t cfgRecordSize);
-	void ResetRecordSession(RecordSession_t session);
-	void CloseRecordSession(RecordSession_t session);
+	void ResetRecordSession(RecordSession_t* session);
+	void CloseRecordSession(RecordSession_t* session);
 
 };
 

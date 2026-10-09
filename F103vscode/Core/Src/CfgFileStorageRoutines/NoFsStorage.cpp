@@ -126,48 +126,49 @@ int8_t NoFsStorage::WriteCfgRecordNextPart(uint8_t* data, size_t size) {
 
 	//if written = toBeWritten close session and update values in the structures
 	if(_recordSession.writtenBytes == _recordSession.toBeWrittenBytes) {
-		CloseRecordSession(_recordSession);
+		CloseRecordSession(&_recordSession);
 	}
 	return RES_OK;
 }
 
 RecordSession_t NoFsStorage::StartNewRecordSession(uint16_t cfgRecordSize) {
-	ResetRecordSession(_recordSession);
+	RecordSession_t session;
+	ResetRecordSession(&session);
 	//find nearest empty sector
 	for(uint16_t i = RECORDS_START_SECTOR; i < (_flashDeviceInfo.SectorCount + 1); i++) {
 		if (_flashDevice.W25QxxIsEmptySector(i, 0)) {
-			_recordSession.currentSector = i;
+			session.currentSector = i;
 			break;
 		}
 	}
 	uint8_t pagesAtSector = (_flashDeviceInfo.SectorSize/_flashDeviceInfo.PageSize);
 	//find nearest empty page
 	for(uint16_t i = 0; i < (pagesAtSector + 1); i++) {
-		if (_flashDevice.W25QxxIsEmptyPage((_recordSession.currentSector * pagesAtSector) + i, 0)) {
-			_recordSession.currentPage = (_recordSession.currentSector * pagesAtSector) + i;
+		if (_flashDevice.W25QxxIsEmptyPage((session.currentSector * pagesAtSector) + i, 0)) {
+			session.currentPage = (session.currentSector * pagesAtSector) + i;
 			break;
 		}
 	}
 	//calculate start address disregarding the offset inside previous (not empty) page
-	_recordSession.startAddress = _recordSession.currentAddress = 
-											_flashDeviceInfo.PageSize * _recordSession.currentPage;
-	_recordSession.toBeWrittenBytes = cfgRecordSize;
-	_recordSession.isOpened = true; //open session
-	return _recordSession;
+	session.startAddress = session.currentAddress = 
+											_flashDeviceInfo.PageSize * session.currentPage;
+	session.toBeWrittenBytes = cfgRecordSize;
+	session.isOpened = true; //open session
+	return session;
 }
 
-void NoFsStorage::ResetRecordSession(RecordSession_t session) {
-	memset(&session.startAddress, 0, sizeof(RecordSession_t));
+void NoFsStorage::ResetRecordSession(RecordSession_t* session) {
+	memset(session, 0, sizeof(RecordSession_t));
 	return;
 }
 
-void NoFsStorage::CloseRecordSession(RecordSession_t session) {
+void NoFsStorage::CloseRecordSession(RecordSession_t* session) {
 	//update storage info structure
-	_fileStorageInfo.memoryRecordedVolume += session.writtenBytes;
+	_fileStorageInfo.memoryRecordedVolume += session->writtenBytes;
 	_fileStorageInfo.filesNumber ++;
 	for(uint8_t i = 0; i < _fileStorageInfo.fAddresses.size(); i++) {
 		if (!_fileStorageInfo.fAddresses.at(i)) {
-			_fileStorageInfo.fAddresses.at(i) = session.startAddress;
+			_fileStorageInfo.fAddresses.at(i) = session->startAddress;
 			break;
 		}
 	}
