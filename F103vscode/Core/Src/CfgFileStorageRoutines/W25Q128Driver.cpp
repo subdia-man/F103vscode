@@ -622,7 +622,6 @@ void W25Q128Driver::W25QxxReadBytes(uint8_t* pBuffer, uint32_t ReadAddr, uint32_
   W25QxxSpi((ReadAddr >> 16) & 0xFF);
   W25QxxSpi((ReadAddr >> 8) & 0xFF);
   W25QxxSpi(ReadAddr & 0xFF);
-  W25QxxSpi(0);
 
   HAL_SPI_Receive(W25QXX_SPI_PTR, pBuffer, NumByteToRead, 2000);
   W25QxxDelay(2);
