@@ -50,6 +50,7 @@ StorageStruct_t NoFsStorage::CreateNewStorageInfo() {
 	info.filesNumber = 0;
 	memset(&info.fAddresses.at(0), 0, sizeof(uint32_t)*MAX_FILES_NUMBER);
 	memset(&info.fUIDs.at(0), 0, sizeof(uint32_t)*MAX_FILES_NUMBER);
+	memset(&info.fSizes.at(0), 0, sizeof(uint16_t)*MAX_FILES_NUMBER);
 	info.cyclesCounter = 0;
 	return info;
 }
@@ -169,6 +170,7 @@ void NoFsStorage::CloseRecordSession(RecordSession_t* session) {
 	for(uint8_t i = 0; i < _fileStorageInfo.fAddresses.size(); i++) {
 		if (!_fileStorageInfo.fAddresses.at(i)) {
 			_fileStorageInfo.fAddresses.at(i) = session->startAddress;
+			_fileStorageInfo.fSizes.at(i) = session->writtenBytes;
 			break;
 		}
 	}
@@ -176,5 +178,50 @@ void NoFsStorage::CloseRecordSession(RecordSession_t* session) {
 	WriteStorageInfo(_fileStorageInfo);
 	//reset session
 	ResetRecordSession(session);
+	return;
+}
+
+uint16_t NoFsStorage::StartNewCfgRead(uint16_t uid) {
+	_readSession = StartNewReadSession(uid);
+	_readSession.startAddress = _readSession.currentAddress = _fileStorageInfo.fAddresses.at(uid);
+	if(_fileStorageInfo.fSizes.at(uid) != 0) {
+		_readSession.toBeReadBytes = _fileStorageInfo.fSizes.at(uid);
+	} else {
+		_readSession.toBeReadBytes = _fileStorageInfo.memoryRecordedVolume;
+	}
+	return _readSession.toBeReadBytes; //return size of file to be read
+}
+
+int8_t NoFsStorage::ReadCfgRecordNextPart(uint8_t* data, size_t size) {
+	if(!_readSession.isOpened) {
+		return RES_FAIL;
+	}
+	//check if the rest of file bigger than size
+	if(_readSession.toBeReadBytes - _readSession.readBytes < (uint16_t)size) {
+		size = (_readSession.toBeReadBytes - _readSession.readBytes);
+	}
+	_flashDevice.W25QxxReadBytes(data, _readSession.currentAddress, size);
+	_readSession.readBytes += size;
+	_readSession.currentAddress += size;
+	if(_readSession.readBytes == _readSession.toBeReadBytes) {
+		CloseReadSession(&_readSession);
+	}
+	return RES_OK;
+}
+
+ReadSession_t NoFsStorage::StartNewReadSession(uint32_t uid) {
+	ReadSession_t session;
+	ResetReadSession(&session);
+	session.isOpened = true;
+	return session;
+}
+
+void NoFsStorage::ResetReadSession(ReadSession_t* session) {
+	memset(session, 0, sizeof(ReadSession_t));
+	return;
+}
+
+void NoFsStorage::CloseReadSession(ReadSession_t* session) {
+	session->isOpened = false;
 	return;
 }
