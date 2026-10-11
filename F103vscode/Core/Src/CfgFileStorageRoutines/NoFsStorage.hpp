@@ -30,6 +30,7 @@ typedef struct __attribute__((packed)) {
 } StorageStruct_t;
 
 typedef struct {
+	uint8_t currentRecordIndex;
 	uint32_t startAddress;
 	uint32_t currentAddress;
 	uint8_t currentPageOffset;
@@ -41,12 +42,22 @@ typedef struct {
 } RecordSession_t;
 
 typedef struct {
+	uint8_t currentRecordIndex;
 	uint32_t startAddress;
 	uint32_t currentAddress;
 	uint16_t readBytes;
 	uint16_t toBeReadBytes;
 	bool isOpened;
 } ReadSession_t;
+
+typedef struct {
+	uint8_t currentRecordIndex;
+	uint32_t startAddress;
+	uint32_t startSector;
+	uint32_t endSector;
+	uint16_t recordSize;
+	bool isOpened;
+} DeleteRecordSession_t;
 
 class NoFsStorage {
 
@@ -55,6 +66,7 @@ class NoFsStorage {
 	StorageStruct_t _fileStorageInfo;
 	RecordSession_t _recordSession;
 	ReadSession_t _readSession;
+	DeleteRecordSession_t _deleteSession;
 
 public:
 	NoFsStorage() {}
@@ -65,8 +77,10 @@ public:
 	int8_t StartNewCfgRecord(uint16_t cfgRecordSize);
 	int8_t WriteCfgRecordNextPart(uint8_t* data, size_t size);
 
-	uint16_t StartNewCfgRead(uint16_t uid = 0);
+	uint16_t StartNewCfgRead(uint32_t uid = 0);
 	int8_t ReadCfgRecordNextPart(uint8_t* data, size_t size);
+
+	int8_t DeleteRecord(uint32_t uid = 0);
 
 private:
 	w25qxx_t GetDeviceInfo();
@@ -81,6 +95,9 @@ private:
 	ReadSession_t StartNewReadSession(uint32_t uid);
 	void ResetReadSession(ReadSession_t* session);
 	void CloseReadSession(ReadSession_t* session);
+
+	DeleteRecordSession_t StartNewDeleteSession(uint32_t uid);
+	void ResetDeleteSession(DeleteRecordSession_t* session);
 
 };
 

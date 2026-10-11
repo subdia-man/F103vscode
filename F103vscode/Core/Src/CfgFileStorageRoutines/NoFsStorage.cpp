@@ -59,7 +59,7 @@ int8_t NoFsStorage::WriteStorageInfo(StorageStruct_t* info) {
 	//erase zero sector
 	_flashDevice.W25QxxEraseSector(STORAGE_INFO_SECTOR);
 	info->cyclesCounter++;
-	_flashDevice.W25QxxWritePage((uint8_t*)&info, STORAGE_INFO_PAGE, 0, 0);
+	_flashDevice.W25QxxWritePage((uint8_t*)info, STORAGE_INFO_PAGE, 0, 0);
 	return RES_OK;
 }
 
@@ -143,13 +143,7 @@ RecordSession_t NoFsStorage::StartNewRecordSession(uint16_t cfgRecordSize) {
 		}
 	}
 	uint8_t pagesAtSector = (_flashDeviceInfo.SectorSize/_flashDeviceInfo.PageSize);
-	//find nearest empty page
-	for(uint16_t i = 0; i < (pagesAtSector + 1); i++) {
-		if (_flashDevice.W25QxxIsEmptyPage((session.currentSector * pagesAtSector) + i, 0)) {
-			session.currentPage = (session.currentSector * pagesAtSector) + i;
-			break;
-		}
-	}
+	session.currentPage = (session.currentSector * pagesAtSector);
 	//calculate start address disregarding the offset inside previous (not empty) page
 	session.startAddress = session.currentAddress = 
 											_flashDeviceInfo.PageSize * session.currentPage;
@@ -181,7 +175,7 @@ void NoFsStorage::CloseRecordSession(RecordSession_t* session) {
 	return;
 }
 
-uint16_t NoFsStorage::StartNewCfgRead(uint16_t uid) {
+uint16_t NoFsStorage::StartNewCfgRead(uint32_t uid) {
 	_readSession = StartNewReadSession(uid);
 	_readSession.startAddress = _readSession.currentAddress = _fileStorageInfo.fAddresses.at(uid);
 	if(_fileStorageInfo.fSizes.at(uid) != 0) {
@@ -223,5 +217,57 @@ void NoFsStorage::ResetReadSession(ReadSession_t* session) {
 
 void NoFsStorage::CloseReadSession(ReadSession_t* session) {
 	session->isOpened = false;
+	return;
+}
+
+int8_t NoFsStorage::DeleteRecord(uint32_t uid) {
+	//start new delete session and define file's data: start address, file size, start and end sectors
+	_deleteSession = StartNewDeleteSession(uid);
+	if(_deleteSession.startAddress == 0 || _deleteSession.startSector == 0 || _deleteSession.endSector == 0 ||
+		_deleteSession.recordSize == 0) {
+		return RES_FAIL;
+	}
+	//then erase all sectors related to the file being deleted
+	for (uint16_t i = _deleteSession.startSector; i < _deleteSession.endSector; i++) {
+		_flashDevice.W25QxxEraseSector(i);
+	}
+	//zero all fields at the storage info related to this file
+	_fileStorageInfo.fAddresses.at(_deleteSession.currentRecordIndex) = 0;
+	_fileStorageInfo.fSizes.at(_deleteSession.currentRecordIndex) = 0;
+	_fileStorageInfo.fUIDs.at(_deleteSession.currentRecordIndex) = 0;
+	if (_fileStorageInfo.filesNumber > 0) {
+		_fileStorageInfo.filesNumber--;
+	}
+	if (_fileStorageInfo.memoryRecordedVolume > 0) {
+		_fileStorageInfo.memoryRecordedVolume -= _deleteSession.recordSize;
+	}
+	ResetDeleteSession(&_deleteSession);
+	//store renewed storage info
+	WriteStorageInfo(&_fileStorageInfo);
+	return RES_OK;
+}
+
+DeleteRecordSession_t NoFsStorage::StartNewDeleteSession(uint32_t uid) {
+	DeleteRecordSession_t session;
+	ResetDeleteSession(&session);
+	for (uint8_t i = 0; i < _fileStorageInfo.fUIDs.size(); i++) {
+		if(uid == _fileStorageInfo.fUIDs.at(i)) {
+			session.currentRecordIndex = i;
+			break;
+		}
+	}
+	session.startAddress = _fileStorageInfo.fAddresses.at(session.currentRecordIndex);
+	session.recordSize = _fileStorageInfo.fSizes.at(session.currentRecordIndex);
+	session.startSector = (session.startAddress / _flashDeviceInfo.SectorSize);
+	session.endSector = ((session.startAddress + session.recordSize) / _flashDeviceInfo.SectorSize);
+	if ((session.startAddress + session.recordSize) % _flashDeviceInfo.SectorSize) {
+		session.endSector++;
+	}
+	session.isOpened = true;
+	return session;
+}
+
+void NoFsStorage::ResetDeleteSession(DeleteRecordSession_t* session) {
+	memset(session, 0, sizeof(DeleteRecordSession_t));
 	return;
 }
