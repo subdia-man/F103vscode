@@ -72,7 +72,7 @@ private:
 	w25qxx_t GetDeviceInfo();
 	int8_t InitStorageInfo();
 	StorageStruct_t CreateNewStorageInfo();
-	int8_t WriteStorageInfo(StorageStruct_t info);
+	int8_t WriteStorageInfo(StorageStruct_t* info);
 
 	RecordSession_t StartNewRecordSession(uint16_t cfgRecordSize);
 	void ResetRecordSession(RecordSession_t* session);

@@ -24,7 +24,7 @@ int8_t NoFsStorage::InitStorageInfo() {
 	//check zero page for some data
 	if (_flashDevice.W25QxxIsEmptyPage(STORAGE_INFO_PAGE, 0)) {
 		_fileStorageInfo = CreateNewStorageInfo();
-		WriteStorageInfo(_fileStorageInfo);
+		WriteStorageInfo(&_fileStorageInfo);
 		return RES_OK;
 	} 
 	//read zero page
@@ -34,7 +34,7 @@ int8_t NoFsStorage::InitStorageInfo() {
 	if (checkHeader != STORAGE_INFO_HEADER) {
 		//corrupted or not exist
 		_fileStorageInfo = CreateNewStorageInfo();
-		WriteStorageInfo(_fileStorageInfo);
+		WriteStorageInfo(&_fileStorageInfo);
 	} else {
 		//init storage info with read data
 		assert(sizeof(_fileStorageInfo) == MAX_STORAGE_INFO_SIZE);
@@ -55,10 +55,10 @@ StorageStruct_t NoFsStorage::CreateNewStorageInfo() {
 	return info;
 }
 
-int8_t NoFsStorage::WriteStorageInfo(StorageStruct_t info) {
+int8_t NoFsStorage::WriteStorageInfo(StorageStruct_t* info) {
 	//erase zero sector
 	_flashDevice.W25QxxEraseSector(STORAGE_INFO_SECTOR);
-	info.cyclesCounter++;
+	info->cyclesCounter++;
 	_flashDevice.W25QxxWritePage((uint8_t*)&info, STORAGE_INFO_PAGE, 0, 0);
 	return RES_OK;
 }
@@ -175,7 +175,7 @@ void NoFsStorage::CloseRecordSession(RecordSession_t* session) {
 		}
 	}
 	//save storage info
-	WriteStorageInfo(_fileStorageInfo);
+	WriteStorageInfo(&_fileStorageInfo);
 	//reset session
 	ResetRecordSession(session);
 	return;
