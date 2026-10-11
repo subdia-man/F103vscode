@@ -63,8 +63,8 @@ int8_t NoFsStorage::WriteStorageInfo(StorageStruct_t* info) {
 	return RES_OK;
 }
 
-int8_t NoFsStorage::StartNewCfgRecord(uint16_t cfgRecordSize) {
-	_recordSession = StartNewRecordSession(cfgRecordSize);
+int8_t NoFsStorage::StartNewCfgRecord(uint32_t uid, uint16_t cfgRecordSize) {
+	_recordSession = StartNewRecordSession(uid, cfgRecordSize);
 	return RES_OK;
 }
 
@@ -132,16 +132,23 @@ int8_t NoFsStorage::WriteCfgRecordNextPart(uint8_t* data, size_t size) {
 	return RES_OK;
 }
 
-RecordSession_t NoFsStorage::StartNewRecordSession(uint16_t cfgRecordSize) {
+RecordSession_t NoFsStorage::StartNewRecordSession(uint32_t uid, uint16_t cfgRecordSize) {
 	RecordSession_t session;
 	ResetRecordSession(&session);
-	//find nearest empty sector
-	for(uint16_t i = RECORDS_START_SECTOR; i < (_flashDeviceInfo.SectorCount + 1); i++) {
-		if (_flashDevice.W25QxxIsEmptySector(i, 0)) {
+
+	uint16_t neededSectors = (cfgRecordSize / _flashDeviceInfo.SectorSize);
+	if(cfgRecordSize % _flashDeviceInfo.SectorSize) {
+		neededSectors++;
+	}
+	//determine new start sector
+	for(uint16_t i = RECORDS_START_SECTOR; i < _flashDeviceInfo.SectorCount; i++) {
+		if(_flashDevice.W25QxxIsEmptySector(i, 0) && isEmptySectorsEnoughForRecord((i * _flashDeviceInfo.SectorSize), 
+																					neededSectors)) {
 			session.currentSector = i;
 			break;
 		}
 	}
+
 	uint8_t pagesAtSector = (_flashDeviceInfo.SectorSize/_flashDeviceInfo.PageSize);
 	session.currentPage = (session.currentSector * pagesAtSector);
 	//calculate start address disregarding the offset inside previous (not empty) page
@@ -149,7 +156,26 @@ RecordSession_t NoFsStorage::StartNewRecordSession(uint16_t cfgRecordSize) {
 											_flashDeviceInfo.PageSize * session.currentPage;
 	session.toBeWrittenBytes = cfgRecordSize;
 	session.isOpened = true; //open session
+
+	for (uint8_t i = 0; i < _fileStorageInfo.fUIDs.size(); i++) {
+		if(_fileStorageInfo.fUIDs.at(i) == 0) {
+			session.currentRecordIndex = i;
+			_fileStorageInfo.fUIDs.at(i) = uid;
+			break;
+		}
+	}
+
 	return session;
+}
+
+bool NoFsStorage::isEmptySectorsEnoughForRecord(uint32_t startAddress, uint16_t neededSectors) {
+	for (uint16_t i = (startAddress / _flashDeviceInfo.SectorSize); 
+		i < (startAddress / _flashDeviceInfo.SectorSize) + neededSectors; i++) {
+		if (!_flashDevice.W25QxxIsEmptySector(i, 0)) {
+			return false;
+		}
+	}
+	return true;
 }
 
 void NoFsStorage::ResetRecordSession(RecordSession_t* session) {
@@ -177,12 +203,6 @@ void NoFsStorage::CloseRecordSession(RecordSession_t* session) {
 
 uint16_t NoFsStorage::StartNewCfgRead(uint32_t uid) {
 	_readSession = StartNewReadSession(uid);
-	_readSession.startAddress = _readSession.currentAddress = _fileStorageInfo.fAddresses.at(uid);
-	if(_fileStorageInfo.fSizes.at(uid) != 0) {
-		_readSession.toBeReadBytes = _fileStorageInfo.fSizes.at(uid);
-	} else {
-		_readSession.toBeReadBytes = _fileStorageInfo.memoryRecordedVolume;
-	}
 	return _readSession.toBeReadBytes; //return size of file to be read
 }
 
@@ -206,6 +226,14 @@ int8_t NoFsStorage::ReadCfgRecordNextPart(uint8_t* data, size_t size) {
 ReadSession_t NoFsStorage::StartNewReadSession(uint32_t uid) {
 	ReadSession_t session;
 	ResetReadSession(&session);
+	for (uint8_t i = 0; i < _fileStorageInfo.fUIDs.size(); i++) {
+		if(_fileStorageInfo.fUIDs.at(i) == uid) {
+			session.currentRecordIndex = i;
+			session.startAddress = session.currentAddress = _fileStorageInfo.fAddresses.at(i);
+			session.toBeReadBytes = _fileStorageInfo.fSizes.at(i);
+			break;
+		}
+	}
 	session.isOpened = true;
 	return session;
 }

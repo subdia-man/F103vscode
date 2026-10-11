@@ -74,7 +74,7 @@ public:
 
 	int8_t Init();
 
-	int8_t StartNewCfgRecord(uint16_t cfgRecordSize);
+	int8_t StartNewCfgRecord(uint32_t uid = 0, uint16_t cfgRecordSize = 0);
 	int8_t WriteCfgRecordNextPart(uint8_t* data, size_t size);
 
 	uint16_t StartNewCfgRead(uint32_t uid = 0);
@@ -88,9 +88,10 @@ private:
 	StorageStruct_t CreateNewStorageInfo();
 	int8_t WriteStorageInfo(StorageStruct_t* info);
 
-	RecordSession_t StartNewRecordSession(uint16_t cfgRecordSize);
+	RecordSession_t StartNewRecordSession(uint32_t uid, uint16_t cfgRecordSize);
 	void ResetRecordSession(RecordSession_t* session);
 	void CloseRecordSession(RecordSession_t* session);
+	bool isEmptySectorsEnoughForRecord(uint32_t startAddress, uint16_t neededSectors);
 
 	ReadSession_t StartNewReadSession(uint32_t uid);
 	void ResetReadSession(ReadSession_t* session);
