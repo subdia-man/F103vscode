@@ -82,6 +82,10 @@ public:
 
 	int8_t DeleteRecord(uint32_t uid = 0);
 
+	etl::array<uint32_t, MAX_FILES_NUMBER> GetFilesUids() {
+		return _fileStorageInfo.fUIDs;
+	}
+
 private:
 	w25qxx_t GetDeviceInfo();
 	int8_t InitStorageInfo();
