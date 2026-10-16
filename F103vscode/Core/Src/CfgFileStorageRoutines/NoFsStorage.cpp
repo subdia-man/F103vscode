@@ -142,7 +142,7 @@ RecordSession_t NoFsStorage::StartNewRecordSession(uint32_t uid, uint16_t cfgRec
 	}
 	//determine new start sector
 	for(uint16_t i = RECORDS_START_SECTOR; i < _flashDeviceInfo.SectorCount; i++) {
-		if(_flashDevice.W25QxxIsEmptySector(i, 0) && isEmptySectorsEnoughForRecord((i * _flashDeviceInfo.SectorSize), 
+		if(_flashDevice.W25QxxIsEmptySector(i, 0) & isEmptySectorsEnoughForRecord((i * _flashDeviceInfo.SectorSize), 
 																					neededSectors)) {
 			session.currentSector = i;
 			break;
