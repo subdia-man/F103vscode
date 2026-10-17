@@ -1,3 +1,5 @@
+#include <cstdint>
+#include <cstddef>
 
 #ifdef __cplusplus
 extern "C" {

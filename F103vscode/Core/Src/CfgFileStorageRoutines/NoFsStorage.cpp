@@ -13,6 +13,7 @@ int8_t NoFsStorage::Init() {
 	if (InitStorageInfo() != RES_OK) {
 		return RES_FAIL;
 	}
+	_isInit = true;
 	return RES_OK;
 }
 

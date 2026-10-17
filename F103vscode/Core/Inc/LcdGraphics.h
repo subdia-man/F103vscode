@@ -4,6 +4,8 @@
  *  Created on: Sep 18, 2026
  *      Author: subdia
  */
+#include <cstdint>
+#include <cstddef>
 
 #ifndef INC_LCD_GRAPHICS_H_
 #define INC_LCD_GRAPHICS_H_
@@ -157,6 +159,7 @@ class LcdGraphics {
 	uint8_t pixelBuffer[SSD1306_BUFFER_SIZE];
 	// Screen object
 	SSD1306_t SSD1306;
+	SSD1306_COLOR _color = White;
 
 public:
 
@@ -172,6 +175,16 @@ public:
 	void SetTextPosition(SSD1306_Line line, uint8_t chars);
 	SSD1306_Font_t GetCurrentFont();
 	void SetCurrentFont(SSD1306_Font_t font);
+
+	void ClearString(SSD1306_Line line);
+
+	SSD1306_COLOR GetCurrentColor() {
+		return _color;
+	}
+	void SetCurrentColor(SSD1306_COLOR color) {
+		_color = color;
+		return;
+	}
 
 private:
 
