@@ -113,6 +113,7 @@ int main(void) {
   _noFsStorage.Init();
   _lcdExplorer.Init();
   _lcdExplorer.LoadScreenView(SystemLoad);
+  _lcdExplorer.LoadScreenView(FilesView);
   
   /* USER CODE END 2 */
 
