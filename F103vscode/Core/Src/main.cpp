@@ -23,8 +23,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "usbd_cdc_if.h"
-#include "ssd1306.h"
-#include "LcdGraphics.h"
+#include "LcdExplorer.hpp"
 #include "W25Q128Driver.hpp"
 #include "NoFsStorage.hpp"
 #include "CDCExchangeProtocol/CDCProtocolTransceiver.hpp"
@@ -56,7 +55,7 @@ osThreadId cdcRxTaskHandle;
 osThreadId cdcTxTaskHandle;
 osThreadId cdcProcessTaskHandle;
 CDCProtocolTransceiver _cdcProtocolTransceiver;
-LcdGraphics _lcdGraphics;
+LcdExplorer _lcdExplorer;
 
 W25Q128Driver _flashDevice;
 NoFsStorage _noFsStorage;
@@ -111,10 +110,10 @@ int main(void) {
   MX_SPI1_Init();
   MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
-  SSD1306_Init();
-  _lcdGraphics.ClearScreen();
-  _lcdGraphics.SetTextPosition(Third, 4);
-  _lcdGraphics.WriteString("SYSTEM INIT...", _lcdGraphics.GetCurrentFont(), White);
+  _noFsStorage.Init();
+  _lcdExplorer.Init();
+  _lcdExplorer.LoadScreenView(SystemLoad);
+  _lcdExplorer.LoadScreenView(FilesView);
   
   /* USER CODE END 2 */
 

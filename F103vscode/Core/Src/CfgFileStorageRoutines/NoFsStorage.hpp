@@ -67,6 +67,7 @@ class NoFsStorage {
 	RecordSession_t _recordSession;
 	ReadSession_t _readSession;
 	DeleteRecordSession_t _deleteSession;
+	bool _isInit = false;
 
 public:
 	NoFsStorage() {}
@@ -84,6 +85,10 @@ public:
 
 	etl::array<uint32_t, MAX_FILES_NUMBER> GetFilesUids() {
 		return _fileStorageInfo.fUIDs;
+	}
+
+	bool IsInit() {
+		return _isInit;
 	}
 
 private:

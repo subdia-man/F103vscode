@@ -99,6 +99,7 @@ Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp \
 Core/Src/CfgFileStorageRoutines/W25Q128Driver.cpp \
 Core/Src/CfgFileStorageRoutines/BlockDevice.cpp \
 Core/CfgFileStorageRoutines/NoFsStorage.cpp \
+Core/Src/LcdOut/LcdExplorer.cpp \
 libs/alglib/src/diffequations.cpp \
 libs/alglib/src/alglibmisc.cpp \
 libs/alglib/src/ap.cpp \
@@ -224,6 +225,7 @@ CPP_INCLUDES =  \
 -IMiddlewares/Third_Party/FatFs/src \
 -IMiddlewares/Third_Party/FatFs/src/option \
 -Ilibs/alglib/src \
+-ICore/Src/LcdOut \
 
 # compile gcc flags
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
