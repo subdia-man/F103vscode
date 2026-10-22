@@ -19,15 +19,31 @@ void LcdExplorer::Init() {
 	return;
 }
 
-void LcdExplorer::LoadScreenView(ScreenView_t screenView) {
-	switch (screenView) {
-		case SystemLoad:
+void LcdExplorer::ProcessLcdState() {
+	LcdOutState lcdMachineState = LoadScreenView(_lcdStateMachine.GetState());
+	if (lcdMachineState != _lcdStateMachine.GetState()) {
+		_lcdStateMachine.SetState(lcdMachineState);
+	}
+	return;
+}
+
+LcdOutState LcdExplorer::LoadScreenView(LcdOutState state) {
+	LcdOutState lcdState;
+	switch (state) {
+		case LcdOutState::SystemLoad:
 			DrawScreenViewSystemInit();
+			lcdState = FilesView;
 		break;
-		case FilesView:
+		case LcdOutState::FilesView:
 			DrawScreenViewFiles();
 		break;
+		case LcdOutState::MenuView:
+		break;
+		default:
+			lcdState = FilesView;
+		break;
 	}
+	return lcdState;
 }
 
 void LcdExplorer::DrawScreenViewSystemInit() {
