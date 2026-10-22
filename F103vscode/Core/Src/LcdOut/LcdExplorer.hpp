@@ -4,6 +4,7 @@
 #include <string>
 #include "ssd1306.h"
 #include "LcdGraphics.h"
+#include "LcdOutStateMachine.hpp"
 
 #define INIT_LOAD_LINE_STARTX 				14 
 #define INIT_LOAD_LINE_10_PERCENTS_STARTX 	14 
@@ -27,12 +28,6 @@
 #define FILE_VIEW_DATA_FIRST_INDENT				2		
 #define FILE_VIEW_FILE_NUMBER_COLUMN			0		
 
-typedef enum {
-	SystemLoad = 1,
-	FilesView
-
-} ScreenView_t;
-
 typedef struct {
 	SSD1306_Line currentLine;
 	uint8_t numberColumn;
@@ -43,6 +38,7 @@ class LcdExplorer {
 
 	LcdGraphics _lcdGraphics;
 	FiesView_t _filesView;
+	LcdOutStateMachine _lcdStateMachine;
 
 public:
 
@@ -50,9 +46,12 @@ public:
 	~LcdExplorer() {}
 
 	void Init();
-	void LoadScreenView(ScreenView_t screenView);
+	void ProcessLcdState();
 
 private:
+
+	LcdOutState LoadScreenView(LcdOutState state);
+
 	void DrawScreenViewSystemInit();
 	void DrawScreenViewFiles();
 

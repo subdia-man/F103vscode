@@ -54,6 +54,8 @@ osThreadId defaultTaskHandle;
 osThreadId cdcRxTaskHandle;
 osThreadId cdcTxTaskHandle;
 osThreadId cdcProcessTaskHandle;
+osThreadId lcdProcessTaskHandle;
+
 CDCProtocolTransceiver _cdcProtocolTransceiver;
 LcdExplorer _lcdExplorer;
 
@@ -72,6 +74,7 @@ void StartDefaultTask(void const * argument);
 void StartCdcRxTask(void const * argument);
 void StartCdcTxTask(void const * argument);
 void StartCdcProcessTask(void const * argument);
+void StartLcdProcessTask(void const * argument);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -112,8 +115,9 @@ int main(void) {
   /* USER CODE BEGIN 2 */
   _noFsStorage.Init();
   _lcdExplorer.Init();
-  _lcdExplorer.LoadScreenView(SystemLoad);
-  _lcdExplorer.LoadScreenView(FilesView);
+  //_lcdExplorer.ProcessLcdState();
+  //_lcdExplorer.LoadScreenView(SystemLoad);
+  //_lcdExplorer.LoadScreenView(FilesView);
   
   /* USER CODE END 2 */
 
@@ -148,6 +152,9 @@ int main(void) {
 
   osThreadDef(cdcProcessTask, StartCdcProcessTask, osPriorityNormal, 0, 128);
   cdcProcessTaskHandle = osThreadCreate(osThread(cdcProcessTask), NULL);
+
+  osThreadDef(lcdProcessTask, StartLcdProcessTask, osPriorityNormal, 0, 128);
+  lcdProcessTaskHandle = osThreadCreate(osThread(lcdProcessTask), NULL);
   
   /* USER CODE END RTOS_THREADS */
 
@@ -360,14 +367,23 @@ void StartCdcRxTask(void const * argument) {
 }
 
 void StartCdcTxTask(void const * argument) {
+
   for(;;) {
    _cdcProtocolTransceiver.Transmit();
   }
 }
 
 void StartCdcProcessTask(void const * argument) {
+
   for(;;) {
     _cdcProtocolTransceiver.Process();
+  }
+}
+
+void StartLcdProcessTask(void const * argument) {
+
+  for(;;) {
+    _lcdExplorer.ProcessLcdState();
   }
 }
  /* USER CODE END 6 */
