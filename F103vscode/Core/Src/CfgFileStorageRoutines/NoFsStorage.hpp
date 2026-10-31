@@ -4,8 +4,9 @@
 #include <cassert>
 #include "W25Q128Driver.hpp"
 #include "etl/vector.h"
+#include "CarModelCodeStorage.hpp"
 
-//relatied to the storage info
+//related to the storage info
 #define STORAGE_INFO_HEADER			0xAAAA
 #define MAX_STORAGE_INFO_SIZE 		256
 #define STORAGE_INFO_SECTOR	 		0
@@ -17,6 +18,8 @@
 //related to other
 #define MAX_BUFFER_RWX_SIZE			1024
 #define RECORDS_START_SECTOR		1
+#define CAR_NAME_CODE_SIZE			1
+#define CAR_MODEL_NAME_SIZE			8
 
 typedef struct __attribute__((packed)) {
 	uint16_t header;
@@ -68,6 +71,7 @@ class NoFsStorage {
 	ReadSession_t _readSession;
 	DeleteRecordSession_t _deleteSession;
 	bool _isInit = false;
+	CarModelCodeStorage _carModelCodeStorage;
 
 public:
 	NoFsStorage() {}
@@ -83,13 +87,13 @@ public:
 
 	int8_t DeleteRecord(uint32_t uid = 0);
 
-	etl::array<uint32_t, MAX_FILES_NUMBER> GetFilesUids() {
-		return _fileStorageInfo.fUIDs;
-	}
+	etl::array<std::string, MAX_FILES_NUMBER> GetCarNames();
+	void GetCarModelName(uint32_t uid, char* data);
 
-	bool IsInit() {
-		return _isInit;
-	}
+	etl::array<uint32_t, MAX_FILES_NUMBER> GetFileUids();
+	uint8_t GetNumberOfUids();
+
+	bool IsInit();
 
 private:
 	w25qxx_t GetDeviceInfo();
@@ -108,6 +112,9 @@ private:
 
 	DeleteRecordSession_t StartNewDeleteSession(uint32_t uid);
 	void ResetDeleteSession(DeleteRecordSession_t* session);
+
+	std::string GetCarName(uint32_t fileUid);
+	uint8_t GetIndexOfUid(uint32_t fileUid);
 
 };
 

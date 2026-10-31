@@ -300,3 +300,56 @@ void NoFsStorage::ResetDeleteSession(DeleteRecordSession_t* session) {
 	memset(session, 0, sizeof(DeleteRecordSession_t));
 	return;
 }
+
+etl::array<std::string, MAX_FILES_NUMBER> NoFsStorage::GetCarNames() {
+		etl::array<std::string, MAX_FILES_NUMBER> carNames;
+		for (uint8_t i = 0; i < GetNumberOfUids(); i++) {
+			carNames.at(i) = GetCarName(_fileStorageInfo.fUIDs.at(i));
+		}
+		return carNames;
+	}
+
+std::string NoFsStorage::GetCarName(uint32_t fileUid) {
+	uint32_t fAddr = _fileStorageInfo.fAddresses.at(GetIndexOfUid(fileUid));
+	uint8_t carCode = 0;
+	_flashDevice.W25QxxReadBytes(&carCode, fAddr + 1, CAR_NAME_CODE_SIZE);
+	return _carModelCodeStorage.GetBrand(carCode);
+}
+
+void NoFsStorage::GetCarModelName(uint32_t uid, char* data) {
+	uint32_t fAddr = _fileStorageInfo.fAddresses.at(GetIndexOfUid(uid));
+	_flashDevice.W25QxxReadBytes((uint8_t*)data, fAddr + 2, CAR_MODEL_NAME_SIZE);
+	return;
+}
+
+uint8_t NoFsStorage::GetIndexOfUid(uint32_t fileUid) {
+	uint8_t fIndex = 0;
+	for (uint8_t i = 0; i < MAX_FILES_NUMBER; i++) {
+		if (_fileStorageInfo.fUIDs.at(i) == fileUid) {
+			fIndex = i;
+			break;
+		}
+	}
+	return fIndex;
+}
+
+uint8_t NoFsStorage::GetNumberOfUids() {
+	uint8_t number = 0;
+	for (uint8_t i = 0; i < MAX_FILES_NUMBER; i++) {
+		if (_fileStorageInfo.fUIDs.at(i) != 0) {
+			number +=1;
+		}
+		else {
+			break;
+		}
+	}
+	return number;
+}
+
+etl::array<uint32_t, MAX_FILES_NUMBER> NoFsStorage::GetFileUids() {
+	return this -> _fileStorageInfo.fUIDs;
+}
+
+bool NoFsStorage::IsInit() {
+	return _isInit;
+}

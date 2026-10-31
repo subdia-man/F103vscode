@@ -28,22 +28,26 @@ void LcdExplorer::ProcessLcdState() {
 }
 
 LcdOutState LcdExplorer::LoadScreenView(LcdOutState state) {
-	LcdOutState lcdState;
 	switch (state) {
 		case LcdOutState::SystemLoad:
 			DrawScreenViewSystemInit();
-			lcdState = FilesView;
+			return FilesView;
 		break;
 		case LcdOutState::FilesView:
 			DrawScreenViewFiles();
+			return PassOut;
 		break;
 		case LcdOutState::MenuView:
+			return PassOut;
+		break;
+		case LcdOutState::PassOut:
+			return PassOut;
 		break;
 		default:
-			lcdState = FilesView;
+			return PassOut;
 		break;
 	}
-	return lcdState;
+	return PassOut;
 }
 
 void LcdExplorer::DrawScreenViewSystemInit() {
@@ -90,24 +94,28 @@ void LcdExplorer::DrawScreenViewFiles() {
 	_filesView.currentLine = FILE_VIEW_DATA_FIRST_LINE;
 	_filesView.numberColumn = FILE_VIEW_FILE_NUMBER_COLUMN;
 	_filesView.fileNameColumn = FILE_VIEW_DATA_FIRST_INDENT;
-
-	etl::array<uint32_t, MAX_FILES_NUMBER> uids =  _noFsStorage.GetFilesUids();
-	for (uint8_t i = 0; i < uids.size(); i++) {
-		if (uids.at(i) != 0) {
-			DrawFileInfo(i + 1, uids.at(i));
-		}
+	etl::array<std::string, MAX_FILES_NUMBER> carNames =  _noFsStorage.GetCarNames();
+	etl::array<uint32_t, MAX_FILES_NUMBER> fUids = _noFsStorage.GetFileUids();
+	char buf[CAR_MODEL_NAME_SIZE];
+	memset(buf, 0, CAR_MODEL_NAME_SIZE);
+	for (uint8_t i = 0; i < _noFsStorage.GetNumberOfUids(); i++) {
+		_noFsStorage.GetCarModelName(fUids.at(i), buf);
+		BufferToChar(buf, CAR_MODEL_NAME_SIZE);
+		DrawFileInfo(i + 1, carNames.at(i), buf);
 	}
-	return;
+return;
 }
 
-void LcdExplorer::DrawFileInfo(uint8_t number, uint32_t uid) {
+void LcdExplorer::DrawFileInfo(uint8_t number, std::string name, char* model) {
 	//insert encryption number
 	_lcdGraphics.SetTextPosition(_filesView.currentLine, _filesView.numberColumn);
-	_lcdGraphics.WriteChar(ToChar(number) + 0x30, _lcdGraphics.GetCurrentFont(), _lcdGraphics.GetCurrentColor());
+	_lcdGraphics.WriteChar(ToChar(number), _lcdGraphics.GetCurrentFont(), _lcdGraphics.GetCurrentColor());
 
-	//insert uid
+	//insert car manufacturer and model
 	_lcdGraphics.SetTextPosition(_filesView.currentLine, _filesView.fileNameColumn);
-  	_lcdGraphics.WriteString(ToString(uid).data(), _lcdGraphics.GetCurrentFont(), _lcdGraphics.GetCurrentColor());
+  	_lcdGraphics.WriteString(name.data(), _lcdGraphics.GetCurrentFont(), _lcdGraphics.GetCurrentColor());
+  	_lcdGraphics.WriteChar(' ', _lcdGraphics.GetCurrentFont(), _lcdGraphics.GetCurrentColor());
+  	_lcdGraphics.WriteString(model, _lcdGraphics.GetCurrentFont(), _lcdGraphics.GetCurrentColor());
   	_filesView.currentLine = (SSD1306_Line)((uint8_t)_filesView.currentLine + 1);
 	return;
 }
@@ -145,5 +153,12 @@ std::string LcdExplorer::ToString(uint32_t value) {
 }
 
 char LcdExplorer::ToChar(uint8_t value) {
-	return (char)value;
+	return (char)value + 0x30;
+}
+
+void LcdExplorer::BufferToChar(char* buf, uint8_t bytesToConvert) {
+	for (uint8_t i = 0; i < bytesToConvert; i++) {
+		buf[i] = ToChar(buf[i]);
+	}
+	return;
 }

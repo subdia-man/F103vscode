@@ -2,7 +2,8 @@
 enum LcdOutState {
 	SystemLoad,
 	FilesView, 
-	MenuView
+	MenuView,
+	PassOut,
 };
 
 class LcdOutStateMachine {

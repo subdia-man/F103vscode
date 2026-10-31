@@ -80,12 +80,6 @@ Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c \
 Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c \
 Core/Src/sysmem.c \
 Core/Src/syscalls.c \
-FATFS/App/fatfs.c \
-Middlewares/Third_Party/FatFs/src/diskio.c \
-Middlewares/Third_Party/FatFs/src/ff_gen_drv.c \
-Middlewares/Third_Party/FatFs/src/ff.c \
-Middlewares/Third_Party/FatFs/src/option/syscall.c \
-FATFS/Target/user_diskio.c \
 
 # CPP sources
 CPP_SOURCES =  \
@@ -97,7 +91,6 @@ Core/Src/CDCExchangeProtocol/CDCParser.cpp \
 Core/Src/CDCExchangeProtocol/CDCProtocolFormer.cpp \
 Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp \
 Core/Src/CfgFileStorageRoutines/W25Q128Driver.cpp \
-Core/Src/CfgFileStorageRoutines/BlockDevice.cpp \
 Core/CfgFileStorageRoutines/NoFsStorage.cpp \
 Core/Src/LcdOut/LcdExplorer.cpp \
 libs/alglib/src/diffequations.cpp \
@@ -189,9 +182,6 @@ C_INCLUDES =  \
 -IMiddlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc \
 -IDrivers/CMSIS/Device/ST/STM32F1xx/Include \
 -IDrivers/CMSIS/Include \
--IFATFS/App \
--IFATFS/Target \
--IMiddlewares/Third_Party/FatFs/src \
 -ICore/Src/CfgFileStorageRoutines\
 
 # CPP includes
@@ -220,10 +210,6 @@ CPP_INCLUDES =  \
 -Ietl/private \
 -Ietl/private/chrono \
 -Ietl/profiles \
--IFATFS/App\
--IFATFS/Target\
--IMiddlewares/Third_Party/FatFs/src \
--IMiddlewares/Third_Party/FatFs/src/option \
 -Ilibs/alglib/src \
 -ICore/Src/LcdOut \
 

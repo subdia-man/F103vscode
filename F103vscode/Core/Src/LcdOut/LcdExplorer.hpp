@@ -56,13 +56,14 @@ private:
 	void DrawScreenViewFiles();
 
 	void DrawFileViewTable();
-	void DrawFileInfo(uint8_t number, uint32_t uid);
+	void DrawFileInfo(uint8_t number, std::string name, char* model);
 
 	void DrawLoading(uint8_t percents);
 	void DrawLoadingLine(uint8_t startx, uint8_t endx, uint8_t y);
 	void WriteNewTextLine(uint8_t indentx, SSD1306_Line line, char* text);
 	std::string ToString(uint32_t value);
 	char ToChar(uint8_t value);
+	void BufferToChar(char* buf, uint8_t bytesToConvert);
 };
 
 #endif
