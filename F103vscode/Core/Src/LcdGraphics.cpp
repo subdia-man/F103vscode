@@ -163,7 +163,7 @@ SSD1306_Font_t LcdGraphics::GetCurrentFont() {
 void LcdGraphics::ClearString(SSD1306_Line line) {
         SetTextPosition(line, 0);
         for (uint8_t i = 0; i < SSD1306_X_SIZE; i++) {
-            WriteChar(' ', GetCurrentFont(), White);
+            WriteChar(' ', GetCurrentFont(), GetCurrentColor());
         }
         SetTextPosition(line, 0);
         return;
