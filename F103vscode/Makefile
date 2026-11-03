@@ -92,6 +92,7 @@ Core/Src/CDCExchangeProtocol/CDCProtocolFormer.cpp \
 Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp \
 Core/Src/CfgFileStorageRoutines/W25Q128Driver.cpp \
 Core/CfgFileStorageRoutines/NoFsStorage.cpp \
+Core/Src/Keyboard/ButtonControl.cpp \
 Core/Src/LcdOut/LcdExplorer.cpp \
 libs/alglib/src/diffequations.cpp \
 libs/alglib/src/alglibmisc.cpp \
@@ -212,6 +213,7 @@ CPP_INCLUDES =  \
 -Ietl/profiles \
 -Ilibs/alglib/src \
 -ICore/Src/LcdOut \
+-ICore/Src/Keyboard\
 
 # compile gcc flags
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
