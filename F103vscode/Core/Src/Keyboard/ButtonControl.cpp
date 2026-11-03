@@ -69,6 +69,10 @@ Button ButtonControl::GetKeyPressed() {
 	return _lastPressed;
 }
 
+Button ButtonControl::GetLastPressed() {
+	return this -> _lastPressed;
+}
+
 uint8_t ButtonControl::Scan() {
    	return ScanColumnOne() | ScanColumnTwo() | ScanColumnThree() | ScanColumnFour();
 }

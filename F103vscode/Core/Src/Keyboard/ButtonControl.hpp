@@ -22,7 +22,7 @@
 
 #define PIN_SET 	GPIO_PIN_SET 
 #define PIN_RESET 	GPIO_PIN_RESET
-#define KEYPRESS_DELAY	20
+#define KEYPRESS_DELAY	50
 
 enum Button {
 	NoOne,
@@ -54,10 +54,11 @@ public:
 	~ButtonControl() {}
 
 	Button GetKeyPressed();
-	uint8_t Scan();
+	Button GetLastPressed();
 
 private:
 
+	uint8_t Scan();
 	uint8_t ScanColumnOne();
 	uint8_t ScanColumnTwo();
 	uint8_t ScanColumnThree();

@@ -47,6 +47,7 @@ public:
 
 	void Init();
 	void ProcessLcdState();
+	void WriteNewTextLine(uint8_t indentx, SSD1306_Line line, char* text);
 
 private:
 
@@ -60,7 +61,6 @@ private:
 
 	void DrawLoading(uint8_t percents);
 	void DrawLoadingLine(uint8_t startx, uint8_t endx, uint8_t y);
-	void WriteNewTextLine(uint8_t indentx, SSD1306_Line line, char* text);
 	std::string ToString(uint32_t value);
 	char ToChar(uint8_t value);
 	void BufferToChar(char* buf, uint8_t bytesToConvert);

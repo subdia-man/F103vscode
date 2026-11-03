@@ -415,10 +415,6 @@ void StartDefaultTask(void const * argument) {
   Button key = Button::NoOne;
   for(;;) {
    key = _buttonControl.GetKeyPressed();
-    if (key != Button::NoOne) {
-      _lcdExplorer.WriteNewTextLine(4, Fifth, "Key pressed: ");
-      _lcdExplorer.WriteNewTextLine(4, Sixth, (char*)key);
-   }
   }
   /* USER CODE END 5 */
 }
