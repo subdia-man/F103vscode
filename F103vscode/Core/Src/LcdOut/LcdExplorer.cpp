@@ -16,6 +16,7 @@ extern NoFsStorage _noFsStorage;
 void LcdExplorer::Init() {
 	SSD1306_Init();
 	memset (&_filesView, 0, sizeof(_filesView));
+	_ButtonDrawerAnimator.Init();
 	return;
 }
 
@@ -103,6 +104,9 @@ void LcdExplorer::DrawScreenViewFiles() {
 		BufferToChar(buf, CAR_MODEL_NAME_SIZE);
 		DrawFileInfo(i + 1, carNames.at(i), buf);
 	}
+	
+	_ButtonDrawerAnimator.DrawButton(_ButtonDrawerAnimator.GetLcdButtons().lcdViewButton);
+	_ButtonDrawerAnimator.DrawButton(_ButtonDrawerAnimator.GetLcdButtons().lcdDeleteButton);
 return;
 }
 
@@ -121,8 +125,8 @@ void LcdExplorer::DrawFileInfo(uint8_t number, std::string name, char* model) {
 }
 
 void LcdExplorer::DrawFileViewTable() {
-	_lcdGraphics.DrawHorizontalLine(0, SSD1306_X_SIZE-1, FILE_VIEW_TABLE_HEADING_Y);
-	_lcdGraphics.DrawVerticalLine(FILE_VIEW_TABLE_FILE_NUMBER_COLUMN_X, 0, SSD1306_Y_SIZE-1);
+	_lcdGraphics.DrawHorizontalLine(0, SSD1306_X_SIZE-1, FILE_VIEW_TABLE_HEADING_Y, _lcdGraphics.GetCurrentColor());
+	_lcdGraphics.DrawVerticalLine(FILE_VIEW_TABLE_FILE_NUMBER_COLUMN_X, 0, SSD1306_Y_SIZE-12, _lcdGraphics.GetCurrentColor());
 	_lcdGraphics.SetTextPosition(First, 0);
 	_lcdGraphics.WriteChar('#', _lcdGraphics.GetCurrentFont(), _lcdGraphics.GetCurrentColor());
 	_lcdGraphics.SetTextPosition(First, 2);
@@ -136,9 +140,9 @@ void LcdExplorer::DrawLoading(uint8_t percents) {
 }
 
 void LcdExplorer::DrawLoadingLine(uint8_t startx, uint8_t endx, uint8_t starty) {
-	_lcdGraphics.DrawHorizontalLine(startx, endx, starty);
-  	_lcdGraphics.DrawHorizontalLine(startx, endx, starty+1);
-  	_lcdGraphics.DrawHorizontalLine(startx, endx, starty+2);
+	_lcdGraphics.DrawHorizontalLine(startx, endx, starty, _lcdGraphics.GetCurrentColor());
+  	_lcdGraphics.DrawHorizontalLine(startx, endx, starty+1, _lcdGraphics.GetCurrentColor());
+  	_lcdGraphics.DrawHorizontalLine(startx, endx, starty+2, _lcdGraphics.GetCurrentColor());
 }
 
 void LcdExplorer::WriteNewTextLine(uint8_t indentx, SSD1306_Line line, char* text) {

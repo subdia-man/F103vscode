@@ -168,11 +168,13 @@ public:
 
 	char WriteChar(char ch, SSD1306_Font_t Font, SSD1306_COLOR color);
 	char WriteString(char* str, SSD1306_Font_t Font, SSD1306_COLOR color);
-	void DrawHorizontalLine(uint8_t startx, uint8_t endx, uint8_t y);
-	void DrawVerticalLine(uint8_t x, uint8_t starty, uint8_t endy);
-	void DrawLine(uint8_t startx, uint8_t endx, uint8_t starty, uint8_t endy);
+	void DrawHorizontalLine(uint8_t startx, uint8_t endx, uint8_t y, SSD1306_COLOR color);
+	void DrawVerticalLine(uint8_t x, uint8_t starty, uint8_t endy, SSD1306_COLOR color);
+	void DrawLine(uint8_t startx, uint8_t endx, uint8_t starty, uint8_t endy, SSD1306_COLOR color);
+	void DrawRectangle(uint8_t startx, uint8_t endx, uint8_t starty, uint8_t endy, SSD1306_COLOR color);
 	void ClearScreen();
 	void SetTextPosition(SSD1306_Line line, uint8_t chars);
+	void SetCursor(uint8_t x, uint8_t y);
 	SSD1306_Font_t GetCurrentFont();
 	void SetCurrentFont(SSD1306_Font_t font);
 
@@ -189,7 +191,6 @@ public:
 private:
 
 	void UpdateScreen(void);
-	void SetCursor(uint8_t x, uint8_t y);
 	void SetPixel(uint8_t x, uint8_t y, SSD1306_COLOR color);
 	void SetLine (SSD1306_Line line);
 	void SetIndent(uint8_t chars);

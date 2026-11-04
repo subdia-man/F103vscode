@@ -5,6 +5,7 @@
 #include "ssd1306.h"
 #include "LcdGraphics.h"
 #include "LcdOutStateMachine.hpp"
+#include "ButtonDrawerAnimator.hpp"
 
 #define INIT_LOAD_LINE_STARTX 				14 
 #define INIT_LOAD_LINE_10_PERCENTS_STARTX 	14 
@@ -34,9 +35,11 @@ typedef struct {
 	uint8_t fileNameColumn;
 } FiesView_t;
 
+extern LcdGraphics _lcdGraphics;
+extern ButtonDrawerAnimator _ButtonDrawerAnimator;
+
 class LcdExplorer {
 
-	LcdGraphics _lcdGraphics;
 	FiesView_t _filesView;
 	LcdOutStateMachine _lcdStateMachine;
 
