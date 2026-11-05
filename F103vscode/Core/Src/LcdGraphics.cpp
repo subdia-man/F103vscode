@@ -119,8 +119,12 @@ void LcdGraphics::UpdateScreen(void) {
 }
 
 void LcdGraphics::ClearScreen() {
+    uint8_t filler = 0x00;
+    if (_color != SSD1306_COLOR::White) {
+        filler = 0xFF;
+    }
   	for (uint16_t i = 0; i < SSD1306_BUFFER_SIZE; i++) {
-    	pixelBuffer[i] = 0x00;
+    	pixelBuffer[i] = filler;
   	}
   	UpdateScreen();
   	return;
