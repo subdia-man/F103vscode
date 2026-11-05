@@ -415,9 +415,9 @@ void StartDefaultTask(void const * argument) {
   MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 5 */
   /* Infinite loop */
-  Button key = Button::NoOne;
   for(;;) {
-   key = _buttonControl.GetKeyPressed();
+   _buttonControl.GetKeyPressed();
+   osDelay(200);
   }
   /* USER CODE END 5 */
 }
