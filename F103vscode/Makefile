@@ -94,6 +94,7 @@ Core/Src/CfgFileStorageRoutines/W25Q128Driver.cpp \
 Core/CfgFileStorageRoutines/NoFsStorage.cpp \
 Core/Src/Keyboard/ButtonControl.cpp \
 Core/Src/LcdOut/LcdExplorer.cpp \
+Core/Src/LcdOut/ButtonDrawerAnimator.cpp \
 libs/alglib/src/diffequations.cpp \
 libs/alglib/src/alglibmisc.cpp \
 libs/alglib/src/ap.cpp \

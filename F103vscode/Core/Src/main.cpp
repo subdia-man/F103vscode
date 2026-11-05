@@ -26,6 +26,7 @@
 #include "FileUIDGenerator.hpp"
 #include "ButtonControl.hpp"
 #include "LcdExplorer.hpp"
+#include "ButtonDrawerAnimator.hpp"
 #include "NoFsStorage.hpp"
 #include "CDCExchangeProtocol/CDCProtocolTransceiver.hpp"
 
@@ -58,7 +59,9 @@ osThreadId cdcProcessTaskHandle;
 osThreadId lcdProcessTaskHandle;
 
 CDCProtocolTransceiver _cdcProtocolTransceiver;
+LcdGraphics _lcdGraphics;
 LcdExplorer _lcdExplorer;
+ButtonDrawerAnimator _ButtonDrawerAnimator (_lcdGraphics);
 
 W25Q128Driver _flashDevice;
 NoFsStorage _noFsStorage;
@@ -199,7 +202,7 @@ int main(void) {
   osThreadDef(cdcProcessTask, StartCdcProcessTask, osPriorityNormal, 0, 128);
   cdcProcessTaskHandle = osThreadCreate(osThread(cdcProcessTask), NULL);
 
-  osThreadDef(lcdProcessTask, StartLcdProcessTask, osPriorityNormal, 0, 256);
+  osThreadDef(lcdProcessTask, StartLcdProcessTask, osPriorityNormal, 0, 384);
   lcdProcessTaskHandle = osThreadCreate(osThread(lcdProcessTask), NULL);
   
   /* USER CODE END RTOS_THREADS */

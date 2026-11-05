@@ -73,32 +73,40 @@ char LcdGraphics::WriteString(char* str, SSD1306_Font_t Font, SSD1306_COLOR colo
     return *str;
 }
 
-void LcdGraphics::DrawHorizontalLine(uint8_t startx, uint8_t endx, uint8_t y) {
+void LcdGraphics::DrawHorizontalLine(uint8_t startx, uint8_t endx, uint8_t y, SSD1306_COLOR color) {
 	for (uint8_t i = startx; i< endx; i++) {
-		SetPixel(i, y, White);
+		SetPixel(i, y, color);
 	}
 	UpdateScreen();
 	return;
 }
 
-void LcdGraphics::DrawVerticalLine(uint8_t x, uint8_t starty, uint8_t endy) {
+void LcdGraphics::DrawVerticalLine(uint8_t x, uint8_t starty, uint8_t endy, SSD1306_COLOR color) {
 	for (uint8_t i = starty; i< endy; i++) {
-		SetPixel(x, i, White);
+		SetPixel(x, i, color);
 	}
 	UpdateScreen();
 	return;
 }
 
 void LcdGraphics::DrawLine(uint8_t startx, uint8_t endx, 
-			  uint8_t starty, uint8_t endy) {
+			  uint8_t starty, uint8_t endy, SSD1306_COLOR color) {
 
 	float kornerKff = (abs(starty - endy)/abs(startx - endx));
 	for (uint8_t i = startx; i < endx; i++) {
 		uint8_t yk = kornerKff*(i - endx) + endy;
-		SetPixel(i, yk, White);
+		SetPixel(i, yk, color);
 	}
 	UpdateScreen();
 	return;
+}
+
+void LcdGraphics::DrawRectangle(uint8_t startx, uint8_t endx, uint8_t starty, uint8_t endy, SSD1306_COLOR color) {
+    DrawHorizontalLine(startx, endx, starty, color);
+    DrawHorizontalLine(startx, endx, endy, color);
+    DrawVerticalLine(startx, starty, endy, color);
+    DrawVerticalLine(endx, starty, endy, color);
+    return;
 }
 
 void LcdGraphics::UpdateScreen(void) {
@@ -111,8 +119,12 @@ void LcdGraphics::UpdateScreen(void) {
 }
 
 void LcdGraphics::ClearScreen() {
+    uint8_t filler = 0x00;
+    if (_color != SSD1306_COLOR::White) {
+        filler = 0xFF;
+    }
   	for (uint16_t i = 0; i < SSD1306_BUFFER_SIZE; i++) {
-    	pixelBuffer[i] = 0x00;
+    	pixelBuffer[i] = filler;
   	}
   	UpdateScreen();
   	return;
