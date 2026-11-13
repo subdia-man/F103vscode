@@ -94,6 +94,7 @@ public:
 	uint8_t GetNumberOfUids();
 
 	bool IsInit();
+	uint8_t GetIndexOfUid(uint32_t fileUid);
 
 private:
 	w25qxx_t GetDeviceInfo();
@@ -114,7 +115,6 @@ private:
 	void ResetDeleteSession(DeleteRecordSession_t* session);
 
 	std::string GetCarName(uint32_t fileUid);
-	uint8_t GetIndexOfUid(uint32_t fileUid);
 
 };
 

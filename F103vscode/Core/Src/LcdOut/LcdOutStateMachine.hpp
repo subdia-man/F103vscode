@@ -1,7 +1,8 @@
 
 enum LcdOutState {
 	SystemLoad,
-	FilesView, 
+	FilesView,
+	FileDeleteModalView, 
 	MenuView,
 	PassOut,
 };

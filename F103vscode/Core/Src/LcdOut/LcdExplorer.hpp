@@ -2,10 +2,12 @@
 #define LCD_EXPLORER_H
 
 #include <string>
+#include "etl/map.h"
+#include "ButtonDrawerAnimator.hpp"
 #include "ssd1306.h"
 #include "LcdGraphics.h"
 #include "LcdOutStateMachine.hpp"
-#include "ButtonDrawerAnimator.hpp"
+#include "NoFsStorage.hpp"
 
 #define INIT_LOAD_LINE_STARTX 				14 
 #define INIT_LOAD_LINE_10_PERCENTS_STARTX 	14 
@@ -39,13 +41,13 @@ extern LcdGraphics _lcdGraphics;
 extern ButtonDrawerAnimator _ButtonDrawerAnimator;
 
 class LcdExplorer {
-
 	FiesView_t _filesView;
-	LcdOutStateMachine _lcdStateMachine;
+	LcdOutStateMachine* _lcdStateMachine;
+	etl::map<SSD1306_Line, uint32_t, MAX_FILES_NUMBER> _screenRowObjects;
 
 public:
 
-	LcdExplorer() {}
+	LcdExplorer(LcdOutStateMachine& lcdOutStateMachine) : _lcdStateMachine(&lcdOutStateMachine) {}
 	~LcdExplorer() {}
 
 	void Init();
@@ -58,9 +60,12 @@ private:
 
 	void DrawScreenViewSystemInit();
 	void DrawScreenViewFiles();
+	void DrawFileDeleteModalView();
 
 	void DrawFileViewTable();
-	void DrawFileInfo(uint8_t number, std::string name, char* model);
+	void DrawFileInfo(uint8_t number, std::string nameModel);
+
+	std::string GetCarNameAndModel(uint8_t uidIndex);
 
 	void DrawLoading(uint8_t percents);
 	void DrawLoadingLine(uint8_t startx, uint8_t endx, uint8_t y);
