@@ -65,6 +65,7 @@ Button ButtonControl::GetKeyPressed() {
 		button = Button::NoOne;
 		break;
 	}
+	ButtonControlDelay(50);
 	return button;
 }
 

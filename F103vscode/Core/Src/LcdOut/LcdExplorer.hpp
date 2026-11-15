@@ -42,6 +42,7 @@ extern ButtonDrawerAnimator _ButtonDrawerAnimator;
 
 class LcdExplorer {
 	FiesView_t _filesView;
+	LcdOutState _storedLcdMachineState = LcdOutState::Deinitted;
 	LcdOutStateMachine* _lcdStateMachine;
 	etl::map<SSD1306_Line, uint32_t, MAX_FILES_NUMBER> _screenRowObjects;
 
@@ -56,7 +57,7 @@ public:
 
 private:
 
-	LcdOutState LoadScreenView(LcdOutState state);
+	void LoadScreenView(LcdOutState state);
 
 	void DrawScreenViewSystemInit();
 	void DrawScreenViewFiles();

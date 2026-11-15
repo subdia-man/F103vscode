@@ -20,38 +20,36 @@ void LcdExplorer::Init() {
 }
 
 void LcdExplorer::ProcessLcdState() {
-	LcdOutState lcdMachineState = LoadScreenView(_lcdStateMachine->GetState());
-	if (lcdMachineState != _lcdStateMachine->GetState()) {
-		_lcdStateMachine->SetState(lcdMachineState);
+	LcdOutState lcdMachineState = _lcdStateMachine->GetState(); 
+	if (lcdMachineState != _storedLcdMachineState) {
+		LoadScreenView(lcdMachineState);
+		_storedLcdMachineState = lcdMachineState;
 	}
 	return;
 }
 
-LcdOutState LcdExplorer::LoadScreenView(LcdOutState state) {
+void LcdExplorer::LoadScreenView(LcdOutState state) {
 	switch (state) {
+		case LcdOutState::Deinitted:
+		break;
 		case LcdOutState::SystemLoad:
 			DrawScreenViewSystemInit();
-			return FilesView;
 		break;
 		case LcdOutState::FilesView:
 			DrawScreenViewFiles();
-			return PassOut;
 		break;
 		case LcdOutState::FileDeleteModalView:
 			DrawFileDeleteModalView();
-			return PassOut;
 		break;
 		case LcdOutState::MenuView:
-			return PassOut;
 		break;
 		case LcdOutState::PassOut:
-			return PassOut;
 		break;
 		default:
-			return PassOut;
+			return;
 		break;
 	}
-	return PassOut;
+	return;
 }
 
 void LcdExplorer::DrawFileDeleteModalView() {

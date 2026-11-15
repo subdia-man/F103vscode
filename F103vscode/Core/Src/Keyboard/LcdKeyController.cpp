@@ -4,10 +4,20 @@
 
 void LcdKeyController::Step() {
 	Button button = _buttonControl->Filter();
-	switch (_lcdOutStateMachine -> GetState()) {
+	LcdOutState state = _lcdOutStateMachine -> GetState();
+	switch (state) {
+		case LcdOutState::Deinitted:
+			_lcdOutStateMachine -> SetState(LcdOutState::SystemLoad);
+		break;
+		case LcdOutState::SystemLoad:
+			_lcdOutStateMachine -> SetState(LcdOutState::FilesView);
+		break;
 		case LcdOutState::FilesView:
-			if(button == Button::Enter) {
+			if(button == Button::Escape) { //delete
 				_lcdOutStateMachine -> SetState(LcdOutState::FileDeleteModalView);
+			} 
+			else if (button == Button::Enter) { //file view
+				//view file
 			}
 		break;
 		case LcdOutState::FileDeleteModalView:
