@@ -29,6 +29,7 @@ void LcdExplorer::ProcessLcdState() {
 }
 
 void LcdExplorer::LoadScreenView(LcdOutState state) {
+	_lcdGraphics.ClearScreen();
 	switch (state) {
 		case LcdOutState::Deinitted:
 		break;
@@ -58,7 +59,6 @@ void LcdExplorer::DrawFileDeleteModalView() {
 }
 
 void LcdExplorer::DrawScreenViewSystemInit() {
-	_lcdGraphics.ClearScreen();
   	WriteNewTextLine(2, Third, "ECU OBD II emulator");
   	LcdExplorerDelay(3000);
 

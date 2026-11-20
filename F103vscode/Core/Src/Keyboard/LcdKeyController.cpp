@@ -27,6 +27,7 @@ void LcdKeyController::Step() {
 			}
 			else if (button == Button::Escape) {
 				//return to the FilesView state
+				_lcdOutStateMachine -> SetState(LcdOutState::FilesView);
 			}
 		break;
 	}
