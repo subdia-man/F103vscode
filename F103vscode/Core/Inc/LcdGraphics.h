@@ -188,6 +188,10 @@ public:
 		return;
 	}
 
+	uint8_t* GetScreenBuffer() {
+		return pixelBuffer;
+	}
+
 private:
 
 	void UpdateScreen(void);

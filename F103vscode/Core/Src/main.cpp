@@ -26,6 +26,7 @@
 #include "FileUIDGenerator.hpp"
 #include "ButtonControl.hpp"
 #include "LcdExplorer.hpp"
+#include "LcdKeyController.hpp"
 #include "ButtonDrawerAnimator.hpp"
 #include "NoFsStorage.hpp"
 #include "CDCExchangeProtocol/CDCProtocolTransceiver.hpp"
@@ -53,20 +54,21 @@ SPI_HandleTypeDef hspi2;
 
 osThreadId defaultTaskHandle;
 /* USER CODE BEGIN PV */
-osThreadId cdcRxTaskHandle;
-osThreadId cdcTxTaskHandle;
+osThreadId cdcTxRxTaskHandle;
 osThreadId cdcProcessTaskHandle;
 osThreadId lcdProcessTaskHandle;
 
 CDCProtocolTransceiver _cdcProtocolTransceiver;
 LcdGraphics _lcdGraphics;
-LcdExplorer _lcdExplorer;
+LcdOutStateMachine _lcdStateMachine;
+LcdExplorer _lcdExplorer(_lcdStateMachine);
 ButtonDrawerAnimator _ButtonDrawerAnimator (_lcdGraphics);
 
 W25Q128Driver _flashDevice;
 NoFsStorage _noFsStorage;
 FileUIDGenerator _fileUidGenerator;
 ButtonControl _buttonControl;
+LcdKeyController _lcdKeyController(_lcdStateMachine, _buttonControl);
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -77,8 +79,7 @@ static void MX_SPI2_Init(void);
 void StartDefaultTask(void const * argument);
 
 /* USER CODE BEGIN PFP */
-void StartCdcRxTask(void const * argument);
-void StartCdcTxTask(void const * argument);
+void StartCdcTxRxTask(void const * argument);
 void StartCdcProcessTask(void const * argument);
 void StartLcdProcessTask(void const * argument);
 /* USER CODE END PFP */
@@ -193,16 +194,13 @@ int main(void) {
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
-  osThreadDef(cdcRxTask, StartCdcRxTask, osPriorityNormal, 0, 128);
-  cdcRxTaskHandle = osThreadCreate(osThread(cdcRxTask), NULL);
-
-  osThreadDef(cdcTxTask, StartCdcTxTask, osPriorityNormal, 0, 128);
-  cdcTxTaskHandle = osThreadCreate(osThread(cdcTxTask), NULL);
+  osThreadDef(cdcTxRxTask, StartCdcTxRxTask, osPriorityNormal, 0, 128);
+  cdcTxRxTaskHandle = osThreadCreate(osThread(cdcTxRxTask), NULL);
 
   osThreadDef(cdcProcessTask, StartCdcProcessTask, osPriorityNormal, 0, 128);
   cdcProcessTaskHandle = osThreadCreate(osThread(cdcProcessTask), NULL);
 
-  osThreadDef(lcdProcessTask, StartLcdProcessTask, osPriorityNormal, 0, 384);
+  osThreadDef(lcdProcessTask, StartLcdProcessTask, osPriorityNormal, 0, 448);
   lcdProcessTaskHandle = osThreadCreate(osThread(lcdProcessTask), NULL);
   
   /* USER CODE END RTOS_THREADS */
@@ -415,25 +413,19 @@ void StartDefaultTask(void const * argument) {
   MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 5 */
   /* Infinite loop */
-  Button key = Button::NoOne;
   for(;;) {
-   key = _buttonControl.GetKeyPressed();
+   _lcdKeyController.Step();
+   osDelay(50);
   }
   /* USER CODE END 5 */
 }
 
 /* USER CODE BEGIN 6 */
-void StartCdcRxTask(void const * argument) {
- 
-  for(;;) {
-   _cdcProtocolTransceiver.Receive();
-  }
-}
-
-void StartCdcTxTask(void const * argument) {
+void StartCdcTxRxTask(void const * argument) {
 
   for(;;) {
-   _cdcProtocolTransceiver.Transmit();
+    _cdcProtocolTransceiver.Receive();
+    _cdcProtocolTransceiver.Transmit();
   }
 }
 

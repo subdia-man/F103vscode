@@ -65,7 +65,38 @@ Button ButtonControl::GetKeyPressed() {
 		button = Button::NoOne;
 		break;
 	}
-	_lastPressed = button;
+	ButtonControlDelay(50);
+	return button;
+}
+
+Button ButtonControl::Filter() {
+
+	switch(GetKeyPressed()) {
+		case Button::Two:
+		_lastPressed = Button::ArrowUp;
+		break;
+		case Button::Eight:
+		_lastPressed = Button::ArrowDown;
+		break;
+		case Button::Four:
+		_lastPressed = Button::ArrowLeft;
+		break;
+		case Button::Six:
+		_lastPressed = Button::ArrowRight;
+		break;
+		case Button::Five:
+		_lastPressed = Button::Enter;
+		break;
+		case Button::Abutton:
+		_lastPressed = Button::Enter;
+		break;
+		case Button::Bbutton:
+		_lastPressed = Button::Escape;
+		break;
+		default:
+		_lastPressed = Button::NoOne;
+		break;
+	}
 	return _lastPressed;
 }
 

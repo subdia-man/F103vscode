@@ -113,6 +113,8 @@ public:
 	void AnimateButton(lcdButton button);
 	void DrawReversedButton(lcdButton button);
 	void ChooseButton(lcdButton button);
+	void HighLightRow(SSD1306_Line row, std::string text);
+	void HighLightRowArea(SSD1306_Line row, std::string text);
 
 	void DrawModal(modal modal);
 

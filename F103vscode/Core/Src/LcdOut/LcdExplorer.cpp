@@ -1,7 +1,6 @@
 
 #include "LcdExplorer.hpp"
 #include "CDCProtocolTransceiver.hpp"
-#include "NoFsStorage.hpp"
 
 #if (_W25QXX_USE_FREERTOS == 1)
 #define LcdExplorerDelay(delay)   osDelay(delay)
@@ -21,34 +20,41 @@ void LcdExplorer::Init() {
 }
 
 void LcdExplorer::ProcessLcdState() {
-	LcdOutState lcdMachineState = LoadScreenView(_lcdStateMachine.GetState());
-	if (lcdMachineState != _lcdStateMachine.GetState()) {
-		_lcdStateMachine.SetState(lcdMachineState);
+	LcdOutState lcdMachineState = _lcdStateMachine->GetState(); 
+	if (lcdMachineState != _storedLcdMachineState) {
+		LoadScreenView(lcdMachineState);
+		_storedLcdMachineState = lcdMachineState;
 	}
 	return;
 }
 
-LcdOutState LcdExplorer::LoadScreenView(LcdOutState state) {
+void LcdExplorer::LoadScreenView(LcdOutState state) {
 	switch (state) {
+		case LcdOutState::Deinitted:
+		break;
 		case LcdOutState::SystemLoad:
 			DrawScreenViewSystemInit();
-			return FilesView;
 		break;
 		case LcdOutState::FilesView:
 			DrawScreenViewFiles();
-			return PassOut;
+		break;
+		case LcdOutState::FileDeleteModalView:
+			DrawFileDeleteModalView();
 		break;
 		case LcdOutState::MenuView:
-			return PassOut;
 		break;
 		case LcdOutState::PassOut:
-			return PassOut;
 		break;
 		default:
-			return PassOut;
+			return;
 		break;
 	}
-	return PassOut;
+	return;
+}
+
+void LcdExplorer::DrawFileDeleteModalView() {
+	_ButtonDrawerAnimator.DrawModal(_ButtonDrawerAnimator._fileDeleteModal);
+	return;
 }
 
 void LcdExplorer::DrawScreenViewSystemInit() {
@@ -95,33 +101,42 @@ void LcdExplorer::DrawScreenViewFiles() {
 	_filesView.currentLine = FILE_VIEW_DATA_FIRST_LINE;
 	_filesView.numberColumn = FILE_VIEW_FILE_NUMBER_COLUMN;
 	_filesView.fileNameColumn = FILE_VIEW_DATA_FIRST_INDENT;
-	etl::array<std::string, MAX_FILES_NUMBER> carNames =  _noFsStorage.GetCarNames();
-	etl::array<uint32_t, MAX_FILES_NUMBER> fUids = _noFsStorage.GetFileUids();
-	char buf[CAR_MODEL_NAME_SIZE];
-	memset(buf, 0, CAR_MODEL_NAME_SIZE);
 	for (uint8_t i = 0; i < _noFsStorage.GetNumberOfUids(); i++) {
-		_noFsStorage.GetCarModelName(fUids.at(i), buf);
-		BufferToChar(buf, CAR_MODEL_NAME_SIZE);
-		DrawFileInfo(i + 1, carNames.at(i), buf);
+		etl::pair<SSD1306_Line, uint32_t> _screenRowObjects {_filesView.currentLine, _noFsStorage.GetFileUids().at(i)};
+		DrawFileInfo(i + 1, GetCarNameAndModel(i));
 	}
 	
+	_ButtonDrawerAnimator.HighLightRow(FILE_VIEW_DATA_FIRST_LINE, 
+							GetCarNameAndModel(_noFsStorage.
+							GetIndexOfUid(_screenRowObjects.
+							find(FILE_VIEW_DATA_FIRST_LINE)->second)));
 	_ButtonDrawerAnimator.DrawButton(_ButtonDrawerAnimator.GetLcdButtons().lcdViewButton);
 	_ButtonDrawerAnimator.DrawButton(_ButtonDrawerAnimator.GetLcdButtons().lcdDeleteButton);
 return;
 }
 
-void LcdExplorer::DrawFileInfo(uint8_t number, std::string name, char* model) {
+void LcdExplorer::DrawFileInfo(uint8_t number, std::string nameModel) {
 	//insert encryption number
 	_lcdGraphics.SetTextPosition(_filesView.currentLine, _filesView.numberColumn);
 	_lcdGraphics.WriteChar(ToChar(number), _lcdGraphics.GetCurrentFont(), _lcdGraphics.GetCurrentColor());
 
 	//insert car manufacturer and model
 	_lcdGraphics.SetTextPosition(_filesView.currentLine, _filesView.fileNameColumn);
-  	_lcdGraphics.WriteString(name.data(), _lcdGraphics.GetCurrentFont(), _lcdGraphics.GetCurrentColor());
-  	_lcdGraphics.WriteChar(' ', _lcdGraphics.GetCurrentFont(), _lcdGraphics.GetCurrentColor());
-  	_lcdGraphics.WriteString(model, _lcdGraphics.GetCurrentFont(), _lcdGraphics.GetCurrentColor());
+  	_lcdGraphics.WriteString(nameModel.data(), _lcdGraphics.GetCurrentFont(), _lcdGraphics.GetCurrentColor());
   	_filesView.currentLine = (SSD1306_Line)((uint8_t)_filesView.currentLine + 1);
 	return;
+}
+
+std::string LcdExplorer::GetCarNameAndModel(uint8_t uidIndex) {
+	std::string carName =  _noFsStorage.GetCarNames().at(uidIndex);
+	char buf[CAR_MODEL_NAME_SIZE];
+	memset(buf, 0, CAR_MODEL_NAME_SIZE);
+	_noFsStorage.GetCarModelName(_noFsStorage.GetFileUids().at(uidIndex), buf);
+	BufferToChar(buf, CAR_MODEL_NAME_SIZE);
+	std::string fullString = carName
+							.append(" ", 1)
+							.append(buf, CAR_MODEL_NAME_SIZE);
+	return fullString;
 }
 
 void LcdExplorer::DrawFileViewTable() {

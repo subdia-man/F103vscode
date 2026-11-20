@@ -93,6 +93,7 @@ Core/Src/CDCExchangeProtocol/CDCProtocolTransceiver.cpp \
 Core/Src/CfgFileStorageRoutines/W25Q128Driver.cpp \
 Core/CfgFileStorageRoutines/NoFsStorage.cpp \
 Core/Src/Keyboard/ButtonControl.cpp \
+Core/Src/Keyboard/LcdKeyController.cpp \
 Core/Src/LcdOut/LcdExplorer.cpp \
 Core/Src/LcdOut/ButtonDrawerAnimator.cpp \
 libs/alglib/src/diffequations.cpp \

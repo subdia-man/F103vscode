@@ -41,7 +41,15 @@ enum Button {
 	Cbutton,
 	Dbutton,
 	AsteriskButton, //*
-	SharpButton //#
+	SharpButton, //#
+	ArrowUp, 
+	ArrowDown,
+	ArrowLeft,
+	ArrowRight,
+	Enter,
+	Escape,
+	Delete,
+	View
 };
 
 class ButtonControl {
@@ -55,6 +63,7 @@ public:
 
 	Button GetKeyPressed();
 	Button GetLastPressed();
+	Button Filter();
 
 private:
 

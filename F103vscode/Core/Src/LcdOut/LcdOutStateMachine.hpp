@@ -1,14 +1,16 @@
 
 enum LcdOutState {
+	Deinitted,
 	SystemLoad,
-	FilesView, 
+	FilesView,
+	FileDeleteModalView, 
 	MenuView,
 	PassOut,
 };
 
 class LcdOutStateMachine {
 
-	LcdOutState _currentState = SystemLoad; 
+	LcdOutState _currentState = Deinitted; 
 
 public:
 

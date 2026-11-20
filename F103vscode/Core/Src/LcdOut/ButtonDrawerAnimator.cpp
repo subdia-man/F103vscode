@@ -45,6 +45,24 @@ void ButtonDrawerAnimator::ChooseButton(lcdButton button) {
 	return DrawReversedButton(button);
 }
 
+void ButtonDrawerAnimator::HighLightRow(SSD1306_Line row, std::string text) {
+	HighLightRowArea(row, text);
+	_lcdGraphics->SetTextPosition(row, 2);
+	_lcdGraphics->WriteString(text.data(), _lcdGraphics->GetCurrentFont(), GetReversedColor(_lcdGraphics->GetCurrentColor()));
+	return;
+}
+
+void ButtonDrawerAnimator::HighLightRowArea(SSD1306_Line row, std::string text) {
+	_lcdGraphics->DrawRectangle(_lcdGraphics->GetCurrentFont().width * 2 - 1, 
+								_lcdGraphics->GetCurrentFont().width * 2 + 
+								_lcdGraphics->GetCurrentFont().width * text.length(), 
+								_lcdGraphics->GetCurrentFont().height * row, 
+								(_lcdGraphics->GetCurrentFont().height + 
+								(row * _lcdGraphics->GetCurrentFont().height)) - 1, 
+								_lcdGraphics->GetCurrentColor());
+	return;
+}
+
 void ButtonDrawerAnimator::DrawModal(modal modal) {
 	_lcdGraphics->ClearScreen();
 	_lcdGraphics->DrawRectangle(modal.borderStartx, modal.borderEndx, modal.borderStarty, 
