@@ -1,0 +1,1234 @@
+ARM GAS  C:\Users\subdia\AppData\Local\Temp\ccyNVXgS.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"ButtonControl.cpp"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "Core/Src/Keyboard/ButtonControl.cpp"
+  20              		.section	.text._ZN13ButtonControl14GetLastPressedEv,"ax",%progbits
+  21              		.align	1
+  22              		.global	_ZN13ButtonControl14GetLastPressedEv
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	_ZN13ButtonControl14GetLastPressedEv:
+  28              		.fnstart
+  29              	.LVL0:
+  30              	.LFB150:
+   1:Core/Src/Keyboard/ButtonControl.cpp **** #include "ButtonControl.hpp"
+   2:Core/Src/Keyboard/ButtonControl.cpp **** 
+   3:Core/Src/Keyboard/ButtonControl.cpp **** #ifdef _BUTTON_CONTROL_USE_FREERTOS
+   4:Core/Src/Keyboard/ButtonControl.cpp **** #define ButtonControlDelay(delay)   osDelay(delay)
+   5:Core/Src/Keyboard/ButtonControl.cpp **** #include "cmsis_os.h"
+   6:Core/Src/Keyboard/ButtonControl.cpp **** #else
+   7:Core/Src/Keyboard/ButtonControl.cpp **** #define ButtonControlDelay(delay)   HAL_Delay(delay)
+   8:Core/Src/Keyboard/ButtonControl.cpp **** #endif
+   9:Core/Src/Keyboard/ButtonControl.cpp **** 
+  10:Core/Src/Keyboard/ButtonControl.cpp **** Button ButtonControl::GetKeyPressed() {
+  11:Core/Src/Keyboard/ButtonControl.cpp **** 	Button button = Button::NoOne;
+  12:Core/Src/Keyboard/ButtonControl.cpp **** 	switch(Scan()) {
+  13:Core/Src/Keyboard/ButtonControl.cpp **** 		case 10:
+  14:Core/Src/Keyboard/ButtonControl.cpp **** 		button = Button::Zero;
+  15:Core/Src/Keyboard/ButtonControl.cpp **** 		break;
+  16:Core/Src/Keyboard/ButtonControl.cpp **** 		case 1:
+  17:Core/Src/Keyboard/ButtonControl.cpp **** 		button = Button::One;
+  18:Core/Src/Keyboard/ButtonControl.cpp **** 		break;
+  19:Core/Src/Keyboard/ButtonControl.cpp **** 		case 2:
+  20:Core/Src/Keyboard/ButtonControl.cpp **** 		button = Button::Two;
+  21:Core/Src/Keyboard/ButtonControl.cpp **** 		break;
+  22:Core/Src/Keyboard/ButtonControl.cpp **** 		case 3:
+  23:Core/Src/Keyboard/ButtonControl.cpp **** 		button = Button::Three;
+  24:Core/Src/Keyboard/ButtonControl.cpp **** 		break;
+  25:Core/Src/Keyboard/ButtonControl.cpp **** 		case 4:
+  26:Core/Src/Keyboard/ButtonControl.cpp **** 		button = Button::Four;
+  27:Core/Src/Keyboard/ButtonControl.cpp **** 		break;
+  28:Core/Src/Keyboard/ButtonControl.cpp **** 		case 5:
+ARM GAS  C:\Users\subdia\AppData\Local\Temp\ccyNVXgS.s 			page 2
+
+
+  29:Core/Src/Keyboard/ButtonControl.cpp **** 		button = Button::Five;
+  30:Core/Src/Keyboard/ButtonControl.cpp **** 		break;
+  31:Core/Src/Keyboard/ButtonControl.cpp **** 		case 6:
+  32:Core/Src/Keyboard/ButtonControl.cpp **** 		button = Button::Six;
+  33:Core/Src/Keyboard/ButtonControl.cpp **** 		break;
+  34:Core/Src/Keyboard/ButtonControl.cpp **** 		case 7:
+  35:Core/Src/Keyboard/ButtonControl.cpp **** 		button = Button::Seven;
+  36:Core/Src/Keyboard/ButtonControl.cpp **** 		break;
+  37:Core/Src/Keyboard/ButtonControl.cpp **** 		case 8:
+  38:Core/Src/Keyboard/ButtonControl.cpp **** 		button = Button::Eight;
+  39:Core/Src/Keyboard/ButtonControl.cpp **** 		break;
+  40:Core/Src/Keyboard/ButtonControl.cpp **** 		case 9:
+  41:Core/Src/Keyboard/ButtonControl.cpp **** 		button = Button::Nine;
+  42:Core/Src/Keyboard/ButtonControl.cpp **** 		break;
+  43:Core/Src/Keyboard/ButtonControl.cpp **** 		case 71:
+  44:Core/Src/Keyboard/ButtonControl.cpp **** 		button = Button::AsteriskButton;
+  45:Core/Src/Keyboard/ButtonControl.cpp **** 		break;
+  46:Core/Src/Keyboard/ButtonControl.cpp **** 		case 91:
+  47:Core/Src/Keyboard/ButtonControl.cpp **** 		button = Button::SharpButton;
+  48:Core/Src/Keyboard/ButtonControl.cpp **** 		break;
+  49:Core/Src/Keyboard/ButtonControl.cpp **** 		case 11:
+  50:Core/Src/Keyboard/ButtonControl.cpp **** 		button = Button::Abutton;
+  51:Core/Src/Keyboard/ButtonControl.cpp **** 		break;
+  52:Core/Src/Keyboard/ButtonControl.cpp **** 		case 21:
+  53:Core/Src/Keyboard/ButtonControl.cpp **** 		button = Button::Bbutton;
+  54:Core/Src/Keyboard/ButtonControl.cpp **** 		break;
+  55:Core/Src/Keyboard/ButtonControl.cpp **** 		case 31:
+  56:Core/Src/Keyboard/ButtonControl.cpp **** 		button = Button::Cbutton;
+  57:Core/Src/Keyboard/ButtonControl.cpp **** 		break;
+  58:Core/Src/Keyboard/ButtonControl.cpp **** 		case 41:
+  59:Core/Src/Keyboard/ButtonControl.cpp **** 		button = Button::Dbutton;
+  60:Core/Src/Keyboard/ButtonControl.cpp **** 		break;
+  61:Core/Src/Keyboard/ButtonControl.cpp **** 		case 0xFF:
+  62:Core/Src/Keyboard/ButtonControl.cpp **** 		button = Button::NoOne;
+  63:Core/Src/Keyboard/ButtonControl.cpp **** 		break;
+  64:Core/Src/Keyboard/ButtonControl.cpp **** 		default:
+  65:Core/Src/Keyboard/ButtonControl.cpp **** 		button = Button::NoOne;
+  66:Core/Src/Keyboard/ButtonControl.cpp **** 		break;
+  67:Core/Src/Keyboard/ButtonControl.cpp **** 	}
+  68:Core/Src/Keyboard/ButtonControl.cpp **** 	ButtonControlDelay(50);
+  69:Core/Src/Keyboard/ButtonControl.cpp **** 	return button;
+  70:Core/Src/Keyboard/ButtonControl.cpp **** }
+  71:Core/Src/Keyboard/ButtonControl.cpp **** 
+  72:Core/Src/Keyboard/ButtonControl.cpp **** Button ButtonControl::Filter() {
+  73:Core/Src/Keyboard/ButtonControl.cpp **** 
+  74:Core/Src/Keyboard/ButtonControl.cpp **** 	switch(GetKeyPressed()) {
+  75:Core/Src/Keyboard/ButtonControl.cpp **** 		case Button::Two:
+  76:Core/Src/Keyboard/ButtonControl.cpp **** 		_lastPressed = Button::ArrowUp;
+  77:Core/Src/Keyboard/ButtonControl.cpp **** 		break;
+  78:Core/Src/Keyboard/ButtonControl.cpp **** 		case Button::Eight:
+  79:Core/Src/Keyboard/ButtonControl.cpp **** 		_lastPressed = Button::ArrowDown;
+  80:Core/Src/Keyboard/ButtonControl.cpp **** 		break;
+  81:Core/Src/Keyboard/ButtonControl.cpp **** 		case Button::Four:
+  82:Core/Src/Keyboard/ButtonControl.cpp **** 		_lastPressed = Button::ArrowLeft;
+  83:Core/Src/Keyboard/ButtonControl.cpp **** 		break;
+  84:Core/Src/Keyboard/ButtonControl.cpp **** 		case Button::Six:
+  85:Core/Src/Keyboard/ButtonControl.cpp **** 		_lastPressed = Button::ArrowRight;
+ARM GAS  C:\Users\subdia\AppData\Local\Temp\ccyNVXgS.s 			page 3
+
+
+  86:Core/Src/Keyboard/ButtonControl.cpp **** 		break;
+  87:Core/Src/Keyboard/ButtonControl.cpp **** 		case Button::Five:
+  88:Core/Src/Keyboard/ButtonControl.cpp **** 		_lastPressed = Button::Enter;
+  89:Core/Src/Keyboard/ButtonControl.cpp **** 		break;
+  90:Core/Src/Keyboard/ButtonControl.cpp **** 		case Button::Abutton:
+  91:Core/Src/Keyboard/ButtonControl.cpp **** 		_lastPressed = Button::Enter;
+  92:Core/Src/Keyboard/ButtonControl.cpp **** 		break;
+  93:Core/Src/Keyboard/ButtonControl.cpp **** 		case Button::Bbutton:
+  94:Core/Src/Keyboard/ButtonControl.cpp **** 		_lastPressed = Button::Escape;
+  95:Core/Src/Keyboard/ButtonControl.cpp **** 		break;
+  96:Core/Src/Keyboard/ButtonControl.cpp **** 		default:
+  97:Core/Src/Keyboard/ButtonControl.cpp **** 		_lastPressed = Button::NoOne;
+  98:Core/Src/Keyboard/ButtonControl.cpp **** 		break;
+  99:Core/Src/Keyboard/ButtonControl.cpp **** 	}
+ 100:Core/Src/Keyboard/ButtonControl.cpp **** 	return _lastPressed;
+ 101:Core/Src/Keyboard/ButtonControl.cpp **** }
+ 102:Core/Src/Keyboard/ButtonControl.cpp **** 
+ 103:Core/Src/Keyboard/ButtonControl.cpp **** Button ButtonControl::GetLastPressed() {
+  31              		.loc 1 103 40 view -0
+  32              		.cfi_startproc
+  33              		@ args = 0, pretend = 0, frame = 0
+  34              		@ frame_needed = 0, uses_anonymous_args = 0
+  35              		@ link register save eliminated.
+ 104:Core/Src/Keyboard/ButtonControl.cpp **** 	return this -> _lastPressed;
+  36              		.loc 1 104 2 view .LVU1
+ 105:Core/Src/Keyboard/ButtonControl.cpp **** }
+  37              		.loc 1 105 1 is_stmt 0 view .LVU2
+  38 0000 0078     		ldrb	r0, [r0]	@ zero_extendqisi2
+  39              	.LVL1:
+  40              		.loc 1 105 1 view .LVU3
+  41 0002 7047     		bx	lr
+  42              		.cfi_endproc
+  43              	.LFE150:
+  44              		.cantunwind
+  45              		.fnend
+  47              		.section	.text._ZN13ButtonControl13ScanColumnOneEv,"ax",%progbits
+  48              		.align	1
+  49              		.global	_ZN13ButtonControl13ScanColumnOneEv
+  50              		.syntax unified
+  51              		.thumb
+  52              		.thumb_func
+  54              	_ZN13ButtonControl13ScanColumnOneEv:
+  55              		.fnstart
+  56              	.LVL2:
+  57              	.LFB152:
+ 106:Core/Src/Keyboard/ButtonControl.cpp **** 
+ 107:Core/Src/Keyboard/ButtonControl.cpp **** uint8_t ButtonControl::Scan() {
+ 108:Core/Src/Keyboard/ButtonControl.cpp ****    	return ScanColumnOne() | ScanColumnTwo() | ScanColumnThree() | ScanColumnFour();
+ 109:Core/Src/Keyboard/ButtonControl.cpp **** }
+ 110:Core/Src/Keyboard/ButtonControl.cpp **** 
+ 111:Core/Src/Keyboard/ButtonControl.cpp **** uint8_t ButtonControl::ScanColumnOne() {
+  58              		.loc 1 111 40 is_stmt 1 view -0
+  59              		.cfi_startproc
+  60              		@ args = 0, pretend = 0, frame = 0
+  61              		@ frame_needed = 0, uses_anonymous_args = 0
+  62              		.loc 1 111 40 is_stmt 0 view .LVU5
+  63 0000 10B5     		push	{r4, lr}
+ARM GAS  C:\Users\subdia\AppData\Local\Temp\ccyNVXgS.s 			page 4
+
+
+  64              		.save {r4, lr}
+  65              	.LCFI0:
+  66              		.cfi_def_cfa_offset 8
+  67              		.cfi_offset 4, -8
+  68              		.cfi_offset 14, -4
+ 112:Core/Src/Keyboard/ButtonControl.cpp **** 	uint8_t key = 0;
+  69              		.loc 1 112 2 is_stmt 1 view .LVU6
+  70              	.LVL3:
+ 113:Core/Src/Keyboard/ButtonControl.cpp **** 	HAL_GPIO_WritePin(Column_Port, C1_Pin, PIN_RESET);
+  71              		.loc 1 113 2 view .LVU7
+  72              		.loc 1 113 19 is_stmt 0 view .LVU8
+  73 0002 0022     		movs	r2, #0
+  74 0004 0221     		movs	r1, #2
+  75 0006 1748     		ldr	r0, .L12
+  76              	.LVL4:
+  77              		.loc 1 113 19 view .LVU9
+  78 0008 FFF7FEFF 		bl	HAL_GPIO_WritePin
+  79              	.LVL5:
+ 114:Core/Src/Keyboard/ButtonControl.cpp ****     	if (HAL_GPIO_ReadPin(Row_Port, R1_Pin) == GPIO_PIN_RESET) {
+  80              		.loc 1 114 6 is_stmt 1 view .LVU10
+  81              		.loc 1 114 26 is_stmt 0 view .LVU11
+  82 000c 1021     		movs	r1, #16
+  83 000e 1648     		ldr	r0, .L12+4
+  84 0010 FFF7FEFF 		bl	HAL_GPIO_ReadPin
+  85              	.LVL6:
+  86              		.loc 1 114 6 discriminator 1 view .LVU12
+  87 0014 58B9     		cbnz	r0, .L9
+ 115:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 1;
+  88              		.loc 1 115 11 view .LVU13
+  89 0016 0123     		movs	r3, #1
+  90 0018 1C46     		mov	r4, r3
+  91              	.L3:
+  92              	.LVL7:
+ 116:Core/Src/Keyboard/ButtonControl.cpp ****     	}
+ 117:Core/Src/Keyboard/ButtonControl.cpp ****     	else if (HAL_GPIO_ReadPin(Row_Port, R2_Pin) == GPIO_PIN_RESET) {
+ 118:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 4;
+ 119:Core/Src/Keyboard/ButtonControl.cpp ****     	}
+ 120:Core/Src/Keyboard/ButtonControl.cpp ****     	else if (HAL_GPIO_ReadPin(Row_Port, R3_Pin) == GPIO_PIN_RESET) {
+ 121:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 7;
+ 122:Core/Src/Keyboard/ButtonControl.cpp ****     	}
+ 123:Core/Src/Keyboard/ButtonControl.cpp ****     	else if (HAL_GPIO_ReadPin(Row_Port, R4_Pin) == GPIO_PIN_RESET) {
+ 124:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 71;
+ 125:Core/Src/Keyboard/ButtonControl.cpp ****     	}
+ 126:Core/Src/Keyboard/ButtonControl.cpp ****     HAL_GPIO_WritePin(Column_Port, C1_Pin, PIN_SET);
+  93              		.loc 1 126 5 is_stmt 1 view .LVU14
+  94              		.loc 1 126 22 is_stmt 0 view .LVU15
+  95 001a 0122     		movs	r2, #1
+  96 001c 0221     		movs	r1, #2
+  97 001e 1148     		ldr	r0, .L12
+  98 0020 FFF7FEFF 		bl	HAL_GPIO_WritePin
+  99              	.LVL8:
+ 127:Core/Src/Keyboard/ButtonControl.cpp ****     ButtonControlDelay(KEYPRESS_DELAY);
+ 100              		.loc 1 127 5 is_stmt 1 view .LVU16
+ 101 0024 3220     		movs	r0, #50
+ 102 0026 FFF7FEFF 		bl	osDelay
+ 103              	.LVL9:
+ 128:Core/Src/Keyboard/ButtonControl.cpp ****     return key;
+ARM GAS  C:\Users\subdia\AppData\Local\Temp\ccyNVXgS.s 			page 5
+
+
+ 104              		.loc 1 128 5 view .LVU17
+ 129:Core/Src/Keyboard/ButtonControl.cpp **** }
+ 105              		.loc 1 129 1 is_stmt 0 view .LVU18
+ 106 002a 2046     		mov	r0, r4
+ 107 002c 10BD     		pop	{r4, pc}
+ 108              	.LVL10:
+ 109              	.L9:
+ 117:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 4;
+ 110              		.loc 1 117 11 is_stmt 1 view .LVU19
+ 117:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 4;
+ 111              		.loc 1 117 31 is_stmt 0 view .LVU20
+ 112 002e 2021     		movs	r1, #32
+ 113 0030 0D48     		ldr	r0, .L12+4
+ 114 0032 FFF7FEFF 		bl	HAL_GPIO_ReadPin
+ 115              	.LVL11:
+ 117:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 4;
+ 116              		.loc 1 117 11 discriminator 1 view .LVU21
+ 117 0036 10B9     		cbnz	r0, .L10
+ 118:Core/Src/Keyboard/ButtonControl.cpp ****     	}
+ 118              		.loc 1 118 11 view .LVU22
+ 119 0038 0423     		movs	r3, #4
+ 120 003a 1C46     		mov	r4, r3
+ 121 003c EDE7     		b	.L3
+ 122              	.L10:
+ 120:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 7;
+ 123              		.loc 1 120 11 is_stmt 1 view .LVU23
+ 120:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 7;
+ 124              		.loc 1 120 31 is_stmt 0 view .LVU24
+ 125 003e 4021     		movs	r1, #64
+ 126 0040 0948     		ldr	r0, .L12+4
+ 127 0042 FFF7FEFF 		bl	HAL_GPIO_ReadPin
+ 128              	.LVL12:
+ 120:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 7;
+ 129              		.loc 1 120 11 discriminator 1 view .LVU25
+ 130 0046 10B9     		cbnz	r0, .L11
+ 121:Core/Src/Keyboard/ButtonControl.cpp ****     	}
+ 131              		.loc 1 121 11 view .LVU26
+ 132 0048 0723     		movs	r3, #7
+ 133 004a 1C46     		mov	r4, r3
+ 134 004c E5E7     		b	.L3
+ 135              	.L11:
+ 123:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 71;
+ 136              		.loc 1 123 11 is_stmt 1 view .LVU27
+ 123:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 71;
+ 137              		.loc 1 123 31 is_stmt 0 view .LVU28
+ 138 004e 8021     		movs	r1, #128
+ 139 0050 0548     		ldr	r0, .L12+4
+ 140 0052 FFF7FEFF 		bl	HAL_GPIO_ReadPin
+ 141              	.LVL13:
+ 123:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 71;
+ 142              		.loc 1 123 11 discriminator 1 view .LVU29
+ 143 0056 10B1     		cbz	r0, .L7
+ 112:Core/Src/Keyboard/ButtonControl.cpp **** 	HAL_GPIO_WritePin(Column_Port, C1_Pin, PIN_RESET);
+ 144              		.loc 1 112 10 view .LVU30
+ 145 0058 0023     		movs	r3, #0
+ 146 005a 1C46     		mov	r4, r3
+ 147 005c DDE7     		b	.L3
+ARM GAS  C:\Users\subdia\AppData\Local\Temp\ccyNVXgS.s 			page 6
+
+
+ 148              	.L7:
+ 124:Core/Src/Keyboard/ButtonControl.cpp ****     	}
+ 149              		.loc 1 124 11 view .LVU31
+ 150 005e 4723     		movs	r3, #71
+ 151 0060 1C46     		mov	r4, r3
+ 152 0062 DAE7     		b	.L3
+ 153              	.L13:
+ 154              		.align	2
+ 155              	.L12:
+ 156 0064 00000240 		.word	1073872896
+ 157 0068 00040240 		.word	1073873920
+ 158              		.cfi_endproc
+ 159              	.LFE152:
+ 160              		.fnend
+ 162              		.section	.text._ZN13ButtonControl13ScanColumnTwoEv,"ax",%progbits
+ 163              		.align	1
+ 164              		.global	_ZN13ButtonControl13ScanColumnTwoEv
+ 165              		.syntax unified
+ 166              		.thumb
+ 167              		.thumb_func
+ 169              	_ZN13ButtonControl13ScanColumnTwoEv:
+ 170              		.fnstart
+ 171              	.LVL14:
+ 172              	.LFB153:
+ 130:Core/Src/Keyboard/ButtonControl.cpp **** 
+ 131:Core/Src/Keyboard/ButtonControl.cpp **** uint8_t ButtonControl::ScanColumnTwo() {
+ 173              		.loc 1 131 40 is_stmt 1 view -0
+ 174              		.cfi_startproc
+ 175              		@ args = 0, pretend = 0, frame = 0
+ 176              		@ frame_needed = 0, uses_anonymous_args = 0
+ 177              		.loc 1 131 40 is_stmt 0 view .LVU33
+ 178 0000 10B5     		push	{r4, lr}
+ 179              		.save {r4, lr}
+ 180              	.LCFI1:
+ 181              		.cfi_def_cfa_offset 8
+ 182              		.cfi_offset 4, -8
+ 183              		.cfi_offset 14, -4
+ 132:Core/Src/Keyboard/ButtonControl.cpp **** 	uint8_t key = 0;
+ 184              		.loc 1 132 2 is_stmt 1 view .LVU34
+ 185              	.LVL15:
+ 133:Core/Src/Keyboard/ButtonControl.cpp **** 	HAL_GPIO_WritePin(Column_Port, C2_Pin, PIN_RESET);
+ 186              		.loc 1 133 2 view .LVU35
+ 187              		.loc 1 133 19 is_stmt 0 view .LVU36
+ 188 0002 0022     		movs	r2, #0
+ 189 0004 0421     		movs	r1, #4
+ 190 0006 1748     		ldr	r0, .L24
+ 191              	.LVL16:
+ 192              		.loc 1 133 19 view .LVU37
+ 193 0008 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 194              	.LVL17:
+ 134:Core/Src/Keyboard/ButtonControl.cpp ****     	if (HAL_GPIO_ReadPin(Row_Port, R1_Pin) == GPIO_PIN_RESET) {
+ 195              		.loc 1 134 6 is_stmt 1 view .LVU38
+ 196              		.loc 1 134 26 is_stmt 0 view .LVU39
+ 197 000c 1021     		movs	r1, #16
+ 198 000e 1648     		ldr	r0, .L24+4
+ 199 0010 FFF7FEFF 		bl	HAL_GPIO_ReadPin
+ 200              	.LVL18:
+ARM GAS  C:\Users\subdia\AppData\Local\Temp\ccyNVXgS.s 			page 7
+
+
+ 201              		.loc 1 134 6 discriminator 1 view .LVU40
+ 202 0014 58B9     		cbnz	r0, .L21
+ 135:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 2;
+ 203              		.loc 1 135 11 view .LVU41
+ 204 0016 0223     		movs	r3, #2
+ 205 0018 1C46     		mov	r4, r3
+ 206              	.L15:
+ 207              	.LVL19:
+ 136:Core/Src/Keyboard/ButtonControl.cpp ****     	}
+ 137:Core/Src/Keyboard/ButtonControl.cpp ****     	else if (HAL_GPIO_ReadPin(Row_Port, R2_Pin) == GPIO_PIN_RESET) {
+ 138:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 5;
+ 139:Core/Src/Keyboard/ButtonControl.cpp ****     	}
+ 140:Core/Src/Keyboard/ButtonControl.cpp ****     	else if (HAL_GPIO_ReadPin(Row_Port, R3_Pin) == GPIO_PIN_RESET) {
+ 141:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 8;
+ 142:Core/Src/Keyboard/ButtonControl.cpp ****     	}
+ 143:Core/Src/Keyboard/ButtonControl.cpp ****     	else if (HAL_GPIO_ReadPin(Row_Port, R4_Pin) == GPIO_PIN_RESET) {
+ 144:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 10;
+ 145:Core/Src/Keyboard/ButtonControl.cpp ****     	}
+ 146:Core/Src/Keyboard/ButtonControl.cpp ****     HAL_GPIO_WritePin(Column_Port, C2_Pin, PIN_SET);
+ 208              		.loc 1 146 5 is_stmt 1 view .LVU42
+ 209              		.loc 1 146 22 is_stmt 0 view .LVU43
+ 210 001a 0122     		movs	r2, #1
+ 211 001c 0421     		movs	r1, #4
+ 212 001e 1148     		ldr	r0, .L24
+ 213 0020 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 214              	.LVL20:
+ 147:Core/Src/Keyboard/ButtonControl.cpp ****     ButtonControlDelay(KEYPRESS_DELAY);
+ 215              		.loc 1 147 5 is_stmt 1 view .LVU44
+ 216 0024 3220     		movs	r0, #50
+ 217 0026 FFF7FEFF 		bl	osDelay
+ 218              	.LVL21:
+ 148:Core/Src/Keyboard/ButtonControl.cpp ****     return key;
+ 219              		.loc 1 148 5 view .LVU45
+ 149:Core/Src/Keyboard/ButtonControl.cpp **** }
+ 220              		.loc 1 149 1 is_stmt 0 view .LVU46
+ 221 002a 2046     		mov	r0, r4
+ 222 002c 10BD     		pop	{r4, pc}
+ 223              	.LVL22:
+ 224              	.L21:
+ 137:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 5;
+ 225              		.loc 1 137 11 is_stmt 1 view .LVU47
+ 137:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 5;
+ 226              		.loc 1 137 31 is_stmt 0 view .LVU48
+ 227 002e 2021     		movs	r1, #32
+ 228 0030 0D48     		ldr	r0, .L24+4
+ 229 0032 FFF7FEFF 		bl	HAL_GPIO_ReadPin
+ 230              	.LVL23:
+ 137:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 5;
+ 231              		.loc 1 137 11 discriminator 1 view .LVU49
+ 232 0036 10B9     		cbnz	r0, .L22
+ 138:Core/Src/Keyboard/ButtonControl.cpp ****     	}
+ 233              		.loc 1 138 11 view .LVU50
+ 234 0038 0523     		movs	r3, #5
+ 235 003a 1C46     		mov	r4, r3
+ 236 003c EDE7     		b	.L15
+ 237              	.L22:
+ 140:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 8;
+ARM GAS  C:\Users\subdia\AppData\Local\Temp\ccyNVXgS.s 			page 8
+
+
+ 238              		.loc 1 140 11 is_stmt 1 view .LVU51
+ 140:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 8;
+ 239              		.loc 1 140 31 is_stmt 0 view .LVU52
+ 240 003e 4021     		movs	r1, #64
+ 241 0040 0948     		ldr	r0, .L24+4
+ 242 0042 FFF7FEFF 		bl	HAL_GPIO_ReadPin
+ 243              	.LVL24:
+ 140:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 8;
+ 244              		.loc 1 140 11 discriminator 1 view .LVU53
+ 245 0046 10B9     		cbnz	r0, .L23
+ 141:Core/Src/Keyboard/ButtonControl.cpp ****     	}
+ 246              		.loc 1 141 11 view .LVU54
+ 247 0048 0823     		movs	r3, #8
+ 248 004a 1C46     		mov	r4, r3
+ 249 004c E5E7     		b	.L15
+ 250              	.L23:
+ 143:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 10;
+ 251              		.loc 1 143 11 is_stmt 1 view .LVU55
+ 143:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 10;
+ 252              		.loc 1 143 31 is_stmt 0 view .LVU56
+ 253 004e 8021     		movs	r1, #128
+ 254 0050 0548     		ldr	r0, .L24+4
+ 255 0052 FFF7FEFF 		bl	HAL_GPIO_ReadPin
+ 256              	.LVL25:
+ 143:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 10;
+ 257              		.loc 1 143 11 discriminator 1 view .LVU57
+ 258 0056 10B1     		cbz	r0, .L19
+ 132:Core/Src/Keyboard/ButtonControl.cpp **** 	HAL_GPIO_WritePin(Column_Port, C2_Pin, PIN_RESET);
+ 259              		.loc 1 132 10 view .LVU58
+ 260 0058 0023     		movs	r3, #0
+ 261 005a 1C46     		mov	r4, r3
+ 262 005c DDE7     		b	.L15
+ 263              	.L19:
+ 144:Core/Src/Keyboard/ButtonControl.cpp ****     	}
+ 264              		.loc 1 144 11 view .LVU59
+ 265 005e 0A23     		movs	r3, #10
+ 266 0060 1C46     		mov	r4, r3
+ 267 0062 DAE7     		b	.L15
+ 268              	.L25:
+ 269              		.align	2
+ 270              	.L24:
+ 271 0064 00000240 		.word	1073872896
+ 272 0068 00040240 		.word	1073873920
+ 273              		.cfi_endproc
+ 274              	.LFE153:
+ 275              		.fnend
+ 277              		.section	.text._ZN13ButtonControl15ScanColumnThreeEv,"ax",%progbits
+ 278              		.align	1
+ 279              		.global	_ZN13ButtonControl15ScanColumnThreeEv
+ 280              		.syntax unified
+ 281              		.thumb
+ 282              		.thumb_func
+ 284              	_ZN13ButtonControl15ScanColumnThreeEv:
+ 285              		.fnstart
+ 286              	.LVL26:
+ 287              	.LFB154:
+ 150:Core/Src/Keyboard/ButtonControl.cpp **** 
+ARM GAS  C:\Users\subdia\AppData\Local\Temp\ccyNVXgS.s 			page 9
+
+
+ 151:Core/Src/Keyboard/ButtonControl.cpp **** uint8_t ButtonControl::ScanColumnThree() {
+ 288              		.loc 1 151 42 is_stmt 1 view -0
+ 289              		.cfi_startproc
+ 290              		@ args = 0, pretend = 0, frame = 0
+ 291              		@ frame_needed = 0, uses_anonymous_args = 0
+ 292              		.loc 1 151 42 is_stmt 0 view .LVU61
+ 293 0000 10B5     		push	{r4, lr}
+ 294              		.save {r4, lr}
+ 295              	.LCFI2:
+ 296              		.cfi_def_cfa_offset 8
+ 297              		.cfi_offset 4, -8
+ 298              		.cfi_offset 14, -4
+ 152:Core/Src/Keyboard/ButtonControl.cpp **** 	uint8_t key = 0;
+ 299              		.loc 1 152 2 is_stmt 1 view .LVU62
+ 300              	.LVL27:
+ 153:Core/Src/Keyboard/ButtonControl.cpp **** 	HAL_GPIO_WritePin(Column_Port, C3_Pin, PIN_RESET);
+ 301              		.loc 1 153 2 view .LVU63
+ 302              		.loc 1 153 19 is_stmt 0 view .LVU64
+ 303 0002 0022     		movs	r2, #0
+ 304 0004 0821     		movs	r1, #8
+ 305 0006 1748     		ldr	r0, .L36
+ 306              	.LVL28:
+ 307              		.loc 1 153 19 view .LVU65
+ 308 0008 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 309              	.LVL29:
+ 154:Core/Src/Keyboard/ButtonControl.cpp ****     	if (HAL_GPIO_ReadPin(Row_Port, R1_Pin) == GPIO_PIN_RESET) {
+ 310              		.loc 1 154 6 is_stmt 1 view .LVU66
+ 311              		.loc 1 154 26 is_stmt 0 view .LVU67
+ 312 000c 1021     		movs	r1, #16
+ 313 000e 1648     		ldr	r0, .L36+4
+ 314 0010 FFF7FEFF 		bl	HAL_GPIO_ReadPin
+ 315              	.LVL30:
+ 316              		.loc 1 154 6 discriminator 1 view .LVU68
+ 317 0014 58B9     		cbnz	r0, .L33
+ 155:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 3;
+ 318              		.loc 1 155 11 view .LVU69
+ 319 0016 0323     		movs	r3, #3
+ 320 0018 1C46     		mov	r4, r3
+ 321              	.L27:
+ 322              	.LVL31:
+ 156:Core/Src/Keyboard/ButtonControl.cpp ****     	}
+ 157:Core/Src/Keyboard/ButtonControl.cpp ****     	else if (HAL_GPIO_ReadPin(Row_Port, R2_Pin) == GPIO_PIN_RESET) {
+ 158:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 6;
+ 159:Core/Src/Keyboard/ButtonControl.cpp ****     	}
+ 160:Core/Src/Keyboard/ButtonControl.cpp ****     	else if (HAL_GPIO_ReadPin(Row_Port, R3_Pin) == GPIO_PIN_RESET) {
+ 161:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 9;
+ 162:Core/Src/Keyboard/ButtonControl.cpp ****     	}
+ 163:Core/Src/Keyboard/ButtonControl.cpp ****     	else if (HAL_GPIO_ReadPin(Row_Port, R4_Pin) == GPIO_PIN_RESET) {
+ 164:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 91;
+ 165:Core/Src/Keyboard/ButtonControl.cpp ****     	}
+ 166:Core/Src/Keyboard/ButtonControl.cpp ****     HAL_GPIO_WritePin(Column_Port, C3_Pin, PIN_SET);
+ 323              		.loc 1 166 5 is_stmt 1 view .LVU70
+ 324              		.loc 1 166 22 is_stmt 0 view .LVU71
+ 325 001a 0122     		movs	r2, #1
+ 326 001c 0821     		movs	r1, #8
+ 327 001e 1148     		ldr	r0, .L36
+ 328 0020 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ARM GAS  C:\Users\subdia\AppData\Local\Temp\ccyNVXgS.s 			page 10
+
+
+ 329              	.LVL32:
+ 167:Core/Src/Keyboard/ButtonControl.cpp ****     ButtonControlDelay(KEYPRESS_DELAY);
+ 330              		.loc 1 167 5 is_stmt 1 view .LVU72
+ 331 0024 3220     		movs	r0, #50
+ 332 0026 FFF7FEFF 		bl	osDelay
+ 333              	.LVL33:
+ 168:Core/Src/Keyboard/ButtonControl.cpp ****     return key;
+ 334              		.loc 1 168 5 view .LVU73
+ 169:Core/Src/Keyboard/ButtonControl.cpp **** }
+ 335              		.loc 1 169 1 is_stmt 0 view .LVU74
+ 336 002a 2046     		mov	r0, r4
+ 337 002c 10BD     		pop	{r4, pc}
+ 338              	.LVL34:
+ 339              	.L33:
+ 157:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 6;
+ 340              		.loc 1 157 11 is_stmt 1 view .LVU75
+ 157:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 6;
+ 341              		.loc 1 157 31 is_stmt 0 view .LVU76
+ 342 002e 2021     		movs	r1, #32
+ 343 0030 0D48     		ldr	r0, .L36+4
+ 344 0032 FFF7FEFF 		bl	HAL_GPIO_ReadPin
+ 345              	.LVL35:
+ 157:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 6;
+ 346              		.loc 1 157 11 discriminator 1 view .LVU77
+ 347 0036 10B9     		cbnz	r0, .L34
+ 158:Core/Src/Keyboard/ButtonControl.cpp ****     	}
+ 348              		.loc 1 158 11 view .LVU78
+ 349 0038 0623     		movs	r3, #6
+ 350 003a 1C46     		mov	r4, r3
+ 351 003c EDE7     		b	.L27
+ 352              	.L34:
+ 160:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 9;
+ 353              		.loc 1 160 11 is_stmt 1 view .LVU79
+ 160:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 9;
+ 354              		.loc 1 160 31 is_stmt 0 view .LVU80
+ 355 003e 4021     		movs	r1, #64
+ 356 0040 0948     		ldr	r0, .L36+4
+ 357 0042 FFF7FEFF 		bl	HAL_GPIO_ReadPin
+ 358              	.LVL36:
+ 160:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 9;
+ 359              		.loc 1 160 11 discriminator 1 view .LVU81
+ 360 0046 10B9     		cbnz	r0, .L35
+ 161:Core/Src/Keyboard/ButtonControl.cpp ****     	}
+ 361              		.loc 1 161 11 view .LVU82
+ 362 0048 0923     		movs	r3, #9
+ 363 004a 1C46     		mov	r4, r3
+ 364 004c E5E7     		b	.L27
+ 365              	.L35:
+ 163:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 91;
+ 366              		.loc 1 163 11 is_stmt 1 view .LVU83
+ 163:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 91;
+ 367              		.loc 1 163 31 is_stmt 0 view .LVU84
+ 368 004e 8021     		movs	r1, #128
+ 369 0050 0548     		ldr	r0, .L36+4
+ 370 0052 FFF7FEFF 		bl	HAL_GPIO_ReadPin
+ 371              	.LVL37:
+ 163:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 91;
+ARM GAS  C:\Users\subdia\AppData\Local\Temp\ccyNVXgS.s 			page 11
+
+
+ 372              		.loc 1 163 11 discriminator 1 view .LVU85
+ 373 0056 10B1     		cbz	r0, .L31
+ 152:Core/Src/Keyboard/ButtonControl.cpp **** 	HAL_GPIO_WritePin(Column_Port, C3_Pin, PIN_RESET);
+ 374              		.loc 1 152 10 view .LVU86
+ 375 0058 0023     		movs	r3, #0
+ 376 005a 1C46     		mov	r4, r3
+ 377 005c DDE7     		b	.L27
+ 378              	.L31:
+ 164:Core/Src/Keyboard/ButtonControl.cpp ****     	}
+ 379              		.loc 1 164 11 view .LVU87
+ 380 005e 5B23     		movs	r3, #91
+ 381 0060 1C46     		mov	r4, r3
+ 382 0062 DAE7     		b	.L27
+ 383              	.L37:
+ 384              		.align	2
+ 385              	.L36:
+ 386 0064 00000240 		.word	1073872896
+ 387 0068 00040240 		.word	1073873920
+ 388              		.cfi_endproc
+ 389              	.LFE154:
+ 390              		.fnend
+ 392              		.section	.text._ZN13ButtonControl14ScanColumnFourEv,"ax",%progbits
+ 393              		.align	1
+ 394              		.global	_ZN13ButtonControl14ScanColumnFourEv
+ 395              		.syntax unified
+ 396              		.thumb
+ 397              		.thumb_func
+ 399              	_ZN13ButtonControl14ScanColumnFourEv:
+ 400              		.fnstart
+ 401              	.LVL38:
+ 402              	.LFB155:
+ 170:Core/Src/Keyboard/ButtonControl.cpp **** 
+ 171:Core/Src/Keyboard/ButtonControl.cpp **** uint8_t ButtonControl::ScanColumnFour() {
+ 403              		.loc 1 171 41 is_stmt 1 view -0
+ 404              		.cfi_startproc
+ 405              		@ args = 0, pretend = 0, frame = 0
+ 406              		@ frame_needed = 0, uses_anonymous_args = 0
+ 407              		.loc 1 171 41 is_stmt 0 view .LVU89
+ 408 0000 10B5     		push	{r4, lr}
+ 409              		.save {r4, lr}
+ 410              	.LCFI3:
+ 411              		.cfi_def_cfa_offset 8
+ 412              		.cfi_offset 4, -8
+ 413              		.cfi_offset 14, -4
+ 172:Core/Src/Keyboard/ButtonControl.cpp **** 	uint8_t key = 0;
+ 414              		.loc 1 172 2 is_stmt 1 view .LVU90
+ 415              	.LVL39:
+ 173:Core/Src/Keyboard/ButtonControl.cpp **** 	HAL_GPIO_WritePin(Column_Port, C4_Pin, PIN_RESET);
+ 416              		.loc 1 173 2 view .LVU91
+ 417              		.loc 1 173 19 is_stmt 0 view .LVU92
+ 418 0002 0022     		movs	r2, #0
+ 419 0004 1021     		movs	r1, #16
+ 420 0006 1748     		ldr	r0, .L48
+ 421              	.LVL40:
+ 422              		.loc 1 173 19 view .LVU93
+ 423 0008 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 424              	.LVL41:
+ARM GAS  C:\Users\subdia\AppData\Local\Temp\ccyNVXgS.s 			page 12
+
+
+ 174:Core/Src/Keyboard/ButtonControl.cpp ****     	if (HAL_GPIO_ReadPin(Row_Port, R1_Pin) == GPIO_PIN_RESET) {
+ 425              		.loc 1 174 6 is_stmt 1 view .LVU94
+ 426              		.loc 1 174 26 is_stmt 0 view .LVU95
+ 427 000c 1021     		movs	r1, #16
+ 428 000e 1648     		ldr	r0, .L48+4
+ 429 0010 FFF7FEFF 		bl	HAL_GPIO_ReadPin
+ 430              	.LVL42:
+ 431              		.loc 1 174 6 discriminator 1 view .LVU96
+ 432 0014 58B9     		cbnz	r0, .L45
+ 175:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 11;
+ 433              		.loc 1 175 11 view .LVU97
+ 434 0016 0B23     		movs	r3, #11
+ 435 0018 1C46     		mov	r4, r3
+ 436              	.L39:
+ 437              	.LVL43:
+ 176:Core/Src/Keyboard/ButtonControl.cpp ****     	}
+ 177:Core/Src/Keyboard/ButtonControl.cpp ****     	else if (HAL_GPIO_ReadPin(Row_Port, R2_Pin) == GPIO_PIN_RESET) {
+ 178:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 21;
+ 179:Core/Src/Keyboard/ButtonControl.cpp ****     	}
+ 180:Core/Src/Keyboard/ButtonControl.cpp ****     	else if (HAL_GPIO_ReadPin(Row_Port, R3_Pin) == GPIO_PIN_RESET) {
+ 181:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 31;
+ 182:Core/Src/Keyboard/ButtonControl.cpp ****     	}
+ 183:Core/Src/Keyboard/ButtonControl.cpp ****     	else if (HAL_GPIO_ReadPin(Row_Port, R4_Pin) == GPIO_PIN_RESET) {
+ 184:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 41;
+ 185:Core/Src/Keyboard/ButtonControl.cpp ****     	}
+ 186:Core/Src/Keyboard/ButtonControl.cpp ****     HAL_GPIO_WritePin(Column_Port, C4_Pin, PIN_SET);
+ 438              		.loc 1 186 5 is_stmt 1 view .LVU98
+ 439              		.loc 1 186 22 is_stmt 0 view .LVU99
+ 440 001a 0122     		movs	r2, #1
+ 441 001c 1021     		movs	r1, #16
+ 442 001e 1148     		ldr	r0, .L48
+ 443 0020 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 444              	.LVL44:
+ 187:Core/Src/Keyboard/ButtonControl.cpp ****     ButtonControlDelay(KEYPRESS_DELAY);
+ 445              		.loc 1 187 5 is_stmt 1 view .LVU100
+ 446 0024 3220     		movs	r0, #50
+ 447 0026 FFF7FEFF 		bl	osDelay
+ 448              	.LVL45:
+ 188:Core/Src/Keyboard/ButtonControl.cpp ****     return key;
+ 449              		.loc 1 188 5 view .LVU101
+ 189:Core/Src/Keyboard/ButtonControl.cpp **** }...
+ 450              		.loc 1 189 1 is_stmt 0 view .LVU102
+ 451 002a 2046     		mov	r0, r4
+ 452 002c 10BD     		pop	{r4, pc}
+ 453              	.LVL46:
+ 454              	.L45:
+ 177:Core/Src/Keyboard/ButtonControl.cpp ****     	else if (HAL_GPIO_ReadPin(Row_Port, R2_Pin) == GPIO_PIN_RESET) {
+ 455              		.loc 1 177 11 is_stmt 1 view .LVU103
+ 177:Core/Src/Keyboard/ButtonControl.cpp ****     	else if (HAL_GPIO_ReadPin(Row_Port, R2_Pin) == GPIO_PIN_RESET) {
+ 456              		.loc 1 177 31 is_stmt 0 view .LVU104
+ 457 002e 2021     		movs	r1, #32
+ 458 0030 0D48     		ldr	r0, .L48+4
+ 459 0032 FFF7FEFF 		bl	HAL_GPIO_ReadPin
+ 460              	.LVL47:
+ 177:Core/Src/Keyboard/ButtonControl.cpp ****     	else if (HAL_GPIO_ReadPin(Row_Port, R2_Pin) == GPIO_PIN_RESET) {
+ 461              		.loc 1 177 11 discriminator 1 view .LVU105
+ 462 0036 10B9     		cbnz	r0, .L46
+ARM GAS  C:\Users\subdia\AppData\Local\Temp\ccyNVXgS.s 			page 13
+
+
+ 178:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 21;
+ 463              		.loc 1 178 11 view .LVU106
+ 464 0038 1523     		movs	r3, #21
+ 465 003a 1C46     		mov	r4, r3
+ 466 003c EDE7     		b	.L39
+ 467              	.L46:
+ 180:Core/Src/Keyboard/ButtonControl.cpp ****     	else if (HAL_GPIO_ReadPin(Row_Port, R3_Pin) == GPIO_PIN_RESET) {
+ 468              		.loc 1 180 11 is_stmt 1 view .LVU107
+ 180:Core/Src/Keyboard/ButtonControl.cpp ****     	else if (HAL_GPIO_ReadPin(Row_Port, R3_Pin) == GPIO_PIN_RESET) {
+ 469              		.loc 1 180 31 is_stmt 0 view .LVU108
+ 470 003e 4021     		movs	r1, #64
+ 471 0040 0948     		ldr	r0, .L48+4
+ 472 0042 FFF7FEFF 		bl	HAL_GPIO_ReadPin
+ 473              	.LVL48:
+ 180:Core/Src/Keyboard/ButtonControl.cpp ****     	else if (HAL_GPIO_ReadPin(Row_Port, R3_Pin) == GPIO_PIN_RESET) {
+ 474              		.loc 1 180 11 discriminator 1 view .LVU109
+ 475 0046 10B9     		cbnz	r0, .L47
+ 181:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 31;
+ 476              		.loc 1 181 11 view .LVU110
+ 477 0048 1F23     		movs	r3, #31
+ 478 004a 1C46     		mov	r4, r3
+ 479 004c E5E7     		b	.L39
+ 480              	.L47:
+ 183:Core/Src/Keyboard/ButtonControl.cpp ****     	else if (HAL_GPIO_ReadPin(Row_Port, R4_Pin) == GPIO_PIN_RESET) {
+ 481              		.loc 1 183 11 is_stmt 1 view .LVU111
+ 183:Core/Src/Keyboard/ButtonControl.cpp ****     	else if (HAL_GPIO_ReadPin(Row_Port, R4_Pin) == GPIO_PIN_RESET) {
+ 482              		.loc 1 183 31 is_stmt 0 view .LVU112
+ 483 004e 8021     		movs	r1, #128
+ 484 0050 0548     		ldr	r0, .L48+4
+ 485 0052 FFF7FEFF 		bl	HAL_GPIO_ReadPin
+ 486              	.LVL49:
+ 183:Core/Src/Keyboard/ButtonControl.cpp ****     	else if (HAL_GPIO_ReadPin(Row_Port, R4_Pin) == GPIO_PIN_RESET) {
+ 487              		.loc 1 183 11 discriminator 1 view .LVU113
+ 488 0056 10B1     		cbz	r0, .L43
+ 172:Core/Src/Keyboard/ButtonControl.cpp **** 	uint8_t key = 0;
+ 489              		.loc 1 172 10 view .LVU114
+ 490 0058 0023     		movs	r3, #0
+ 491 005a 1C46     		mov	r4, r3
+ 492 005c DDE7     		b	.L39
+ 493              	.L43:
+ 184:Core/Src/Keyboard/ButtonControl.cpp ****     		key = 41;
+ 494              		.loc 1 184 11 view .LVU115
+ 495 005e 2923     		movs	r3, #41
+ 496 0060 1C46     		mov	r4, r3
+ 497 0062 DAE7     		b	.L39
+ 498              	.L49:
+ 499              		.align	2
+ 500              	.L48:
+ 501 0064 00000240 		.word	1073872896
+ 502 0068 00040240 		.word	1073873920
+ 503              		.cfi_endproc
+ 504              	.LFE155:
+ 505              		.fnend
+ 507              		.section	.text._ZN13ButtonControl4ScanEv,"ax",%progbits
+ 508              		.align	1
+ 509              		.global	_ZN13ButtonControl4ScanEv
+ 510              		.syntax unified
+ARM GAS  C:\Users\subdia\AppData\Local\Temp\ccyNVXgS.s 			page 14
+
+
+ 511              		.thumb
+ 512              		.thumb_func
+ 514              	_ZN13ButtonControl4ScanEv:
+ 515              		.fnstart
+ 516              	.LVL50:
+ 517              	.LFB151:
+ 107:Core/Src/Keyboard/ButtonControl.cpp **** uint8_t ButtonControl::Scan() {
+ 518              		.loc 1 107 31 is_stmt 1 view -0
+ 519              		.cfi_startproc
+ 520              		@ args = 0, pretend = 0, frame = 0
+ 521              		@ frame_needed = 0, uses_anonymous_args = 0
+ 107:Core/Src/Keyboard/ButtonControl.cpp **** uint8_t ButtonControl::Scan() {
+ 522              		.loc 1 107 31 is_stmt 0 view .LVU117
+ 523 0000 38B5     		push	{r3, r4, r5, lr}
+ 524              		.save {r3, r4, r5, lr}
+ 525              	.LCFI4:
+ 526              		.cfi_def_cfa_offset 16
+ 527              		.cfi_offset 3, -16
+ 528              		.cfi_offset 4, -12
+ 529              		.cfi_offset 5, -8
+ 530              		.cfi_offset 14, -4
+ 531 0002 0546     		mov	r5, r0
+ 108:Core/Src/Keyboard/ButtonControl.cpp ****    	return ScanColumnOne() | ScanColumnTwo() | ScanColumnThree() | ScanColumnFour();
+ 532              		.loc 1 108 5 is_stmt 1 view .LVU118
+ 108:Core/Src/Keyboard/ButtonControl.cpp ****    	return ScanColumnOne() | ScanColumnTwo() | ScanColumnThree() | ScanColumnFour();
+ 533              		.loc 1 108 25 is_stmt 0 view .LVU119
+ 534 0004 FFF7FEFF 		bl	_ZN13ButtonControl13ScanColumnOneEv
+ 535              	.LVL51:
+ 108:Core/Src/Keyboard/ButtonControl.cpp ****    	return ScanColumnOne() | ScanColumnTwo() | ScanColumnThree() | ScanColumnFour();
+ 536              		.loc 1 108 25 view .LVU120
+ 537 0008 0446     		mov	r4, r0
+ 108:Core/Src/Keyboard/ButtonControl.cpp ****    	return ScanColumnOne() | ScanColumnTwo() | ScanColumnThree() | ScanColumnFour();
+ 538              		.loc 1 108 43 discriminator 1 view .LVU121
+ 539 000a 2846     		mov	r0, r5
+ 540 000c FFF7FEFF 		bl	_ZN13ButtonControl13ScanColumnTwoEv
+ 541              	.LVL52:
+ 108:Core/Src/Keyboard/ButtonControl.cpp ****    	return ScanColumnOne() | ScanColumnTwo() | ScanColumnThree() | ScanColumnFour();
+ 542              		.loc 1 108 28 discriminator 2 view .LVU122
+ 543 0010 0443     		orrs	r4, r4, r0
+ 544 0012 E4B2     		uxtb	r4, r4
+ 108:Core/Src/Keyboard/ButtonControl.cpp ****    	return ScanColumnOne() | ScanColumnTwo() | ScanColumnThree() | ScanColumnFour();
+ 545              		.loc 1 108 63 discriminator 2 view .LVU123
+ 546 0014 2846     		mov	r0, r5
+ 547 0016 FFF7FEFF 		bl	_ZN13ButtonControl15ScanColumnThreeEv
+ 548              	.LVL53:
+ 108:Core/Src/Keyboard/ButtonControl.cpp ****    	return ScanColumnOne() | ScanColumnTwo() | ScanColumnThree() | ScanColumnFour();
+ 549              		.loc 1 108 46 discriminator 3 view .LVU124
+ 550 001a 0443     		orrs	r4, r4, r0
+ 551 001c E4B2     		uxtb	r4, r4
+ 108:Core/Src/Keyboard/ButtonControl.cpp ****    	return ScanColumnOne() | ScanColumnTwo() | ScanColumnThree() | ScanColumnFour();
+ 552              		.loc 1 108 82 discriminator 3 view .LVU125
+ 553 001e 2846     		mov	r0, r5
+ 554 0020 FFF7FEFF 		bl	_ZN13ButtonControl14ScanColumnFourEv
+ 555              	.LVL54:
+ 108:Core/Src/Keyboard/ButtonControl.cpp ****    	return ScanColumnOne() | ScanColumnTwo() | ScanColumnThree() | ScanColumnFour();
+ 556              		.loc 1 108 83 discriminator 4 view .LVU126
+ 557 0024 2043     		orrs	r0, r0, r4
+ARM GAS  C:\Users\subdia\AppData\Local\Temp\ccyNVXgS.s 			page 15
+
+
+ 109:Core/Src/Keyboard/ButtonControl.cpp **** }
+ 558              		.loc 1 109 1 view .LVU127
+ 559 0026 C0B2     		uxtb	r0, r0
+ 560 0028 38BD     		pop	{r3, r4, r5, pc}
+ 109:Core/Src/Keyboard/ButtonControl.cpp **** }
+ 561              		.loc 1 109 1 view .LVU128
+ 562              		.cfi_endproc
+ 563              	.LFE151:
+ 564              		.fnend
+ 566              		.section	.text._ZN13ButtonControl13GetKeyPressedEv,"ax",%progbits
+ 567              		.align	1
+ 568              		.global	_ZN13ButtonControl13GetKeyPressedEv
+ 569              		.syntax unified
+ 570              		.thumb
+ 571              		.thumb_func
+ 573              	_ZN13ButtonControl13GetKeyPressedEv:
+ 574              		.fnstart
+ 575              	.LVL55:
+ 576              	.LFB148:
+  10:Core/Src/Keyboard/ButtonControl.cpp **** Button ButtonControl::GetKeyPressed() {
+ 577              		.loc 1 10 39 is_stmt 1 view -0
+ 578              		.cfi_startproc
+ 579              		@ args = 0, pretend = 0, frame = 0
+ 580              		@ frame_needed = 0, uses_anonymous_args = 0
+  10:Core/Src/Keyboard/ButtonControl.cpp **** Button ButtonControl::GetKeyPressed() {
+ 581              		.loc 1 10 39 is_stmt 0 view .LVU130
+ 582 0000 10B5     		push	{r4, lr}
+ 583              		.save {r4, lr}
+ 584              	.LCFI5:
+ 585              		.cfi_def_cfa_offset 8
+ 586              		.cfi_offset 4, -8
+ 587              		.cfi_offset 14, -4
+  11:Core/Src/Keyboard/ButtonControl.cpp **** 	Button button = Button::NoOne;
+ 588              		.loc 1 11 2 is_stmt 1 view .LVU131
+ 589              	.LVL56:
+  12:Core/Src/Keyboard/ButtonControl.cpp **** 	switch(Scan()) {
+ 590              		.loc 1 12 2 view .LVU132
+  12:Core/Src/Keyboard/ButtonControl.cpp **** 	switch(Scan()) {
+ 591              		.loc 1 12 13 is_stmt 0 view .LVU133
+ 592 0002 FFF7FEFF 		bl	_ZN13ButtonControl4ScanEv
+ 593              	.LVL57:
+  12:Core/Src/Keyboard/ButtonControl.cpp **** 	switch(Scan()) {
+ 594              		.loc 1 12 13 view .LVU134
+ 595 0006 0446     		mov	r4, r0
+  12:Core/Src/Keyboard/ButtonControl.cpp **** 	switch(Scan()) {
+ 596              		.loc 1 12 2 discriminator 1 view .LVU135
+ 597 0008 0928     		cmp	r0, #9
+ 598 000a 0ED0     		beq	.L53
+ 599 000c 1AD8     		bhi	.L54
+ 600 000e 0528     		cmp	r0, #5
+ 601 0010 0BD0     		beq	.L53
+ 602 0012 0FD8     		bhi	.L55
+ 603 0014 0328     		cmp	r0, #3
+ 604 0016 08D0     		beq	.L53
+ 605 0018 05D8     		bhi	.L56
+ 606 001a 0128     		cmp	r0, #1
+ 607 001c 05D0     		beq	.L53
+ARM GAS  C:\Users\subdia\AppData\Local\Temp\ccyNVXgS.s 			page 16
+
+
+ 608 001e 0228     		cmp	r0, #2
+ 609 0020 03D0     		beq	.L53
+  65:Core/Src/Keyboard/ButtonControl.cpp **** 		button = Button::NoOne;
+ 610              		.loc 1 65 10 view .LVU136
+ 611 0022 0024     		movs	r4, #0
+ 612 0024 01E0     		b	.L53
+ 613              	.L56:
+  12:Core/Src/Keyboard/ButtonControl.cpp **** 	switch(Scan()) {
+ 614              		.loc 1 12 2 discriminator 1 view .LVU137
+ 615 0026 0428     		cmp	r0, #4
+ 616 0028 24D1     		bne	.L70
+ 617              	.L53:
+ 618              	.LVL58:
+  68:Core/Src/Keyboard/ButtonControl.cpp **** 	ButtonControlDelay(50);
+ 619              		.loc 1 68 2 is_stmt 1 view .LVU138
+ 620 002a 3220     		movs	r0, #50
+ 621 002c FFF7FEFF 		bl	osDelay
+ 622              	.LVL59:
+  69:Core/Src/Keyboard/ButtonControl.cpp **** 	return button;
+ 623              		.loc 1 69 2 view .LVU139
+  70:Core/Src/Keyboard/ButtonControl.cpp **** }
+ 624              		.loc 1 70 1 is_stmt 0 view .LVU140
+ 625 0030 2046     		mov	r0, r4
+ 626 0032 10BD     		pop	{r4, pc}
+ 627              	.LVL60:
+ 628              	.L55:
+  12:Core/Src/Keyboard/ButtonControl.cpp **** 	switch(Scan()) {
+ 629              		.loc 1 12 2 discriminator 1 view .LVU141
+ 630 0034 0728     		cmp	r0, #7
+ 631 0036 F8D0     		beq	.L53
+ 632 0038 0828     		cmp	r0, #8
+ 633 003a F6D0     		beq	.L53
+ 634 003c 0628     		cmp	r0, #6
+ 635 003e F4D0     		beq	.L53
+  65:Core/Src/Keyboard/ButtonControl.cpp **** 		button = Button::NoOne;
+ 636              		.loc 1 65 10 view .LVU142
+ 637 0040 0024     		movs	r4, #0
+ 638 0042 F2E7     		b	.L53
+ 639              	.L54:
+  12:Core/Src/Keyboard/ButtonControl.cpp **** 	switch(Scan()) {
+ 640              		.loc 1 12 2 discriminator 1 view .LVU143
+ 641 0044 2928     		cmp	r0, #41
+ 642 0046 17D0     		beq	.L62
+ 643 0048 0CD8     		bhi	.L57
+ 644 004a 1528     		cmp	r0, #21
+ 645 004c 16D0     		beq	.L63
+ 646 004e 05D8     		bhi	.L58
+ 647 0050 0A28     		cmp	r0, #10
+ 648 0052 EAD0     		beq	.L53
+ 649 0054 0B28     		cmp	r0, #11
+ 650 0056 E8D0     		beq	.L53
+  65:Core/Src/Keyboard/ButtonControl.cpp **** 		button = Button::NoOne;
+ 651              		.loc 1 65 10 view .LVU144
+ 652 0058 0024     		movs	r4, #0
+ 653 005a E6E7     		b	.L53
+ 654              	.L58:
+  12:Core/Src/Keyboard/ButtonControl.cpp **** 	switch(Scan()) {
+ARM GAS  C:\Users\subdia\AppData\Local\Temp\ccyNVXgS.s 			page 17
+
+
+ 655              		.loc 1 12 2 discriminator 1 view .LVU145
+ 656 005c 1F28     		cmp	r0, #31
+ 657 005e 0FD1     		bne	.L65
+  56:Core/Src/Keyboard/ButtonControl.cpp **** 		button = Button::Cbutton;
+ 658              		.loc 1 56 10 view .LVU146
+ 659 0060 0D24     		movs	r4, #13
+ 660 0062 E2E7     		b	.L53
+ 661              	.L57:
+  12:Core/Src/Keyboard/ButtonControl.cpp **** 	switch(Scan()) {
+ 662              		.loc 1 12 2 discriminator 1 view .LVU147
+ 663 0064 5B28     		cmp	r0, #91
+ 664 0066 0DD0     		beq	.L66
+ 665 0068 FF28     		cmp	r0, #255
+ 666 006a 0DD0     		beq	.L67
+ 667 006c 4728     		cmp	r0, #71
+ 668 006e 0DD1     		bne	.L68
+  44:Core/Src/Keyboard/ButtonControl.cpp **** 		button = Button::AsteriskButton;
+ 669              		.loc 1 44 10 view .LVU148
+ 670 0070 0F24     		movs	r4, #15
+ 671 0072 DAE7     		b	.L53
+ 672              	.L70:
+  65:Core/Src/Keyboard/ButtonControl.cpp **** 		button = Button::NoOne;
+ 673              		.loc 1 65 10 view .LVU149
+ 674 0074 0024     		movs	r4, #0
+ 675 0076 D8E7     		b	.L53
+ 676              	.L62:
+  59:Core/Src/Keyboard/ButtonControl.cpp **** 		button = Button::Dbutton;
+ 677              		.loc 1 59 10 view .LVU150
+ 678 0078 0E24     		movs	r4, #14
+ 679 007a D6E7     		b	.L53
+ 680              	.L63:
+  53:Core/Src/Keyboard/ButtonControl.cpp **** 		button = Button::Bbutton;
+ 681              		.loc 1 53 10 view .LVU151
+ 682 007c 0C24     		movs	r4, #12
+ 683 007e D4E7     		b	.L53
+ 684              	.L65:
+  65:Core/Src/Keyboard/ButtonControl.cpp **** 		button = Button::NoOne;
+ 685              		.loc 1 65 10 view .LVU152
+ 686 0080 0024     		movs	r4, #0
+ 687 0082 D2E7     		b	.L53
+ 688              	.L66:
+  47:Core/Src/Keyboard/ButtonControl.cpp **** 		button = Button::SharpButton;
+ 689              		.loc 1 47 10 view .LVU153
+ 690 0084 1024     		movs	r4, #16
+ 691 0086 D0E7     		b	.L53
+ 692              	.L67:
+  62:Core/Src/Keyboard/ButtonControl.cpp **** 		button = Button::NoOne;
+ 693              		.loc 1 62 10 view .LVU154
+ 694 0088 0024     		movs	r4, #0
+ 695 008a CEE7     		b	.L53
+ 696              	.L68:
+  65:Core/Src/Keyboard/ButtonControl.cpp **** 		button = Button::NoOne;
+ 697              		.loc 1 65 10 view .LVU155
+ 698 008c 0024     		movs	r4, #0
+ 699 008e CCE7     		b	.L53
+ 700              		.cfi_endproc
+ 701              	.LFE148:
+ARM GAS  C:\Users\subdia\AppData\Local\Temp\ccyNVXgS.s 			page 18
+
+
+ 702              		.fnend
+ 704              		.section	.text._ZN13ButtonControl6FilterEv,"ax",%progbits
+ 705              		.align	1
+ 706              		.global	_ZN13ButtonControl6FilterEv
+ 707              		.syntax unified
+ 708              		.thumb
+ 709              		.thumb_func
+ 711              	_ZN13ButtonControl6FilterEv:
+ 712              		.fnstart
+ 713              	.LVL61:
+ 714              	.LFB149:
+  72:Core/Src/Keyboard/ButtonControl.cpp **** Button ButtonControl::Filter() {
+ 715              		.loc 1 72 32 is_stmt 1 view -0
+ 716              		.cfi_startproc
+ 717              		@ args = 0, pretend = 0, frame = 0
+ 718              		@ frame_needed = 0, uses_anonymous_args = 0
+  72:Core/Src/Keyboard/ButtonControl.cpp **** Button ButtonControl::Filter() {
+ 719              		.loc 1 72 32 is_stmt 0 view .LVU157
+ 720 0000 10B5     		push	{r4, lr}
+ 721              		.save {r4, lr}
+ 722              	.LCFI6:
+ 723              		.cfi_def_cfa_offset 8
+ 724              		.cfi_offset 4, -8
+ 725              		.cfi_offset 14, -4
+ 726 0002 0446     		mov	r4, r0
+  74:Core/Src/Keyboard/ButtonControl.cpp **** 	switch(GetKeyPressed()) {
+ 727              		.loc 1 74 2 is_stmt 1 view .LVU158
+  74:Core/Src/Keyboard/ButtonControl.cpp **** 	switch(GetKeyPressed()) {
+ 728              		.loc 1 74 22 is_stmt 0 view .LVU159
+ 729 0004 FFF7FEFF 		bl	_ZN13ButtonControl13GetKeyPressedEv
+ 730              	.LVL62:
+  74:Core/Src/Keyboard/ButtonControl.cpp **** 	switch(GetKeyPressed()) {
+ 731              		.loc 1 74 2 discriminator 1 view .LVU160
+ 732 0008 0628     		cmp	r0, #6
+ 733 000a 16D0     		beq	.L72
+ 734 000c 09D8     		bhi	.L73
+ 735 000e 0428     		cmp	r0, #4
+ 736 0010 10D0     		beq	.L74
+ 737 0012 0528     		cmp	r0, #5
+ 738 0014 14D0     		beq	.L75
+ 739 0016 0228     		cmp	r0, #2
+ 740 0018 1BD1     		bne	.L77
+  75:Core/Src/Keyboard/ButtonControl.cpp **** 		case Button::Two:
+ 741              		.loc 1 75 3 is_stmt 1 view .LVU161
+  76:Core/Src/Keyboard/ButtonControl.cpp **** 		_lastPressed = Button::ArrowUp;
+ 742              		.loc 1 76 3 view .LVU162
+  76:Core/Src/Keyboard/ButtonControl.cpp **** 		_lastPressed = Button::ArrowUp;
+ 743              		.loc 1 76 16 is_stmt 0 view .LVU163
+ 744 001a 1123     		movs	r3, #17
+ 745 001c 2370     		strb	r3, [r4]
+  77:Core/Src/Keyboard/ButtonControl.cpp **** 		break;
+ 746              		.loc 1 77 3 is_stmt 1 view .LVU164
+ 747              	.L81:
+ 100:Core/Src/Keyboard/ButtonControl.cpp **** 	return _lastPressed;
+ 748              		.loc 1 100 2 view .LVU165
+ 101:Core/Src/Keyboard/ButtonControl.cpp **** }
+ 749              		.loc 1 101 1 is_stmt 0 view .LVU166
+ARM GAS  C:\Users\subdia\AppData\Local\Temp\ccyNVXgS.s 			page 19
+
+
+ 750 001e 2078     		ldrb	r0, [r4]	@ zero_extendqisi2
+ 751 0020 10BD     		pop	{r4, pc}
+ 752              	.LVL63:
+ 753              	.L73:
+  74:Core/Src/Keyboard/ButtonControl.cpp **** 	switch(GetKeyPressed()) {
+ 754              		.loc 1 74 2 discriminator 1 view .LVU167
+ 755 0022 0B28     		cmp	r0, #11
+ 756 0024 0FD0     		beq	.L78
+ 757 0026 0C28     		cmp	r0, #12
+ 758 0028 10D0     		beq	.L79
+ 759 002a 0828     		cmp	r0, #8
+ 760 002c 11D1     		bne	.L77
+  78:Core/Src/Keyboard/ButtonControl.cpp **** 		case Button::Eight:
+ 761              		.loc 1 78 3 is_stmt 1 view .LVU168
+  79:Core/Src/Keyboard/ButtonControl.cpp **** 		_lastPressed = Button::ArrowDown;
+ 762              		.loc 1 79 3 view .LVU169
+  79:Core/Src/Keyboard/ButtonControl.cpp **** 		_lastPressed = Button::ArrowDown;
+ 763              		.loc 1 79 16 is_stmt 0 view .LVU170
+ 764 002e 1223     		movs	r3, #18
+ 765 0030 2370     		strb	r3, [r4]
+  80:Core/Src/Keyboard/ButtonControl.cpp **** 		break;
+ 766              		.loc 1 80 3 is_stmt 1 view .LVU171
+ 767 0032 F4E7     		b	.L81
+ 768              	.L74:
+  81:Core/Src/Keyboard/ButtonControl.cpp **** 		case Button::Four:
+ 769              		.loc 1 81 3 view .LVU172
+  82:Core/Src/Keyboard/ButtonControl.cpp **** 		_lastPressed = Button::ArrowLeft;
+ 770              		.loc 1 82 3 view .LVU173
+  82:Core/Src/Keyboard/ButtonControl.cpp **** 		_lastPressed = Button::ArrowLeft;
+ 771              		.loc 1 82 16 is_stmt 0 view .LVU174
+ 772 0034 1323     		movs	r3, #19
+ 773 0036 2370     		strb	r3, [r4]
+  83:Core/Src/Keyboard/ButtonControl.cpp **** 		break;
+ 774              		.loc 1 83 3 is_stmt 1 view .LVU175
+ 775 0038 F1E7     		b	.L81
+ 776              	.L72:
+  84:Core/Src/Keyboard/ButtonControl.cpp **** 		case Button::Six:
+ 777              		.loc 1 84 3 view .LVU176
+  85:Core/Src/Keyboard/ButtonControl.cpp **** 		_lastPressed = Button::ArrowRight;
+ 778              		.loc 1 85 3 view .LVU177
+  85:Core/Src/Keyboard/ButtonControl.cpp **** 		_lastPressed = Button::ArrowRight;
+ 779              		.loc 1 85 16 is_stmt 0 view .LVU178
+ 780 003a 1423     		movs	r3, #20
+ 781 003c 2370     		strb	r3, [r4]
+  86:Core/Src/Keyboard/ButtonControl.cpp **** 		break;
+ 782              		.loc 1 86 3 is_stmt 1 view .LVU179
+ 783 003e EEE7     		b	.L81
+ 784              	.L75:
+  87:Core/Src/Keyboard/ButtonControl.cpp **** 		case Button::Five:
+ 785              		.loc 1 87 3 view .LVU180
+  88:Core/Src/Keyboard/ButtonControl.cpp **** 		_lastPressed = Button::Enter;
+ 786              		.loc 1 88 3 view .LVU181
+  88:Core/Src/Keyboard/ButtonControl.cpp **** 		_lastPressed = Button::Enter;
+ 787              		.loc 1 88 16 is_stmt 0 view .LVU182
+ 788 0040 1523     		movs	r3, #21
+ 789 0042 2370     		strb	r3, [r4]
+  89:Core/Src/Keyboard/ButtonControl.cpp **** 		break;
+ARM GAS  C:\Users\subdia\AppData\Local\Temp\ccyNVXgS.s 			page 20
+
+
+ 790              		.loc 1 89 3 is_stmt 1 view .LVU183
+ 791 0044 EBE7     		b	.L81
+ 792              	.L78:
+  90:Core/Src/Keyboard/ButtonControl.cpp **** 		case Button::Abutton:
+ 793              		.loc 1 90 3 view .LVU184
+  91:Core/Src/Keyboard/ButtonControl.cpp **** 		_lastPressed = Button::Enter;
+ 794              		.loc 1 91 3 view .LVU185
+  91:Core/Src/Keyboard/ButtonControl.cpp **** 		_lastPressed = Button::Enter;
+ 795              		.loc 1 91 16 is_stmt 0 view .LVU186
+ 796 0046 1523     		movs	r3, #21
+ 797 0048 2370     		strb	r3, [r4]
+  92:Core/Src/Keyboard/ButtonControl.cpp **** 		break;
+ 798              		.loc 1 92 3 is_stmt 1 view .LVU187
+ 799 004a E8E7     		b	.L81
+ 800              	.L79:
+  93:Core/Src/Keyboard/ButtonControl.cpp **** 		case Button::Bbutton:
+ 801              		.loc 1 93 3 view .LVU188
+  94:Core/Src/Keyboard/ButtonControl.cpp **** 		_lastPressed = Button::Escape;
+ 802              		.loc 1 94 3 view .LVU189
+  94:Core/Src/Keyboard/ButtonControl.cpp **** 		_lastPressed = Button::Escape;
+ 803              		.loc 1 94 16 is_stmt 0 view .LVU190
+ 804 004c 1623     		movs	r3, #22
+ 805 004e 2370     		strb	r3, [r4]
+  95:Core/Src/Keyboard/ButtonControl.cpp **** 		break;
+ 806              		.loc 1 95 3 is_stmt 1 view .LVU191
+ 807 0050 E5E7     		b	.L81
+ 808              	.L77:
+  96:Core/Src/Keyboard/ButtonControl.cpp **** 		default:
+ 809              		.loc 1 96 3 view .LVU192
+  97:Core/Src/Keyboard/ButtonControl.cpp **** 		_lastPressed = Button::NoOne;
+ 810              		.loc 1 97 3 view .LVU193
+  97:Core/Src/Keyboard/ButtonControl.cpp **** 		_lastPressed = Button::NoOne;
+ 811              		.loc 1 97 16 is_stmt 0 view .LVU194
+ 812 0052 0023     		movs	r3, #0
+ 813 0054 2370     		strb	r3, [r4]
+  98:Core/Src/Keyboard/ButtonControl.cpp **** 		break;
+ 814              		.loc 1 98 3 is_stmt 1 view .LVU195
+ 815 0056 E2E7     		b	.L81
+ 816              		.cfi_endproc
+ 817              	.LFE149:
+ 818              		.fnend
+ 820              		.text
+ 821              	.Letext0:
+ 822              		.file 2 "C:/GNUArmToolchain/arm-none-eabi-gcc-15.2.1/arm-none-eabi/include/c++/15.2.1/cstdint"
+ 823              		.file 3 "C:/GNUArmToolchain/arm-none-eabi-gcc-15.2.1/arm-none-eabi/include/c++/15.2.1/arm-none-eab
+ 824              		.file 4 "C:/GNUArmToolchain/arm-none-eabi-gcc-15.2.1/arm-none-eabi/include/machine/_default_types.
+ 825              		.file 5 "C:/GNUArmToolchain/arm-none-eabi-gcc-15.2.1/arm-none-eabi/include/sys/_stdint.h"
+ 826              		.file 6 "C:/GNUArmToolchain/arm-none-eabi-gcc-15.2.1/arm-none-eabi/include/stdint.h"
+ 827              		.file 7 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f401xc.h"
+ 828              		.file 8 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h"
+ 829              		.file 9 "Core/Src/Keyboard/ButtonControl.hpp"
+ 830              		.file 10 "Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h"
+ARM GAS  C:\Users\subdia\AppData\Local\Temp\ccyNVXgS.s 			page 21
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 ButtonControl.cpp
+C:\Users\subdia\AppData\Local\Temp\ccyNVXgS.s:21     .text._ZN13ButtonControl14GetLastPressedEv:00000000 $t
+C:\Users\subdia\AppData\Local\Temp\ccyNVXgS.s:27     .text._ZN13ButtonControl14GetLastPressedEv:00000000 _ZN13ButtonControl14GetLastPressedEv
+.ARM.exidx.text._ZN13ButtonControl14GetLastPressedEv:00000000 $d
+C:\Users\subdia\AppData\Local\Temp\ccyNVXgS.s:48     .text._ZN13ButtonControl13ScanColumnOneEv:00000000 $t
+C:\Users\subdia\AppData\Local\Temp\ccyNVXgS.s:54     .text._ZN13ButtonControl13ScanColumnOneEv:00000000 _ZN13ButtonControl13ScanColumnOneEv
+C:\Users\subdia\AppData\Local\Temp\ccyNVXgS.s:156    .text._ZN13ButtonControl13ScanColumnOneEv:00000064 $d
+.ARM.exidx.text._ZN13ButtonControl13ScanColumnOneEv:00000000 $d
+C:\Users\subdia\AppData\Local\Temp\ccyNVXgS.s:163    .text._ZN13ButtonControl13ScanColumnTwoEv:00000000 $t
+C:\Users\subdia\AppData\Local\Temp\ccyNVXgS.s:169    .text._ZN13ButtonControl13ScanColumnTwoEv:00000000 _ZN13ButtonControl13ScanColumnTwoEv
+C:\Users\subdia\AppData\Local\Temp\ccyNVXgS.s:271    .text._ZN13ButtonControl13ScanColumnTwoEv:00000064 $d
+.ARM.exidx.text._ZN13ButtonControl13ScanColumnTwoEv:00000000 $d
+C:\Users\subdia\AppData\Local\Temp\ccyNVXgS.s:278    .text._ZN13ButtonControl15ScanColumnThreeEv:00000000 $t
+C:\Users\subdia\AppData\Local\Temp\ccyNVXgS.s:284    .text._ZN13ButtonControl15ScanColumnThreeEv:00000000 _ZN13ButtonControl15ScanColumnThreeEv
+C:\Users\subdia\AppData\Local\Temp\ccyNVXgS.s:386    .text._ZN13ButtonControl15ScanColumnThreeEv:00000064 $d
+.ARM.exidx.text._ZN13ButtonControl15ScanColumnThreeEv:00000000 $d
+C:\Users\subdia\AppData\Local\Temp\ccyNVXgS.s:393    .text._ZN13ButtonControl14ScanColumnFourEv:00000000 $t
+C:\Users\subdia\AppData\Local\Temp\ccyNVXgS.s:399    .text._ZN13ButtonControl14ScanColumnFourEv:00000000 _ZN13ButtonControl14ScanColumnFourEv
+C:\Users\subdia\AppData\Local\Temp\ccyNVXgS.s:501    .text._ZN13ButtonControl14ScanColumnFourEv:00000064 $d
+.ARM.exidx.text._ZN13ButtonControl14ScanColumnFourEv:00000000 $d
+C:\Users\subdia\AppData\Local\Temp\ccyNVXgS.s:508    .text._ZN13ButtonControl4ScanEv:00000000 $t
+C:\Users\subdia\AppData\Local\Temp\ccyNVXgS.s:514    .text._ZN13ButtonControl4ScanEv:00000000 _ZN13ButtonControl4ScanEv
+.ARM.exidx.text._ZN13ButtonControl4ScanEv:00000000 $d
+C:\Users\subdia\AppData\Local\Temp\ccyNVXgS.s:567    .text._ZN13ButtonControl13GetKeyPressedEv:00000000 $t
+C:\Users\subdia\AppData\Local\Temp\ccyNVXgS.s:573    .text._ZN13ButtonControl13GetKeyPressedEv:00000000 _ZN13ButtonControl13GetKeyPressedEv
+.ARM.exidx.text._ZN13ButtonControl13GetKeyPressedEv:00000000 $d
+C:\Users\subdia\AppData\Local\Temp\ccyNVXgS.s:705    .text._ZN13ButtonControl6FilterEv:00000000 $t
+C:\Users\subdia\AppData\Local\Temp\ccyNVXgS.s:711    .text._ZN13ButtonControl6FilterEv:00000000 _ZN13ButtonControl6FilterEv
+.ARM.exidx.text._ZN13ButtonControl6FilterEv:00000000 $d
+
+UNDEFINED SYMBOLS
+HAL_GPIO_WritePin
+HAL_GPIO_ReadPin
+osDelay
+__aeabi_unwind_cpp_pr0
