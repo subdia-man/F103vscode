@@ -36,7 +36,7 @@ struct lcdButton {
 	uint8_t finishx;
 	uint8_t starty;
 	uint8_t finishy;
-	SSD1306_COLOR color;
+	uint16_t color;
 	char* name;
 };
 
@@ -46,7 +46,7 @@ struct lcdButtons {
 		LCD_VIEW_BUTTON_FINISHX,
 		LCD_VIEW_BUTTON_STARTY,
 		LCD_VIEW_BUTTON_FINISHY,
-		White, //by default
+		0x07E0, //by default
 		"View"
 	};
 
@@ -55,7 +55,7 @@ struct lcdButtons {
 		LCD_DELETE_BUTTON_FINISHX,
 		LCD_DELETE_BUTTON_STARTY,
 		LCD_DELETE_BUTTON_FINISHY,
-		White, //by default
+		0x07E0, //by default
 		"Delete"
 	};
 
@@ -64,7 +64,7 @@ struct lcdButtons {
 		LCD_CANCEL_BUTTON_FINISHX,
 		LCD_CANCEL_BUTTON_STARTY,
 		LCD_CANCEL_BUTTON_FINISHY,
-		White, //by default
+		0x07E0, //by default
 		"Cancel"
 	};
 
@@ -73,7 +73,7 @@ struct lcdButtons {
 		LCD_CONFIRM_BUTTON_FINISHX,
 		LCD_CONFIRM_BUTTON_STARTY,
 		LCD_CONFIRM_BUTTON_FINISHY,
-		White, //by default
+		0x07E0, //by default
 		"Confirm"
 	};
 	
@@ -113,8 +113,8 @@ public:
 	void AnimateButton(lcdButton button);
 	void DrawReversedButton(lcdButton button);
 	void ChooseButton(lcdButton button);
-	void HighLightRow(SSD1306_Line row, std::string text);
-	void HighLightRowArea(SSD1306_Line row, std::string text);
+	void HighLightRow(LCD_Line row, std::string text);
+	void HighLightRowArea(LCD_Line row, std::string text);
 
 	void DrawModal(modal modal);
 
@@ -123,12 +123,12 @@ public:
 	}
 
 private:
-	uint8_t pixelBufferBackup[SSD1306_BUFFER_SIZE];
 
 	LcdGraphics* _lcdGraphics;
-	void FillArea(uint8_t startx, uint8_t finishx, uint8_t starty, uint8_t finishy, SSD1306_COLOR color);
-	void ClearArea(uint8_t startx, uint8_t finishx, uint8_t starty, uint8_t finishy, SSD1306_COLOR color);
-	SSD1306_COLOR GetReversedColor(SSD1306_COLOR color);
+	ST7789_Colors_t _colors;
+	void FillArea(uint16_t startx, uint16_t finishx, uint8_t starty, uint8_t finishy, uint16_t color);
+	void ClearArea(uint16_t startx, uint16_t finishx, uint8_t starty, uint8_t finishy, uint16_t color);
+	uint16_t GetReversedColor(uint16_t color);
 	
 };
 

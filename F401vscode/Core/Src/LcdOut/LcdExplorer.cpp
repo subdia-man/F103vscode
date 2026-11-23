@@ -13,7 +13,7 @@ extern CDCProtocolTransceiver _cdcProtocolTransceiver;
 extern NoFsStorage _noFsStorage;
 
 void LcdExplorer::Init() {
-	SSD1306_Init();
+	_lcdDriver.Init();
 	memset (&_filesView, 0, sizeof(_filesView));
 	_ButtonDrawerAnimator.Init();
 	return;
@@ -102,7 +102,7 @@ void LcdExplorer::DrawScreenViewFiles() {
 	_filesView.numberColumn = FILE_VIEW_FILE_NUMBER_COLUMN;
 	_filesView.fileNameColumn = FILE_VIEW_DATA_FIRST_INDENT;
 	for (uint8_t i = 0; i < _noFsStorage.GetNumberOfUids(); i++) {
-		etl::pair<SSD1306_Line, uint32_t> _screenRowObjects {_filesView.currentLine, _noFsStorage.GetFileUids().at(i)};
+		etl::pair<LCD_Line, uint32_t> _screenRowObjects {_filesView.currentLine, _noFsStorage.GetFileUids().at(i)};
 		DrawFileInfo(i + 1, GetCarNameAndModel(i));
 	}
 	
@@ -118,12 +118,16 @@ return;
 void LcdExplorer::DrawFileInfo(uint8_t number, std::string nameModel) {
 	//insert encryption number
 	_lcdGraphics.SetTextPosition(_filesView.currentLine, _filesView.numberColumn);
-	_lcdGraphics.WriteChar(ToChar(number), _lcdGraphics.GetCurrentFont(), _lcdGraphics.GetCurrentColor());
+	_lcdGraphics.WriteChar(ToChar(number), _lcdGraphics.GetCurrentFontWidth() * _filesView.numberColumn, 
+							_lcdGraphics.GetCurrentFontHeight() * _filesView.currentLine,
+							_lcdGraphics.GetCurrentColor());
 
 	//insert car manufacturer and model
 	_lcdGraphics.SetTextPosition(_filesView.currentLine, _filesView.fileNameColumn);
-  	_lcdGraphics.WriteString(nameModel.data(), _lcdGraphics.GetCurrentFont(), _lcdGraphics.GetCurrentColor());
-  	_filesView.currentLine = (SSD1306_Line)((uint8_t)_filesView.currentLine + 1);
+  	_lcdGraphics.WriteString(_lcdGraphics.GetCurrentFontWidth() * _filesView.numberColumn, 
+							_lcdGraphics.GetCurrentFontHeight() * _filesView.currentLine, 
+							nameModel.data(), _lcdGraphics.GetCurrentColor());
+  	_filesView.currentLine = (LCD_Line)((uint8_t)_filesView.currentLine + 1);
 	return;
 }
 
@@ -140,12 +144,16 @@ std::string LcdExplorer::GetCarNameAndModel(uint8_t uidIndex) {
 }
 
 void LcdExplorer::DrawFileViewTable() {
-	_lcdGraphics.DrawHorizontalLine(0, SSD1306_X_SIZE-1, FILE_VIEW_TABLE_HEADING_Y, _lcdGraphics.GetCurrentColor());
-	_lcdGraphics.DrawVerticalLine(FILE_VIEW_TABLE_FILE_NUMBER_COLUMN_X, 0, SSD1306_Y_SIZE-12, _lcdGraphics.GetCurrentColor());
+	_lcdGraphics.DrawHorizontalLine(0, ST7789_WIDTH-1, FILE_VIEW_TABLE_HEADING_Y, _lcdGraphics.GetCurrentColor());
+	_lcdGraphics.DrawVerticalLine(FILE_VIEW_TABLE_FILE_NUMBER_COLUMN_X, 0, ST7789_HEIGHT-12, _lcdGraphics.GetCurrentColor());
 	_lcdGraphics.SetTextPosition(First, 0);
-	_lcdGraphics.WriteChar('#', _lcdGraphics.GetCurrentFont(), _lcdGraphics.GetCurrentColor());
+	_lcdGraphics.WriteChar(_lcdGraphics.GetCurrentFontWidth() * _filesView.numberColumn, 
+							_lcdGraphics.GetCurrentFontHeight() * _filesView.currentLine, 
+							'#', _lcdGraphics.GetCurrentColor());
 	_lcdGraphics.SetTextPosition(First, 2);
-	_lcdGraphics.WriteString("Cfg file", _lcdGraphics.GetCurrentFont(), _lcdGraphics.GetCurrentColor());
+	_lcdGraphics.WriteString(_lcdGraphics.GetCurrentFontWidth() * _filesView.numberColumn, 
+							_lcdGraphics.GetCurrentFontHeight() * _filesView.currentLine, 
+							"Cfg file", _lcdGraphics.GetCurrentColor());
 	return;
 }
 
@@ -160,10 +168,12 @@ void LcdExplorer::DrawLoadingLine(uint8_t startx, uint8_t endx, uint8_t starty) 
   	_lcdGraphics.DrawHorizontalLine(startx, endx, starty+2, _lcdGraphics.GetCurrentColor());
 }
 
-void LcdExplorer::WriteNewTextLine(uint8_t indentx, SSD1306_Line line, char* text) {
+void LcdExplorer::WriteNewTextLine(uint8_t indentx, LCD_Line line, char* text) {
 	_lcdGraphics.ClearString(line);
   	_lcdGraphics.SetTextPosition(line, indentx);
-  	_lcdGraphics.WriteString(text, _lcdGraphics.GetCurrentFont(), _lcdGraphics.GetCurrentColor());
+  	_lcdGraphics.WriteString(_lcdGraphics.GetCurrentFontWidth() * _filesView.numberColumn, 
+							_lcdGraphics.GetCurrentFontHeight() * _filesView.currentLine, 
+							text, _lcdGraphics.GetCurrentColor());
 	return;
 }
 

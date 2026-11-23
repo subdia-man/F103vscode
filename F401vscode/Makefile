@@ -97,6 +97,8 @@ Core/CfgFileStorageRoutines/NoFsStorage.cpp \
 Core/Src/Keyboard/ButtonControl.cpp \
 Core/Src/Keyboard/LcdKeyController.cpp \
 Core/Src/LcdOut/LcdExplorer.cpp \
+Core/Src/LcdOut/ST7789vLcdDriver.cpp \
+Core/Src/LcdOut/font8x16.cpp \
 Core/Src/LcdOut/ButtonDrawerAnimator.cpp \
 libs/alglib/src/diffequations.cpp \
 libs/alglib/src/alglibmisc.cpp \
@@ -224,7 +226,9 @@ CPP_INCLUDES =  \
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
  
 CFLAGS = $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections -std=c11
+CFLAGS += -fstack-usage
 CPPFLAGS = $(MCU) $(C_DEFS) $(CPP_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections -std=c++17
+CPPFLAGS += -fstack-usage
  
 ifeq ($(DEBUG), 1)
 CFLAGS += -g -gdwarf-2
