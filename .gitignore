@@ -1,3 +1,7 @@
 
-F103vscode/build/
+F401vscode/build/
 *.json
+*.d
+*.out
+*.lst
+*.su
