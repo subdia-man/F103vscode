@@ -87,10 +87,10 @@ Button ButtonControl::Filter() {
 		case Button::Five:
 		_lastPressed = Button::Enter;
 		break;
-		case Button::Abutton:
+		case Button::AsteriskButton:
 		_lastPressed = Button::Enter;
 		break;
-		case Button::Bbutton:
+		case Button::SharpButton:
 		_lastPressed = Button::Escape;
 		break;
 		default:

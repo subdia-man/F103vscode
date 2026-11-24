@@ -59,25 +59,25 @@ void LcdExplorer::DrawFileDeleteModalView() {
 }
 
 void LcdExplorer::DrawScreenViewSystemInit() {
-  	WriteNewTextLine(2, Third, "ECU OBD II emulator");
+  	WriteNewTextLine(8, Third, "ECU OBD II emulator");
   	LcdExplorerDelay(3000);
 
   	_lcdGraphics.ClearScreen();
-  	WriteNewTextLine(4, Third, "SYSTEM INIT...");
+  	WriteNewTextLine(12, Third, "SYSTEM INIT...");
   	DrawLoading(INIT_LOAD_LINE_10_PERCENTS);
   	LcdExplorerDelay(1000);
 	
-  	WriteNewTextLine(2, Sixth, "Await for USB init");
+  	WriteNewTextLine(8, Sixth, "Await for USB init");
   	while (_cdcProtocolTransceiver.GetStateOfTheStateMachine() != CDCCommandAwaiting) {
   		//implement some timer here
   	}
   	DrawLoading(INIT_LOAD_LINE_30_PERCENTS);
   	LcdExplorerDelay(1000);
 
-  	WriteNewTextLine(6, Sixth, "USB initted");
+  	WriteNewTextLine(12, Sixth, "USB initted");
   	LcdExplorerDelay(1500);
 
-  	WriteNewTextLine(1, Sixth, "Awaiting for storage");
+  	WriteNewTextLine(8, Sixth, "Awaiting for storage");
   	LcdExplorerDelay(2000);
 
   	while(!_noFsStorage.IsInit()) {
@@ -85,12 +85,12 @@ void LcdExplorer::DrawScreenViewSystemInit() {
   	}
   	DrawLoading(INIT_LOAD_LINE_70_PERCENTS);
 
-  	WriteNewTextLine(2, Sixth, "Int. memory initted");
+  	WriteNewTextLine(8, Sixth, "Int. memory initted");
   	DrawLoading(INIT_LOAD_LINE_100_PERCENTS);
   	LcdExplorerDelay(2000);
 
 	_lcdGraphics.ClearScreen();
-  	WriteNewTextLine(6, Third, "EMU READY");
+  	WriteNewTextLine(14, Sixth, "EMU READY");
 	LcdExplorerDelay(2000);
 	_lcdGraphics.ClearScreen();
 	return;
@@ -110,23 +110,21 @@ void LcdExplorer::DrawScreenViewFiles() {
 							GetCarNameAndModel(_noFsStorage.
 							GetIndexOfUid(_screenRowObjects.
 							find(FILE_VIEW_DATA_FIRST_LINE)->second)));
-	_ButtonDrawerAnimator.DrawButton(_ButtonDrawerAnimator.GetLcdButtons().lcdViewButton);
-	_ButtonDrawerAnimator.DrawButton(_ButtonDrawerAnimator.GetLcdButtons().lcdDeleteButton);
+	_ButtonDrawerAnimator.DrawButton(_ButtonDrawerAnimator.GetLcdButtons().lcdViewButton, 
+									_lcdGraphics.GetBackgroundColor());
+	_ButtonDrawerAnimator.DrawButton(_ButtonDrawerAnimator.GetLcdButtons().lcdDeleteButton, 
+									_lcdGraphics.GetBackgroundColor());
 return;
 }
 
 void LcdExplorer::DrawFileInfo(uint8_t number, std::string nameModel) {
 	//insert encryption number
 	_lcdGraphics.SetTextPosition(_filesView.currentLine, _filesView.numberColumn);
-	_lcdGraphics.WriteChar(ToChar(number), _lcdGraphics.GetCurrentFontWidth() * _filesView.numberColumn, 
-							_lcdGraphics.GetCurrentFontHeight() * _filesView.currentLine,
-							_lcdGraphics.GetCurrentColor());
+	_lcdGraphics.WriteChar(ToChar(number), _lcdGraphics.GetCurrentColor());
 
 	//insert car manufacturer and model
 	_lcdGraphics.SetTextPosition(_filesView.currentLine, _filesView.fileNameColumn);
-  	_lcdGraphics.WriteString(_lcdGraphics.GetCurrentFontWidth() * _filesView.numberColumn, 
-							_lcdGraphics.GetCurrentFontHeight() * _filesView.currentLine, 
-							nameModel.data(), _lcdGraphics.GetCurrentColor());
+  	_lcdGraphics.WriteString(nameModel.data(), _lcdGraphics.GetCurrentColor());
   	_filesView.currentLine = (LCD_Line)((uint8_t)_filesView.currentLine + 1);
 	return;
 }
@@ -145,35 +143,27 @@ std::string LcdExplorer::GetCarNameAndModel(uint8_t uidIndex) {
 
 void LcdExplorer::DrawFileViewTable() {
 	_lcdGraphics.DrawHorizontalLine(0, ST7789_WIDTH-1, FILE_VIEW_TABLE_HEADING_Y, _lcdGraphics.GetCurrentColor());
-	_lcdGraphics.DrawVerticalLine(FILE_VIEW_TABLE_FILE_NUMBER_COLUMN_X, 0, ST7789_HEIGHT-12, _lcdGraphics.GetCurrentColor());
+	_lcdGraphics.DrawVerticalLine(FILE_VIEW_TABLE_FILE_NUMBER_COLUMN_X, 0, ST7789_HEIGHT-16, _lcdGraphics.GetCurrentColor());
 	_lcdGraphics.SetTextPosition(First, 0);
-	_lcdGraphics.WriteChar(_lcdGraphics.GetCurrentFontWidth() * _filesView.numberColumn, 
-							_lcdGraphics.GetCurrentFontHeight() * _filesView.currentLine, 
-							'#', _lcdGraphics.GetCurrentColor());
+	_lcdGraphics.WriteChar('#', _lcdGraphics.GetCurrentColor());
 	_lcdGraphics.SetTextPosition(First, 2);
-	_lcdGraphics.WriteString(_lcdGraphics.GetCurrentFontWidth() * _filesView.numberColumn, 
-							_lcdGraphics.GetCurrentFontHeight() * _filesView.currentLine, 
-							"Cfg file", _lcdGraphics.GetCurrentColor());
+	_lcdGraphics.WriteString("Cfg file", _lcdGraphics.GetCurrentColor());
 	return;
 }
 
-void LcdExplorer::DrawLoading(uint8_t percents) {
+void LcdExplorer::DrawLoading(uint16_t percents) {
 	DrawLoadingLine(INIT_LOAD_LINE_STARTX, percents, INIT_LOAD_LINE_Y);
 	return;
 }
 
-void LcdExplorer::DrawLoadingLine(uint8_t startx, uint8_t endx, uint8_t starty) {
-	_lcdGraphics.DrawHorizontalLine(startx, endx, starty, _lcdGraphics.GetCurrentColor());
-  	_lcdGraphics.DrawHorizontalLine(startx, endx, starty+1, _lcdGraphics.GetCurrentColor());
-  	_lcdGraphics.DrawHorizontalLine(startx, endx, starty+2, _lcdGraphics.GetCurrentColor());
+void LcdExplorer::DrawLoadingLine(uint16_t startx, uint16_t endx, uint8_t starty) {
+	_lcdGraphics.FillRectangle(startx, starty, (endx - startx), INIT_LOAD_LINE_WIDTH, _lcdGraphics.GetCurrentColor());
 }
 
 void LcdExplorer::WriteNewTextLine(uint8_t indentx, LCD_Line line, char* text) {
-	_lcdGraphics.ClearString(line);
+	_lcdGraphics.ClearString(line, 0);
   	_lcdGraphics.SetTextPosition(line, indentx);
-  	_lcdGraphics.WriteString(_lcdGraphics.GetCurrentFontWidth() * _filesView.numberColumn, 
-							_lcdGraphics.GetCurrentFontHeight() * _filesView.currentLine, 
-							text, _lcdGraphics.GetCurrentColor());
+  	_lcdGraphics.WriteString(text, _lcdGraphics.GetCurrentColor());
 	return;
 }
 

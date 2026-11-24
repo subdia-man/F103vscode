@@ -6,37 +6,38 @@
 
 #define _BDA_USE_FREERTOS     1
 
-#define LCD_VIEW_BUTTON_STARTX 		8
-#define LCD_VIEW_BUTTON_FINISHX 	58
-#define LCD_VIEW_BUTTON_STARTY 		53
-#define LCD_VIEW_BUTTON_FINISHY 	63
+#define LCD_VIEW_BUTTON_STARTX 		20
+#define LCD_VIEW_BUTTON_FINISHX 	139
+#define LCD_VIEW_BUTTON_STARTY 		200
+#define LCD_VIEW_BUTTON_FINISHY 	229
 
-#define LCD_DELETE_BUTTON_STARTX 	69
-#define LCD_DELETE_BUTTON_FINISHX 	119
-#define LCD_DELETE_BUTTON_STARTY 	53
-#define LCD_DELETE_BUTTON_FINISHY 	63
+#define LCD_DELETE_BUTTON_STARTX 	180
+#define LCD_DELETE_BUTTON_FINISHX 	299
+#define LCD_DELETE_BUTTON_STARTY 	200
+#define LCD_DELETE_BUTTON_FINISHY 	229
 
-#define LCD_CONFIRM_BUTTON_STARTX 	8
-#define LCD_CONFIRM_BUTTON_FINISHX 	58
-#define LCD_CONFIRM_BUTTON_STARTY 	32
-#define LCD_CONFIRM_BUTTON_FINISHY 	42
+#define LCD_CONFIRM_BUTTON_STARTX 	30
+#define LCD_CONFIRM_BUTTON_FINISHX 	149
+#define LCD_CONFIRM_BUTTON_STARTY 	140
+#define LCD_CONFIRM_BUTTON_FINISHY 	169
 
-#define LCD_CANCEL_BUTTON_STARTX 	69
-#define LCD_CANCEL_BUTTON_FINISHX 	119
-#define LCD_CANCEL_BUTTON_STARTY 	32
-#define LCD_CANCEL_BUTTON_FINISHY 	42
+#define LCD_CANCEL_BUTTON_STARTX 	170
+#define LCD_CANCEL_BUTTON_FINISHX 	289
+#define LCD_CANCEL_BUTTON_STARTY 	140
+#define LCD_CANCEL_BUTTON_FINISHY 	169
 
-#define LCD_FILE_DELETE_MODAL_STARTX 	4
-#define LCD_FILE_DELETE_MODAL_FINISHX 	123
-#define LCD_FILE_DELETE_MODAL_STARTY 	8
-#define LCD_FILE_DELETE_MODAL_FINISHY 	48
+#define LCD_FILE_DELETE_MODAL_STARTX 	20
+#define LCD_FILE_DELETE_MODAL_FINISHX 	299
+#define LCD_FILE_DELETE_MODAL_STARTY 	20
+#define LCD_FILE_DELETE_MODAL_FINISHY 	179
 
 struct lcdButton {
-	uint8_t startx;
-	uint8_t finishx;
+	uint16_t startx;
+	uint16_t finishx;
 	uint8_t starty;
 	uint8_t finishy;
 	uint16_t color;
+	uint16_t highlightedColor;
 	char* name;
 };
 
@@ -46,7 +47,8 @@ struct lcdButtons {
 		LCD_VIEW_BUTTON_FINISHX,
 		LCD_VIEW_BUTTON_STARTY,
 		LCD_VIEW_BUTTON_FINISHY,
-		0x07E0, //by default
+		0, //by default
+		0,
 		"View"
 	};
 
@@ -55,7 +57,8 @@ struct lcdButtons {
 		LCD_DELETE_BUTTON_FINISHX,
 		LCD_DELETE_BUTTON_STARTY,
 		LCD_DELETE_BUTTON_FINISHY,
-		0x07E0, //by default
+		0, //by default
+		0,
 		"Delete"
 	};
 
@@ -64,7 +67,8 @@ struct lcdButtons {
 		LCD_CANCEL_BUTTON_FINISHX,
 		LCD_CANCEL_BUTTON_STARTY,
 		LCD_CANCEL_BUTTON_FINISHY,
-		0x07E0, //by default
+		0, //by default
+		0,
 		"Cancel"
 	};
 
@@ -73,15 +77,16 @@ struct lcdButtons {
 		LCD_CONFIRM_BUTTON_FINISHX,
 		LCD_CONFIRM_BUTTON_STARTY,
 		LCD_CONFIRM_BUTTON_FINISHY,
-		0x07E0, //by default
+		0, //by default
+		0,
 		"Confirm"
 	};
 	
 };
 
 struct modal {
-	uint8_t borderStartx;
-	uint8_t borderEndx;
+	uint16_t borderStartx;
+	uint16_t borderEndx;
 	uint8_t borderStarty;
 	uint8_t borderFinishy;
 	lcdButton buttonLeft;
@@ -109,7 +114,7 @@ public:
 	~ButtonDrawerAnimator() {}
 
 	void Init();
-	void DrawButton(lcdButton button);
+	void DrawButton(lcdButton button, uint16_t bgColor);
 	void AnimateButton(lcdButton button);
 	void DrawReversedButton(lcdButton button);
 	void ChooseButton(lcdButton button);
@@ -126,9 +131,11 @@ private:
 
 	LcdGraphics* _lcdGraphics;
 	ST7789_Colors_t _colors;
+
 	void FillArea(uint16_t startx, uint16_t finishx, uint8_t starty, uint8_t finishy, uint16_t color);
-	void ClearArea(uint16_t startx, uint16_t finishx, uint8_t starty, uint8_t finishy, uint16_t color);
+	void ClearArea(uint16_t startx, uint16_t finishx, uint8_t starty, uint8_t finishy);
 	uint16_t GetReversedColor(uint16_t color);
+	uint16_t GetHighlightColor();
 	
 };
 

@@ -236,17 +236,17 @@ void ST7789vLcdDriver::Init() {
 
 void ST7789vLcdDriver::LcdReset() {
 	HAL_GPIO_WritePin(ST7789_PORT, ST7789_RES_PIN, GPIO_PIN_SET);
-	LcdDelay(100);
+	LcdDelay(50);
 	HAL_GPIO_WritePin(ST7789_PORT, ST7789_RES_PIN, GPIO_PIN_RESET);
-	LcdDelay(100);
+	LcdDelay(50);
 	HAL_GPIO_WritePin(ST7789_PORT, ST7789_RES_PIN, GPIO_PIN_SET);
-	LcdDelay(100);
+	LcdDelay(50);
 }
 
 void ST7789vLcdDriver::WriteCommand(uint8_t cmd) {
 	HAL_GPIO_WritePin(ST7789_PORT, ST7789_CS_PIN, GPIO_PIN_RESET); // CS = 0
 	HAL_GPIO_WritePin(ST7789_PORT, ST7789_DC_PIN, GPIO_PIN_RESET); // DC = 0 для команды
-    HAL_SPI_Transmit(&hspi1, &cmd, 1, HAL_MAX_DELAY);
+    HAL_SPI_Transmit(&hspi1, &cmd, 1, 10);
     HAL_GPIO_WritePin(ST7789_PORT, ST7789_CS_PIN, GPIO_PIN_SET);   // CS = 1
 	return;
 }
@@ -258,7 +258,7 @@ void ST7789vLcdDriver::WriteData(uint8_t data) {
 void ST7789vLcdDriver::WriteData8(uint8_t data) {
 	HAL_GPIO_WritePin(ST7789_PORT, ST7789_CS_PIN, GPIO_PIN_RESET); // CS = 0
 	HAL_GPIO_WritePin(ST7789_PORT, ST7789_DC_PIN, GPIO_PIN_SET);   // DC = 1 для данных
-    HAL_SPI_Transmit(&hspi1, &data, 1, HAL_MAX_DELAY);
+    HAL_SPI_Transmit(&hspi1, &data, 1, 10);
     HAL_GPIO_WritePin(ST7789_PORT, ST7789_CS_PIN, GPIO_PIN_SET);   // CS = 1
 	return;
 }
@@ -268,6 +268,6 @@ void ST7789vLcdDriver::WriteData16(uint16_t data) {
                          static_cast<uint8_t>(data & 0xFF)};
     HAL_GPIO_WritePin(ST7789_PORT, ST7789_CS_PIN, GPIO_PIN_RESET); // CS = 0
     HAL_GPIO_WritePin(ST7789_PORT, ST7789_DC_PIN, GPIO_PIN_SET);   // DC = 1 для данных
-    HAL_SPI_Transmit(&hspi1, buffer, 2, HAL_MAX_DELAY);
+    HAL_SPI_Transmit(&hspi1, buffer, 2, 10);
     HAL_GPIO_WritePin(ST7789_PORT, ST7789_CS_PIN, GPIO_PIN_SET);   // CS = 1
 }

@@ -33,6 +33,8 @@ typedef enum {
 typedef struct {
     uint16_t CurrentX;
     uint16_t CurrentY;
+    LCD_Line line;
+    uint8_t indent;
     uint8_t Initialized;
     uint8_t DisplayOn;
 } LCD_t;
@@ -44,6 +46,7 @@ class LcdGraphics {
 	ST7789_Colors_t _colors;
 	uint16_t _currentTextColor = _colors.GREEN;
 	uint16_t _currentBGColor = _colors.BLACK;
+	uint16_t _currentHighlightColor = _colors.MAGENTA;
 
 	ST7789vLcdDriver _lcdDriver;
 
@@ -52,43 +55,30 @@ public:
 	LcdGraphics() {}
 	~LcdGraphics() {}
 
-	void WriteChar(uint16_t x, uint16_t y, char ch, uint16_t color);
-	void WriteString(uint16_t x, uint16_t y, char* str, uint16_t color);
+	void WriteChar(char ch, uint16_t color);
+	void WriteString(char* str, uint16_t color);
 	void DrawHorizontalLine(uint16_t startx, uint16_t endx, uint8_t y, uint16_t color);
 	void DrawVerticalLine(uint16_t x, uint16_t starty, uint8_t endy, uint16_t color);
 	void DrawLine(uint16_t startx, uint16_t endx, uint8_t starty, uint8_t endy, uint16_t color);
-	void DrawRectangle(uint8_t startx, uint8_t endx, uint8_t starty, uint8_t endy, uint16_t color);
+	void DrawRectangle(uint16_t startx, uint16_t endx, uint8_t starty, uint8_t endy, uint16_t color);
+	void FillRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color);
 	void ClearScreen();
 	void SetTextPosition(LCD_Line line, uint8_t chars);
 	void SetCursor(uint8_t x, uint8_t y);
 	
-	
+	void ClearString(LCD_Line line, uint8_t indent);
 
-	void ClearString(LCD_Line line);
-
-	uint16_t GetCurrentColor() {
-		return _currentTextColor;
-	}
-	void SetCurrentColor(uint16_t color) {
-		_currentTextColor = color;
-		return;
-	}
-
-	uint8_t GetCurrentFontWidth() {
-		return _font.CHAR_WIDTH;
-	}
-
-	uint8_t GetCurrentFontHeight() {
-		return _font.CHAR_HEIGHT;
-	}
-
-	uint16_t GetCurrentX() {
-		return ST7789v.CurrentX;
-	}
-
-	uint16_t GetCurrentY() {
-		return ST7789v.CurrentY;
-	}
+	// getters and setters
+	uint16_t GetCurrentColor();
+	void SetCurrentColor(uint16_t color);
+	uint16_t GetBackgroundColor();
+	void SetBackgroundColor(uint16_t color);
+	uint16_t GetHighlightColor();
+	void SetHighlightColor (uint16_t color);
+	uint8_t GetCurrentFontWidth();
+	uint8_t GetCurrentFontHeight();
+	uint16_t GetCurrentX();
+	uint16_t GetCurrentY();
 
 private:
 	void SetLine (LCD_Line line);
