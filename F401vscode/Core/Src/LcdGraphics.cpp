@@ -9,174 +9,130 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "ssd1306.h"
 #include "LcdGraphics.h"
 
-void LcdGraphics::SetPixel(uint8_t x, uint8_t y, SSD1306_COLOR color) {
-	 if(x >= SSD1306_X_SIZE || y >= SSD1306_Y_SIZE) {
-        return;
-    }
-    // Draw in the right color
-    if(color == White) {
-        pixelBuffer[x + (y / 8) * SSD1306_X_SIZE] |= 1 << (y % 8);
-    } else { 
-        pixelBuffer[x + (y / 8) * SSD1306_X_SIZE] &= ~(1 << (y % 8));
-    }
-  	return;
+void LcdGraphics::WriteChar(char ch, uint16_t color) {
+    return _lcdDriver.DrawChar(ST7789v.CurrentX, ST7789v.CurrentY, ch, color, _currentBGColor);
 }
 
-char LcdGraphics::WriteChar(char ch, SSD1306_Font_t Font, SSD1306_COLOR color) {
-    uint32_t i, b, j;
-    
-    // Check if character is valid
-    if (ch < 32 || ch > 126)
-        return 0;
-    
-    // Char width is not equal to font width for proportional font
-    const uint8_t char_width = Font.char_width ? Font.char_width[ch-32] : Font.width;
-    // Check remaining space on current line
-    if (SSD1306_X_SIZE < (SSD1306.CurrentX + char_width) ||
-        SSD1306_Y_SIZE < (SSD1306.CurrentY + Font.height))
-    {
-        // Not enough space on current line
-        return 0;
-    }
-    
-    // Use the font to write
-    for(i = 0; i < Font.height; i++) {
-        b = Font.data[(ch - 32) * Font.height + i];
-        for(j = 0; j < char_width; j++) {
-            if((b << j) & 0x8000)  {
-                SetPixel(SSD1306.CurrentX + j, (SSD1306.CurrentY + i), (SSD1306_COLOR) color);
-            } else {
-                SetPixel(SSD1306.CurrentX + j, (SSD1306.CurrentY + i), (SSD1306_COLOR) !color);
-            }
-        }
-    }
-    
-    // The current space is now taken
-    SSD1306.CurrentX += char_width;
-    UpdateScreen();
-    // Return written char for validation
-    return ch;
+void LcdGraphics::WriteString(char* str, uint16_t color) {
+    return _lcdDriver.DrawString(ST7789v.CurrentX, ST7789v.CurrentY, str, color, _currentBGColor);
 }
 
-/* Write full string to screenbuffer */
-char LcdGraphics::WriteString(char* str, SSD1306_Font_t Font, SSD1306_COLOR color) {
-    while (*str) {
-        if (WriteChar(*str, Font, color) != *str) {
-            // Char could not be written
-            return *str;
-        }
-        str++;
-    }
-    return *str;
-}
-
-void LcdGraphics::DrawHorizontalLine(uint8_t startx, uint8_t endx, uint8_t y, SSD1306_COLOR color) {
-	for (uint8_t i = startx; i< endx; i++) {
-		SetPixel(i, y, color);
-	}
-	UpdateScreen();
-	return;
-}
-
-void LcdGraphics::DrawVerticalLine(uint8_t x, uint8_t starty, uint8_t endy, SSD1306_COLOR color) {
-	for (uint8_t i = starty; i< endy; i++) {
-		SetPixel(x, i, color);
-	}
-	UpdateScreen();
-	return;
-}
-
-void LcdGraphics::DrawLine(uint8_t startx, uint8_t endx, 
-			  uint8_t starty, uint8_t endy, SSD1306_COLOR color) {
-
-	float kornerKff = (abs(starty - endy)/abs(startx - endx));
-	for (uint8_t i = startx; i < endx; i++) {
-		uint8_t yk = kornerKff*(i - endx) + endy;
-		SetPixel(i, yk, color);
-	}
-	UpdateScreen();
-	return;
-}
-
-void LcdGraphics::DrawRectangle(uint8_t startx, uint8_t endx, uint8_t starty, uint8_t endy, SSD1306_COLOR color) {
-    DrawHorizontalLine(startx, endx, starty, color);
-    DrawHorizontalLine(startx, endx, endy, color);
-    DrawVerticalLine(startx, starty, endy, color);
-    DrawVerticalLine(endx, starty, endy, color);
+void LcdGraphics::DrawLine(uint16_t startx, uint16_t endx, 
+			  uint8_t starty, uint8_t endy, uint16_t color) {
+	_lcdDriver.DrawLine(startx, starty, endx, endy, color);
     return;
 }
 
-void LcdGraphics::UpdateScreen(void) {
-    for(uint8_t i = 0; i < SSD1306_Y_SIZE/8; i++) {
-        SSD1306_SendCommand(0xB0 + i); // Set the current RAM page address.
-        SSD1306_SendCommand(0x00 + SSD1306_X_OFFSET_LOWER);
-        SSD1306_SendCommand(0x10 + SSD1306_X_OFFSET_UPPER);
-        SSD1306_SendData(&pixelBuffer[SSD1306_X_SIZE*i], SSD1306_X_SIZE);
-    }
+void LcdGraphics::DrawHorizontalLine(uint16_t startx, uint16_t endx, uint8_t y, uint16_t color) {
+    DrawLine(startx, endx, y, y, color);
+    return;
+} 
+
+void LcdGraphics::DrawVerticalLine(uint16_t x, uint16_t starty, uint8_t endy, uint16_t color) {
+    DrawLine(x, x, starty, endy, color);
+    return;
+}
+
+void LcdGraphics::DrawRectangle(uint16_t startx, uint16_t endx, uint8_t starty, uint8_t endy, uint16_t color) {
+    _lcdDriver.DrawLine(startx, starty, endx, starty, color);
+    _lcdDriver.DrawLine(startx, endy, endx, endy, color);
+    _lcdDriver.DrawLine(startx, starty, startx, endy, color);
+    _lcdDriver.DrawLine(endx, starty, endx, endy, color);
+    return;
+}
+
+void LcdGraphics::FillRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color) {
+    _lcdDriver.FillRect(x, y, w, h, color);
 }
 
 void LcdGraphics::ClearScreen() {
-    uint8_t filler = 0x00;
-    if (_color != SSD1306_COLOR::White) {
-        filler = 0xFF;
-    }
-  	for (uint16_t i = 0; i < SSD1306_BUFFER_SIZE; i++) {
-    	pixelBuffer[i] = filler;
-  	}
-  	UpdateScreen();
-  	return;
+  	return _lcdDriver.FillScreen(_currentBGColor);
 }
 
 /* Service */
 
 void LcdGraphics::SetCursor(uint8_t x, uint8_t y) {
-    SSD1306.CurrentX = x;
-    SSD1306.CurrentY = y;
+    ST7789v.CurrentX = x;
+    ST7789v.CurrentY = y;
+    _lcdDriver.SetWindow(ST7789v.CurrentX, ST7789v.CurrentY, ST7789v.CurrentX, ST7789v.CurrentY);
+    return;
 }
 
-void LcdGraphics::SetLine (SSD1306_Line line) {
-	uint8_t maxLines = SSD1306_Y_SIZE / GetCurrentFont().height;
+void LcdGraphics::SetLine (LCD_Line line) {
+	uint8_t maxLines = ST7789_HEIGHT / _font.CHAR_HEIGHT;
 	if (line > maxLines) {
 		return;
 	} else {
-		SSD1306.CurrentY = GetCurrentFont().height * line;
+		ST7789v.CurrentY = _font.CHAR_HEIGHT * line;
 	}
 	return;
 }
 
 void LcdGraphics::SetIndent(uint8_t chars) {
-	uint8_t maxChars = SSD1306_X_SIZE / GetCurrentFont().width;
+	uint8_t maxChars = ST7789_WIDTH / _font.CHAR_WIDTH;
 	if (maxChars < chars + 1) {
 		return;
 	} else {
-		SSD1306.CurrentX = GetCurrentFont().width * chars;
+		ST7789v.CurrentX = _font.CHAR_WIDTH * chars;
 	}
 	return;
 }
 
-void LcdGraphics::SetTextPosition(SSD1306_Line line, uint8_t chars) {
+void LcdGraphics::SetTextPosition(LCD_Line line, uint8_t chars) {
 	SetLine(line);
 	SetIndent(chars);
 	return;
 }
 
-void LcdGraphics::SetCurrentFont(SSD1306_Font_t font) {
-	_currentFont = font;
-	return;
-}
-
-SSD1306_Font_t LcdGraphics::GetCurrentFont() {
-	return _currentFont;
-}
-
-void LcdGraphics::ClearString(SSD1306_Line line) {
-        SetTextPosition(line, 0);
-        for (uint8_t i = 0; i < SSD1306_X_SIZE; i++) {
-            WriteChar(' ', GetCurrentFont(), GetCurrentColor());
-        }
-        SetTextPosition(line, 0);
+void LcdGraphics::ClearString(LCD_Line line, uint8_t indent) {
+        SetTextPosition(line, indent);
+        _lcdDriver.FillRect(ST7789v.CurrentX, ST7789v.CurrentY, (ST7789_WIDTH - ST7789v.CurrentX), 
+                            _font.CHAR_HEIGHT, _currentBGColor);
+        SetTextPosition(line, indent);
         return;
-    }
+}
+
+uint16_t LcdGraphics::GetCurrentColor() {
+    return _currentTextColor;
+}
+
+void LcdGraphics::SetCurrentColor(uint16_t color) {
+    _currentTextColor = color;
+    return;
+}
+
+uint16_t LcdGraphics::GetBackgroundColor() {
+    return _currentBGColor;
+}
+
+void LcdGraphics::SetBackgroundColor(uint16_t color) {
+    _currentBGColor = color;
+    return;
+}
+
+uint16_t LcdGraphics::GetHighlightColor() {
+    return _currentHighlightColor;
+}
+
+void LcdGraphics::SetHighlightColor (uint16_t color) {
+    _currentHighlightColor = color;
+    return;
+}
+
+uint8_t LcdGraphics::GetCurrentFontWidth() {
+    return _font.CHAR_WIDTH;
+}
+
+uint8_t LcdGraphics::GetCurrentFontHeight() {
+    return _font.CHAR_HEIGHT;
+}
+
+uint16_t LcdGraphics::GetCurrentX() {
+    return ST7789v.CurrentX;
+}
+
+uint16_t LcdGraphics::GetCurrentY() {
+    return ST7789v.CurrentY;
+}

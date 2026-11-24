@@ -57,6 +57,7 @@ osThreadId defaultTaskHandle;
 osThreadId cdcTxRxTaskHandle;
 osThreadId cdcProcessTaskHandle;
 osThreadId lcdProcessTaskHandle;
+osThreadId kbdProcessTaskHandle;
 
 CDCProtocolTransceiver _cdcProtocolTransceiver;
 LcdGraphics _lcdGraphics;
@@ -82,6 +83,7 @@ void StartDefaultTask(void const * argument);
 void StartCdcTxRxTask(void const * argument);
 void StartCdcProcessTask(void const * argument);
 void StartLcdProcessTask(void const * argument);
+void StartKeyboardProcessTask(void const * argument);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -106,9 +108,9 @@ uint8_t cfgData[512] = {
 };
 
 void Test() {
-  size_t cfgSize = 512;
-  uint8_t packetSize = 64;
-  uint8_t* pCfgData = (uint8_t*)cfgData;
+  //size_t cfgSize = 512;
+  //uint8_t packetSize = 64;
+  //uint8_t* pCfgData = (uint8_t*)cfgData;
   
   /*uint8_t res = _noFsStorage.Init();
 
@@ -125,7 +127,7 @@ void Test() {
     pCfgData += packetSize;
   }
 
-  /*etl::array<uint32_t, MAX_FILES_NUMBER> files = _noFsStorage.GetFileUids();
+  etl::array<uint32_t, MAX_FILES_NUMBER> files = _noFsStorage.GetFileUids();
   for (uint8_t i = MAX_FILES_NUMBER - 1; i > 0; i--) {
       _noFsStorage.DeleteRecord(files.at(i));
   }*/
@@ -202,6 +204,9 @@ int main(void) {
 
   osThreadDef(lcdProcessTask, StartLcdProcessTask, osPriorityNormal, 0, 448);
   lcdProcessTaskHandle = osThreadCreate(osThread(lcdProcessTask), NULL);
+
+  osThreadDef(kbdProcessTask, StartKeyboardProcessTask, osPriorityNormal, 0, 128);
+  kbdProcessTaskHandle = osThreadCreate(osThread(kbdProcessTask), NULL);
   
   /* USER CODE END RTOS_THREADS */
 
@@ -241,10 +246,10 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLM = 15;
-  RCC_OscInitStruct.PLL.PLLN = 144;
+  RCC_OscInitStruct.PLL.PLLM = 25;
+  RCC_OscInitStruct.PLL.PLLN = 336;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV4;
-  RCC_OscInitStruct.PLL.PLLQ = 5;
+  RCC_OscInitStruct.PLL.PLLQ = 7;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();
@@ -259,7 +264,7 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
   {
     Error_Handler();
   }
@@ -291,12 +296,13 @@ static void MX_SPI1_Init(void) {
   hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
   hspi1.Init.NSS = SPI_NSS_SOFT;
-  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_4;
+  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
   hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
   hspi1.Init.CRCPolynomial = 10;
-  if (HAL_SPI_Init(&hspi1) != HAL_OK) {
+  if (HAL_SPI_Init(&hspi1) != HAL_OK)
+  {
     Error_Handler();
   }
   /* USER CODE BEGIN SPI1_Init 2 */
@@ -421,15 +427,14 @@ void StartDefaultTask(void const * argument) {
   /* USER CODE BEGIN 5 */
   /* Infinite loop */
   for(;;) {
-   _lcdKeyController.Step();
-   osDelay(50);
+   HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+   osDelay(500);
   }
   /* USER CODE END 5 */
 }
 
 /* USER CODE BEGIN 6 */
 void StartCdcTxRxTask(void const * argument) {
-
   for(;;) {
     _cdcProtocolTransceiver.Receive();
     _cdcProtocolTransceiver.Transmit();
@@ -437,16 +442,20 @@ void StartCdcTxRxTask(void const * argument) {
 }
 
 void StartCdcProcessTask(void const * argument) {
-
   for(;;) {
     _cdcProtocolTransceiver.Process();
   }
 }
 
 void StartLcdProcessTask(void const * argument) {
-
   for(;;) {
     _lcdExplorer.ProcessLcdState();
+  }
+}
+
+void StartKeyboardProcessTask(void const * argument) {
+  for(;;) {
+    _lcdKeyController.Step();
   }
 }
  /* USER CODE END 6 */

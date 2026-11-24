@@ -30,6 +30,10 @@ void LcdKeyController::Step() {
 				_lcdOutStateMachine -> SetState(LcdOutState::FilesView);
 			}
 		break;
+		case LcdOutState::MenuView:
+		break;
+		case LcdOutState::PassOut:
+		break;
 	}
 	
 	return;

@@ -10,34 +10,41 @@
 #endif
 
 void ButtonDrawerAnimator::Init() {
-	_lcdButtons.lcdViewButton.color = _lcdGraphics->GetCurrentColor();
-	_lcdButtons.lcdDeleteButton.color = _lcdGraphics->GetCurrentColor();
-	_lcdButtons.lcdCancelButton.color = _lcdGraphics->GetCurrentColor();
+	_lcdButtons.lcdViewButton.color = 
+	_lcdButtons.lcdDeleteButton.color = 
+	_lcdButtons.lcdCancelButton.color = 
 	_lcdButtons.lcdConfirmButton.color = _lcdGraphics->GetCurrentColor();
+	 
+	_lcdButtons.lcdViewButton.highlightedColor = 
+	_lcdButtons.lcdDeleteButton.highlightedColor = 
+	_lcdButtons.lcdCancelButton.highlightedColor = 
+	_lcdButtons.lcdConfirmButton.highlightedColor = _lcdGraphics->GetHighlightColor();
+
+	_fileDeleteModal.buttonLeft.color = _fileDeleteModal.buttonRight.color = _lcdGraphics->GetCurrentColor();
+	_fileDeleteModal.buttonLeft.highlightedColor = 
+	_fileDeleteModal.buttonRight.highlightedColor = _lcdGraphics->GetHighlightColor();
 	return;
 }
 
-void ButtonDrawerAnimator::DrawButton(lcdButton button) {
-	ClearArea(button.startx, button.finishx, button.starty, button.finishy, button.color);
+void ButtonDrawerAnimator::DrawButton(lcdButton button, uint16_t bgColor) {
+	FillArea(button.startx, button.finishx, button.starty, button.finishy, bgColor);
 	_lcdGraphics->DrawRectangle(button.startx, button.finishx, button.starty, button.finishy, button.color);
 	_lcdGraphics->SetCursor(button.startx + ((button.finishx - button.startx - 
-		(strlen(button.name) * _lcdGraphics->GetCurrentFont().width)) / 2), 
-		button.starty + ((button.finishy - button.starty - _lcdGraphics->GetCurrentFont().height) / 2));
-  	_lcdGraphics->WriteString(button.name, _lcdGraphics->GetCurrentFont(), button.color);
+		(strlen(button.name) * _lcdGraphics->GetCurrentFontWidth())) / 2), 
+		button.starty + ((button.finishy - button.starty - _lcdGraphics->GetCurrentFontHeight()) / 2));
+  	_lcdGraphics->WriteString(button.name, button.color);
 	return;
 }
 
 void ButtonDrawerAnimator::AnimateButton(lcdButton button) {
 	DrawReversedButton(button);
 	BtnDriverAnimatorDelay(500);
-	DrawButton(button);
+	DrawButton(button, _lcdGraphics->GetBackgroundColor());
 	return;
 }
 
 void ButtonDrawerAnimator::DrawReversedButton(lcdButton button) {
-	FillArea(button.startx, button.finishx, button.starty, button.finishy, button.color);
-	button.color = GetReversedColor(button.color);
-	DrawButton(button);
+	DrawButton(button, button.highlightedColor);
 	return;
 }
 
@@ -45,21 +52,22 @@ void ButtonDrawerAnimator::ChooseButton(lcdButton button) {
 	return DrawReversedButton(button);
 }
 
-void ButtonDrawerAnimator::HighLightRow(SSD1306_Line row, std::string text) {
+void ButtonDrawerAnimator::HighLightRow(LCD_Line row, std::string text) {
 	HighLightRowArea(row, text);
 	_lcdGraphics->SetTextPosition(row, 2);
-	_lcdGraphics->WriteString(text.data(), _lcdGraphics->GetCurrentFont(), GetReversedColor(_lcdGraphics->GetCurrentColor()));
+	_lcdGraphics->WriteString(text.data(), _lcdGraphics->GetCurrentColor());
 	return;
 }
 
-void ButtonDrawerAnimator::HighLightRowArea(SSD1306_Line row, std::string text) {
-	_lcdGraphics->DrawRectangle(_lcdGraphics->GetCurrentFont().width * 2 - 1, 
-								_lcdGraphics->GetCurrentFont().width * 2 + 
-								_lcdGraphics->GetCurrentFont().width * text.length(), 
-								_lcdGraphics->GetCurrentFont().height * row, 
-								(_lcdGraphics->GetCurrentFont().height + 
-								(row * _lcdGraphics->GetCurrentFont().height)) - 1, 
-								_lcdGraphics->GetCurrentColor());
+void ButtonDrawerAnimator::HighLightRowArea(LCD_Line row, std::string text) {
+	uint16_t w = (_lcdGraphics->GetCurrentFontWidth() * 2 + _lcdGraphics->GetCurrentFontWidth() * text.length() - 
+				_lcdGraphics->GetCurrentFontWidth() * 2 - 1);
+	uint8_t h = ((_lcdGraphics->GetCurrentFontHeight() + (row * _lcdGraphics->GetCurrentFontHeight())) - 1) - 
+					(_lcdGraphics->GetCurrentFontHeight() * row);
+	_lcdGraphics->FillRectangle(_lcdGraphics->GetCurrentFontWidth() * 2 - 1, //startx
+								_lcdGraphics->GetCurrentFontHeight() * row,		//starty
+								w, h, GetHighlightColor());
+
 	return;
 }
 
@@ -68,37 +76,36 @@ void ButtonDrawerAnimator::DrawModal(modal modal) {
 	_lcdGraphics->DrawRectangle(modal.borderStartx, modal.borderEndx, modal.borderStarty, 
 								modal.borderFinishy, modal.buttonLeft.color);
 	_lcdGraphics->SetCursor(modal.borderStartx + ((modal.borderEndx - modal.borderStartx - 
-							(strlen(modal.text) * _lcdGraphics->GetCurrentFont().width)) / 2), 
+							(strlen(modal.text) * _lcdGraphics->GetCurrentFontWidth())) / 2), 
 							modal.borderStarty + ((modal.borderFinishy - modal.borderStarty - 
-							_lcdGraphics->GetCurrentFont().height) / 2) 
-							- _lcdGraphics->GetCurrentFont().height);
-	_lcdGraphics->WriteString(modal.text, _lcdGraphics->GetCurrentFont(), modal.buttonLeft.color);
-	DrawButton(modal.buttonLeft);
-	DrawButton(modal.buttonRight);
+							_lcdGraphics->GetCurrentFontHeight()) / 2) 
+							- _lcdGraphics->GetCurrentFontHeight());
+	_lcdGraphics->WriteString(modal.text, modal.buttonLeft.color);
+	DrawButton(modal.buttonLeft, _lcdGraphics->GetBackgroundColor());
+	DrawButton(modal.buttonRight, _lcdGraphics->GetBackgroundColor());
 	return;
 }
 
-SSD1306_COLOR ButtonDrawerAnimator::GetReversedColor(SSD1306_COLOR color) {
-	if (color == White) {
-		return Black;
+uint16_t ButtonDrawerAnimator::GetReversedColor(uint16_t color) {
+	if (color == _colors.GREEN) {
+		return _colors.BLACK;
 	} else {
-		return White;
+		return _colors.GREEN;
 	}
-	return White;
+	return _colors.GREEN;
 }
 
-void ButtonDrawerAnimator::FillArea(uint8_t startx, uint8_t finishx, uint8_t starty, uint8_t finishy, 
-									SSD1306_COLOR color) {
-	for (uint8_t i = starty; i < finishy; i++) {
-		_lcdGraphics->DrawHorizontalLine(startx, finishx, i, color);
-	}
+uint16_t ButtonDrawerAnimator::GetHighlightColor() {
+	return _lcdGraphics->GetHighlightColor();
+}
+
+void ButtonDrawerAnimator::FillArea(uint16_t startx, uint16_t finishx, uint8_t starty, uint8_t finishy, 
+									uint16_t color) {
+	_lcdGraphics->FillRectangle(startx, starty, (finishx - startx), (finishy - starty), color);
 	return;
 }
 
-void ButtonDrawerAnimator::ClearArea(uint8_t startx, uint8_t finishx, uint8_t starty, uint8_t finishy, SSD1306_COLOR color) {
-	color = GetReversedColor(color);
-	for (uint8_t i = starty; i < finishy; i++) {
-		_lcdGraphics->DrawHorizontalLine(startx, finishx, i, color);
-	}
+void ButtonDrawerAnimator::ClearArea(uint16_t startx, uint16_t finishx, uint8_t starty, uint8_t finishy) {
+	FillArea(startx, finishx, starty, finishy, _lcdGraphics->GetBackgroundColor());
 	return;
 }
