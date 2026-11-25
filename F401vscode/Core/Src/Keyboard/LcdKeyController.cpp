@@ -14,18 +14,22 @@ void LcdKeyController::Step() {
 		break;
 		case LcdOutState::FilesView:
 			if(button == Button::Escape) { //delete
+				_buttonDrawerAnimator -> AnimateButton(_buttonDrawerAnimator -> GetButtonByName("Delete"));
 				_lcdOutStateMachine -> SetState(LcdOutState::FileDeleteModalView);
 			} 
 			else if (button == Button::Enter) { //file view
+				_buttonDrawerAnimator -> AnimateButton(_buttonDrawerAnimator -> GetButtonByName("View"));
 				//view file
 			}
 		break;
 		case LcdOutState::FileDeleteModalView:
 			if(button == Button::Enter) {
+				_buttonDrawerAnimator -> AnimateButton(_buttonDrawerAnimator -> GetButtonByName("Confirm"));
 				//delete file
 				//return to the FilesView state
 			}
 			else if (button == Button::Escape) {
+				_buttonDrawerAnimator -> AnimateButton(_buttonDrawerAnimator -> GetButtonByName("Cancel"));
 				//return to the FilesView state
 				_lcdOutStateMachine -> SetState(LcdOutState::FilesView);
 			}

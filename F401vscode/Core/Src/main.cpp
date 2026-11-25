@@ -69,7 +69,7 @@ W25Q128Driver _flashDevice;
 NoFsStorage _noFsStorage;
 FileUIDGenerator _fileUidGenerator;
 ButtonControl _buttonControl;
-LcdKeyController _lcdKeyController(_lcdStateMachine, _buttonControl);
+LcdKeyController _lcdKeyController(_lcdStateMachine, _buttonControl, _ButtonDrawerAnimator);
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
