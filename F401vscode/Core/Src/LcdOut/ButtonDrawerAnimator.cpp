@@ -86,6 +86,27 @@ void ButtonDrawerAnimator::DrawModal(modal modal) {
 	return;
 }
 
+lcdButtons ButtonDrawerAnimator::GetLcdButtons() {
+		return _lcdButtons;
+}
+
+lcdButton ButtonDrawerAnimator::GetButtonByName(char* name) {
+	lcdButton button = {0, 0, 0, 0, 0, 0, ""};
+	if (!strcmp(name, "View")) {
+		return _lcdButtons.lcdViewButton;
+	} 
+	else if (!strcmp(name, "Delete")) {
+		return _lcdButtons.lcdDeleteButton;
+	}
+	else if (!strcmp(name, "Cancel")) {
+		return _lcdButtons.lcdCancelButton;
+	}
+	else if (!strcmp(name, "Confirm")) {
+		return _lcdButtons.lcdConfirmButton;
+	}
+	return button;
+}
+
 uint16_t ButtonDrawerAnimator::GetReversedColor(uint16_t color) {
 	if (color == _colors.GREEN) {
 		return _colors.BLACK;

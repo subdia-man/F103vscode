@@ -2,6 +2,7 @@
 #define _BUTTON_DRAWER_ANIMATOR_H
 
 #include <string>
+#include <cstring>
 #include "LcdGraphics.h"
 
 #define _BDA_USE_FREERTOS     1
@@ -123,9 +124,8 @@ public:
 
 	void DrawModal(modal modal);
 
-	lcdButtons GetLcdButtons() {
-		return _lcdButtons;
-	}
+	lcdButtons GetLcdButtons();
+	lcdButton GetButtonByName(char* name);
 
 private:
 
